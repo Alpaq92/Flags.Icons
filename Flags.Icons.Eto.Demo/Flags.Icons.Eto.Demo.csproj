@@ -11,6 +11,17 @@
         <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
     </PropertyGroup>
 
+    <!-- Eto.Platform.Mac64's BundleDotNetCore target (imported when the package
+         is referenced) requires explicit RIDs so it knows which architectures
+         to produce the .app bundle for. Setting both names is belt-and-
+         suspenders: the package checks MacRuntimeIdentifiers first, falls back
+         to RuntimeIdentifiers. Hoisted above all ItemGroups so the properties
+         are set before NuGet's package-targets imports are evaluated. -->
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <RuntimeIdentifiers>osx-x64;osx-arm64</RuntimeIdentifiers>
+        <MacRuntimeIdentifiers>osx-x64;osx-arm64</MacRuntimeIdentifiers>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Eto.Forms" Version="2.11.0" />
     </ItemGroup>
@@ -25,13 +36,6 @@
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
         <PackageReference Include="Eto.Platform.Mac64" Version="2.11.0" />
     </ItemGroup>
-    <!-- Eto.Platform.Mac64's BundleDotNetCore target requires explicit RIDs so it
-         knows which architectures to produce the .app bundle for. Without this
-         the build fails with "No RuntimeIdentifiers or MacRuntimeIdentifiers
-         have been specified." -->
-    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-        <RuntimeIdentifiers>osx-x64;osx-arm64</RuntimeIdentifiers>
-    </PropertyGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="..\build\icon.ico" LogicalName="Flags.Icons.Eto.Demo.icon.ico" />
