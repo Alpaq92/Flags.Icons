@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.1.0...v1.2.0) (2026-05-24)
+
+
+### Features
+
+* migrate Flags.Icons.Avalonia to Avalonia 12 / Svg.Controls.Skia.Avalonia ([d92732b](https://github.com/Alpaq92/Flags.Icons/commit/d92732b86ffc35f18dae8d702b231b40c5b7f221))
+
 ## [1.1.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.0.1...v1.1.0) (2026-05-24)
 
 > **Note:** this release is infrastructure-only — no consumer-facing changes to any `Flags.Icons.*` package. The single entry below was a CI workflow change that was mistakenly prefixed `feat(ci):` instead of `ci:`; per the Conventional Commits table in [README](https://github.com/Alpaq92/Flags.Icons/blob/main/README.md#conventional-commits) it should have been a hidden, non-releasing commit.
