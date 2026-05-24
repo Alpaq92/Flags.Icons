@@ -2,6 +2,7 @@
 
 ## [1.1.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.0.1...v1.1.0) (2026-05-24)
 
+> **Note:** this release is infrastructure-only — no consumer-facing changes to any `Flags.Icons.*` package. The single entry below was a CI workflow change that was mistakenly prefixed `feat(ci):` instead of `ci:`; per the Conventional Commits table in [README](https://github.com/Alpaq92/Flags.Icons/blob/main/README.md#conventional-commits) it should have been a hidden, non-releasing commit.
 
 ### Features
 
