@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.0...v1.2.1) (2026-05-24)
+
+
+### Bug Fixes
+
+* ship slim nuget-readme.md to nuget.org for cleaner package-page rendering ([e5e03c5](https://github.com/Alpaq92/Flags.Icons/commit/e5e03c5a1f87320163b6e25bed765a97d2830957))
+
 ## [1.2.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.1.0...v1.2.0) (2026-05-24)
 
 
