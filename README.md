@@ -262,7 +262,12 @@ This guarantees the OS-conditional `<PackageReference>` swaps in the MewUI/Eto d
 - **Required status checks** — all three `CI` jobs (`Build core + Avalonia (linux)`, `Build WPF / MAUI (windows)`, `Build cross-platform demos (macos)`) must pass, and the branch must be up to date with `main` before merge (`strict_required_status_checks_policy: true`).
 - **CodeQL** — the [`codeql.yml`](.github/workflows/codeql.yml) workflow scans the core + Linux-buildable wrappers (`csharp`, `security-and-quality` queries) on every PR plus a weekly cron. The `code_scanning` ruleset rule blocks merges on any high-or-higher security alert or any `error`-level finding.
 - **Branch integrity** — no deletion, no force pushes, linear history required.
-- **Bypass** — repo admins can bypass *only via PR*, never on direct push. On a solo repo with no other collaborators this is the path used to merge your own PRs once CI / CodeQL / threads are green, since the 1-approval requirement has no one else to satisfy it.
+- **Bypass** — three actors are allowed to bypass, each with the minimum scope they actually need:
+  - **Repo admin (you)**, `pull_request` mode — merge your own PRs without a second-account approval. Direct push is still blocked.
+  - **`github-actions[bot]`**, `always` mode — enables [`flagkit-refresh.yml`](.github/workflows/flagkit-refresh.yml) to push the monthly submodule bump directly, and enables [`dependabot-auto-merge.yml`](.github/workflows/dependabot-auto-merge.yml)'s `gh pr merge --auto --squash` to fire on Dependabot PRs once CI passes (the merge actor is github-actions, and auto-merge respects bypass). CI + CodeQL still gate the merge — bypass skips the approval, not the checks.
+  - **`dependabot[bot]`**, `pull_request` mode — belt-and-suspenders for `@dependabot squash and merge` comment merges. No effect on the current auto-merge path.
+
+  The bot bypass assumes only the repo owner adds workflows. On a multi-contributor repo, tighten `github-actions[bot]` to `pull_request` and convert `flagkit-refresh.yml` to a PR-open-and-auto-merge flow instead of a direct push.
 
 **Optional follow-ups (left off by default to avoid breaking unconfigured setups):**
 
