@@ -3,11 +3,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Flags.Icons.Avalonia.Demo.ViewModels;assembly=Flags.Icons.Avalonia.Demo"
+        xmlns:shared="clr-namespace:Flags.Demo.Shared;assembly=Flags.Demo.Shared"
         xmlns:flag="clr-namespace:Flags.Icons.Avalonia;assembly=Flags.Icons.Avalonia"
         xmlns:controls="clr-namespace:Flags.Icons.Avalonia.Demo.Controls"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
         Width="900" Height="600"
         x:Class="Flags.Icons.Avalonia.Demo.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/icon.ico">
 
     <Window.Styles>
@@ -24,7 +26,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="8">
             <TextBox Grid.Column="0"
                      Text="{Binding SearchText}"
-                     Watermark="Search by country code (e.g. US, DE, FR, GB-ENG)" />
+                     PlaceholderText="Search by country code (e.g. US, DE, FR, GB-ENG)" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
                 <TextBlock Text="Variant:" VerticalAlignment="Center" Margin="0,0,6,0" />
                 <ComboBox ItemsSource="{Binding Variants}"
@@ -43,9 +45,9 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="shared:FlagEntry">
                         <controls:SelectionWrapper DataSource="{Binding .}"
-                                                   CurrentSelected="{Binding $parent[ItemsControl].DataContext.Selected, Mode=TwoWay}">
+                                                   CurrentSelected="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).Selected, Mode=TwoWay}">
                             <Border Name="MainBorder" CornerRadius="4" Padding="4">
                                 <DockPanel Margin="2"
                                            ToolTip.Tip="{Binding Kind}"
@@ -73,6 +75,6 @@
                  Margin="8"
                  Text="{Binding CopyText, Mode=OneWay}"
                  IsReadOnly="True"
-                 Watermark="Click a flag to copy the XAML snippet" />
+                 PlaceholderText="Click a flag to copy the XAML snippet" />
     </Grid>
 </Window>
