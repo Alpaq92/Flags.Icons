@@ -302,7 +302,14 @@ Two workflows commit directly to `main` using Conventional Commits, so release-p
 
 ### `RELEASE_PLEASE_PAT` (recommended)
 
-GitHub deliberately does not trigger workflows from pushes signed with the default `GITHUB_TOKEN`, so without configuration both automated commit paths (FlagKit refresh and Dependabot auto-merge) land on `main` but **do not** wake `release.yml` — release-please's PR won't update until the next human push. To close that loop, create a fine-grained Personal Access Token with `contents:write` + `pull-requests:write` on this repo and add it as a repository secret named `RELEASE_PLEASE_PAT`. Both workflows fall back to `GITHUB_TOKEN` when the secret is unset, so the rest of the pipeline (manual pushes, release PR merges) keeps working without it.
+`GITHUB_TOKEN` has two limitations that the release pipeline runs into:
+
+1. **Pushes signed with `GITHUB_TOKEN` don't trigger downstream workflows.** So without configuration, both automated commit paths (FlagKit refresh and Dependabot auto-merge) land on `main` but don't wake `release.yml` — release-please's PR won't update until the next human push.
+2. **`GITHUB_TOKEN` can't create PRs unless the repo opts in.** *Settings → Actions → General → Workflow permissions* has a checkbox **"Allow GitHub Actions to create and approve pull requests"** that defaults to off. While it's off, release-please fails with `GitHub Actions is not permitted to create or approve pull requests` even though the workflow has `pull-requests: write`.
+
+A single fine-grained PAT solves both. Create one with `contents:write` + `pull-requests:write` on this repo and add it as a repository secret named `RELEASE_PLEASE_PAT`. All three workflows that need elevated permissions — [`release.yml`](.github/workflows/release.yml), [`flagkit-refresh.yml`](.github/workflows/flagkit-refresh.yml), and [`dependabot-auto-merge.yml`](.github/workflows/dependabot-auto-merge.yml) — use the pattern `${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}`, so they fall back to `GITHUB_TOKEN` when the secret is unset and the rest of the pipeline (CI, manual pushes, release PR merges) keeps working without it.
+
+If you'd rather not manage a PAT, the alternative for limitation #2 is checking the *"Allow GitHub Actions to create and approve pull requests"* repo setting — that unblocks release-please's PR creation but doesn't fix limitation #1 (automated commits still won't trigger downstream workflows). For a project with active Dependabot and monthly FlagKit refreshes, the PAT path is meaningfully better.
 
 ## License
 

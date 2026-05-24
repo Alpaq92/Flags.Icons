@@ -41,6 +41,13 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          # PAT preferred so the release-PR-merge commit (and the tag push) fire
+          # downstream workflows like CI on the bumped main and any tag-listening
+          # actions. Also lets release-please create the PR on repos where
+          # "Allow GitHub Actions to create and approve pull requests" is off,
+          # since the PAT acts as the human user rather than GitHub Actions.
+          # Falls back to GITHUB_TOKEN if the secret isn't set.
+          token: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
 
   publish:
     name: Pack & Publish
