@@ -31,7 +31,7 @@ jobs:
             10.0.x
 
       - name: Init CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: csharp
           build-mode: manual
@@ -52,6 +52,6 @@ jobs:
           dotnet build Flags.Icons.MewUI/Flags.Icons.MewUI.csproj      -c Release --nologo
 
       - name: Analyze
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:csharp"
