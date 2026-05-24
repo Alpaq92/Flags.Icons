@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.0.1...v1.1.0) (2026-05-24)
+
+
+### Features
+
+* **ci:** auto-merge release-please PR once checks pass ([dae9890](https://github.com/Alpaq92/Flags.Icons/commit/dae9890fa2d39585289ccc60b00472827259868f))
+
 ## [1.0.1](https://github.com/Alpaq92/Flags.Icons/compare/v1.0.0...v1.0.1) (2026-05-24)
 
 
