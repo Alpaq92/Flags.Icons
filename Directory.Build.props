@@ -14,7 +14,12 @@
         <RepositoryUrl>https://github.com/Alpaq92/Flags.Icons</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
 
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <!-- nuget-readme.md is a slimmer, pure-markdown README packed into every
+             nupkg. The top-level README.md uses HTML wrappers for centered
+             badges/screenshots which render on GitHub but break on nuget.org
+             (Markdig strips align attributes). Keeping the two separated lets
+             each surface display optimally. -->
+        <PackageReadmeFile>nuget-readme.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageIcon>icon.png</PackageIcon>
         <PackageTags>flags flag-kit country svg png avalonia wpf maui uno winui mewui eto winforms</PackageTags>
@@ -32,7 +37,7 @@
     </PropertyGroup>
 
     <ItemGroup Condition="'$(IsPackable)' == 'true'">
-        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)nuget-readme.md" Pack="true" PackagePath="\" />
         <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" />
         <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>

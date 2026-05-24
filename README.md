@@ -1,20 +1,26 @@
 # Flags.Icons
 
-[![Flags.Icons](https://img.shields.io/nuget/v/Flags.Icons.svg?label=Flags.Icons)](https://www.nuget.org/packages/Flags.Icons)
-[![Avalonia](https://img.shields.io/nuget/v/Flags.Icons.Avalonia.svg?label=Avalonia)](https://www.nuget.org/packages/Flags.Icons.Avalonia)
-[![Eto](https://img.shields.io/nuget/v/Flags.Icons.Eto.svg?label=Eto)](https://www.nuget.org/packages/Flags.Icons.Eto)
-[![MAUI](https://img.shields.io/nuget/v/Flags.Icons.MAUI.svg?label=MAUI)](https://www.nuget.org/packages/Flags.Icons.MAUI)
-[![MewUI](https://img.shields.io/nuget/v/Flags.Icons.MewUI.svg?label=MewUI)](https://www.nuget.org/packages/Flags.Icons.MewUI)
-[![Uno](https://img.shields.io/nuget/v/Flags.Icons.Uno.svg?label=Uno)](https://www.nuget.org/packages/Flags.Icons.Uno)
-[![WinForms](https://img.shields.io/nuget/v/Flags.Icons.WinForms.svg?label=WinForms)](https://www.nuget.org/packages/Flags.Icons.WinForms)
-[![WinUI](https://img.shields.io/nuget/v/Flags.Icons.WinUi.svg?label=WinUI)](https://www.nuget.org/packages/Flags.Icons.WinUi)
-[![WPF](https://img.shields.io/nuget/v/Flags.Icons.WPF.svg?label=WPF)](https://www.nuget.org/packages/Flags.Icons.WPF)
-[![CI](https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/ci.yml?branch=main&label=CI)](https://github.com/Alpaq92/Flags.Icons/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/release.yml?branch=main&label=Release)](https://github.com/Alpaq92/Flags.Icons/actions/workflows/release.yml)
-[![NuGet downloads](https://img.shields.io/nuget/dt/Flags.Icons.svg?label=Downloads&color=informational)](https://www.nuget.org/packages/Flags.Icons)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Alpaq92/Flags.Icons/blob/main/LICENSE)
+<p align="center">
+  <a href="https://www.nuget.org/packages/Flags.Icons"><img src="https://img.shields.io/nuget/v/Flags.Icons.svg?label=Flags.Icons" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.Avalonia"><img src="https://img.shields.io/nuget/v/Flags.Icons.Avalonia.svg?label=Avalonia" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.Eto"><img src="https://img.shields.io/nuget/v/Flags.Icons.Eto.svg?label=Eto" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.MAUI"><img src="https://img.shields.io/nuget/v/Flags.Icons.MAUI.svg?label=MAUI" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.MewUI"><img src="https://img.shields.io/nuget/v/Flags.Icons.MewUI.svg?label=MewUI" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.Uno"><img src="https://img.shields.io/nuget/v/Flags.Icons.Uno.svg?label=Uno" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.WinForms"><img src="https://img.shields.io/nuget/v/Flags.Icons.WinForms.svg?label=WinForms" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.WinUi"><img src="https://img.shields.io/nuget/v/Flags.Icons.WinUi.svg?label=WinUI" alt="NuGet" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons.WPF"><img src="https://img.shields.io/nuget/v/Flags.Icons.WPF.svg?label=WPF" alt="NuGet" /></a>
+  <a href="https://github.com/Alpaq92/Flags.Icons/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/ci.yml?branch=main&label=CI" alt="CI" /></a>
+  <a href="https://github.com/Alpaq92/Flags.Icons/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/release.yml?branch=main&label=Release" alt="Release" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons"><img src="https://img.shields.io/nuget/dt/Flags.Icons.svg?label=Downloads&color=informational" alt="NuGet downloads (core, transitively included by every platform package)" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+</p>
 
-![Flags.Icons demo](https://raw.githubusercontent.com/Alpaq92/Flags.Icons/main/flag-icons-demo.png)
+<p align="center">
+  <img src="flag-icons-demo.png" alt="Flags.Icons demo" />
+</p>
+
+> **Note:** the README packaged with the NuGet packages is the shorter [`nuget-readme.md`](nuget-readme.md). This file is the GitHub source of truth.
 
 Country flag icons from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every PNG (`@1x`/`@2x`/`@3x`) and SVG ships as an embedded resource in the core `Flags.Icons` package — **~1020 assets across 255 country codes** — reachable through a generated `FlagKind` enum. No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
 
