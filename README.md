@@ -20,7 +20,7 @@
   <img src="flag-icons-demo.png" alt="Flags.Icons demo" />
 </p>
 
-Country flag icons from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), packaged as drop-in controls for Avalonia, [Eto.Forms](https://github.com/picoe/Eto), .NET MAUI, [Aprillz.MewUI](https://github.com/aprillz/MewUI), Uno Platform, Windows Forms, WinUI 3 and WPF. Every PNG (`@1x`/`@2x`/`@3x`) and SVG ships as an embedded resource in the core `Flags.Icons` package — **~1020 assets across 255 country codes** — reachable through a generated `FlagKind` enum. No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
+Country flag icons from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every PNG (`@1x`/`@2x`/`@3x`) and SVG ships as an embedded resource in the core `Flags.Icons` package — **~1020 assets across 255 country codes** — reachable through a generated `FlagKind` enum. No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
 
 ## Packages
 
