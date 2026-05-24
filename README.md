@@ -12,7 +12,7 @@
   <a href="https://www.nuget.org/packages/Flags.Icons.WPF"><img src="https://img.shields.io/nuget/v/Flags.Icons.WPF.svg?label=WPF" alt="NuGet" /></a>
   <a href="https://github.com/Alpaq92/Flags.Icons/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/ci.yml?branch=main&label=CI" alt="CI" /></a>
   <a href="https://github.com/Alpaq92/Flags.Icons/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/release.yml?branch=main&label=Release" alt="Release" /></a>
-  <a href="https://www.nuget.org/packages/Flags.Icons"><img src="https://img.shields.io/nuget/dt/Flags.Icons.svg?label=Downloads&color=informational" alt="NuGet downloads (core, transitively included by every platform package)" /></a>
+  <a href="https://www.nuget.org/packages/Flags.Icons"><img src="https://img.shields.io/nuget/dt/Flags.Icons.svg?label=Downloads&color=blue&cacheSeconds=3600" alt="NuGet downloads (core, transitively included by every platform package)" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 </p>
 
