@@ -57,12 +57,20 @@ jobs:
       # github-actions[bot] via GITHUB_TOKEN) let the merge fire without a
       # human approval — status checks still gate it. Requires "Allow
       # auto-merge" in Settings → General → Pull Requests.
+      #
+      # The JSON parse happens in the run-block (not in env:) because GitHub
+      # evaluates env: before honoring `if:`; passing the raw `pr` output as
+      # PR_JSON and parsing with jq at runtime avoids `fromJson('')` blowing
+      # up the workflow when release-please had nothing to release.
       - name: Enable auto-merge on release PR
         if: steps.rp.outputs.pr
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ fromJson(steps.rp.outputs.pr).number }}
-        run: gh pr merge --auto --squash "$PR_NUMBER" --repo "$GITHUB_REPOSITORY"
+          PR_JSON: ${{ steps.rp.outputs.pr }}
+        run: |
+          PR_NUMBER=$(echo "$PR_JSON" | jq -r '.number')
+          gh pr merge --auto --squash "$PR_NUMBER" --repo "$GITHUB_REPOSITORY"
 
   publish:
     name: Pack & Publish
