@@ -1,5 +1,6 @@
 using System;
 using Avalonia.Markup.Xaml;
+using Avalonia.Metadata;
 
 namespace Flags.Icons.Avalonia {
     public class FlagIconExt : MarkupExtension {

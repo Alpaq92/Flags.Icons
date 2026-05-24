@@ -27,7 +27,7 @@ Country flag icons from [madebybowtie/FlagKit](https://github.com/madebybowtie/F
 | Package                  | Description                                                  | Target framework(s)                          |
 |--------------------------|--------------------------------------------------------------|----------------------------------------------|
 | `Flags.Icons`            | Core: `FlagKind`, asset streams, resolver helpers            | `netstandard2.0`                             |
-| `Flags.Icons.Avalonia`   | Avalonia `FlagIcon` templated control                        | `netstandard2.0`                             |
+| `Flags.Icons.Avalonia`   | Avalonia `FlagIcon` templated control                        | `net8.0`                                     |
 | `Flags.Icons.Eto`        | Eto.Forms `FlagIcon` extending `ImageView`                   | `netstandard2.0`                             |
 | `Flags.Icons.MAUI`       | .NET MAUI `FlagIcon` view                                    | `net10.0` + per-platform TFMs                |
 | `Flags.Icons.MewUI`      | Aprillz.MewUI fluent helpers (`FlagIcon.Create` / `.Flag()`) | `net10.0`                                    |
@@ -36,7 +36,7 @@ Country flag icons from [madebybowtie/FlagKit](https://github.com/madebybowtie/F
 | `Flags.Icons.WinUi`      | WinUI 3 `FlagIcon` control                                   | `net8.0-windows10.0.19041.0`                 |
 | `Flags.Icons.WPF`        | WPF `FlagIcon` control                                       | `net8.0-windows`                             |
 
-SVG rendering on stacks without a native SVG type (Eto, MAUI, MewUI, WinForms) goes through [`Svg.Skia`](https://github.com/wieslawsoltes/Svg.Skia). Avalonia uses `Avalonia.Svg.Skia`, WPF uses `SharpVectors`, Uno/WinUI use the framework's `SvgImageSource`.
+SVG rendering on stacks without a native SVG type (Eto, MAUI, MewUI, WinForms) goes through [`Svg.Skia`](https://github.com/wieslawsoltes/Svg.Skia). Avalonia uses [`Svg.Controls.Skia.Avalonia`](https://github.com/wieslawsoltes/Svg.Skia), WPF uses `SharpVectors`, Uno/WinUI use the framework's `SvgImageSource`.
 
 ## Installation
 
