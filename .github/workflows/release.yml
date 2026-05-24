@@ -3,8 +3,11 @@ name: Release
 # release-please reads Conventional Commits on main (`feat:`, `fix:`, `deps:`,
 # `BREAKING CHANGE`) and maintains a "Release PR" that bumps the version in
 # .release-please-manifest.json, updates CHANGELOG.md, and lists the entries.
-# Merging that PR creates the tag and GitHub Release. The publish job then packs
-# every library at the new tag and pushes to NuGet.org.
+# Every time the Release PR is opened or updated, this workflow also queues it
+# for auto-merge via `gh pr merge --auto --squash`, so the PR merges on its own
+# once CI + CodeQL are green (no human click required). The merge creates the
+# tag and GitHub Release; the publish job then packs every library at the new
+# tag and pushes to NuGet.org.
 #
 # Releases created by GITHUB_TOKEN don't trigger other workflows, so the publish
 # job lives in the same workflow as release-please (linked via `needs:`) rather
@@ -48,6 +51,18 @@ jobs:
           # since the PAT acts as the human user rather than GitHub Actions.
           # Falls back to GITHUB_TOKEN if the secret isn't set.
           token: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
+
+      # Queue the Release PR for auto-merge so it lands on its own when CI +
+      # CodeQL pass. The branch ruleset's bypass actors (admin via PAT, or
+      # github-actions[bot] via GITHUB_TOKEN) let the merge fire without a
+      # human approval — status checks still gate it. Requires "Allow
+      # auto-merge" in Settings → General → Pull Requests.
+      - name: Enable auto-merge on release PR
+        if: steps.rp.outputs.pr
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ fromJson(steps.rp.outputs.pr).number }}
+        run: gh pr merge --auto --squash "$PR_NUMBER" --repo "$GITHUB_REPOSITORY"
 
   publish:
     name: Pack & Publish

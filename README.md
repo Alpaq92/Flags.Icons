@@ -278,8 +278,10 @@ This guarantees the OS-conditional `<PackageReference>` swaps in the MewUI/Eto d
 
 Versions and `CHANGELOG.md` are managed by [release-please](https://github.com/googleapis/release-please) driven by [Conventional Commits](https://www.conventionalcommits.org/). The `Release` workflow has two jobs:
 
-1. **release-please** — on every push to `main`, opens (or updates) a Release PR that bumps `.release-please-manifest.json`, prepends a section to `CHANGELOG.md`, and lists the entries since the last tag. Merging that PR creates the matching `v*.*.*` tag and GitHub Release.
+1. **release-please** — on every push to `main`, opens (or updates) a Release PR that bumps `.release-please-manifest.json`, prepends a section to `CHANGELOG.md`, and lists the entries since the last tag. The same job then calls `gh pr merge --auto --squash` on that PR, so it lands by itself once CI + CodeQL go green — no manual click. The branch ruleset's bypass actors let the merge fire without a human approval; status checks still gate it. Merging creates the matching `v*.*.*` tag and GitHub Release.
 2. **publish** — runs in the same workflow immediately after a release is created (linked via `needs:`, so the GitHub-Actions limitation that `GITHUB_TOKEN`-created releases don't trigger downstream workflows doesn't apply). Packs all nine packages (`Flags.Icons`, `Flags.Icons.Avalonia`, `Flags.Icons.Eto`, `Flags.Icons.MAUI`, `Flags.Icons.MewUI`, `Flags.Icons.Uno`, `Flags.Icons.WinForms`, `Flags.Icons.WinUi`, `Flags.Icons.WPF`) at the new version and pushes them to NuGet.org (uses `secrets.NUGET_API_KEY`, idempotent via `--skip-duplicate`).
+
+For the auto-merge to actually fire, **Settings → General → Pull Requests → Allow auto-merge** must be enabled on the repo. To stop a release from going out, close (or hold) the Release PR before CI finishes — once the checks turn green the merge happens within seconds.
 
 For a one-off republish of an existing tag, run the workflow via `workflow_dispatch` with an explicit `tag` input — release-please is skipped and the publish job runs against the supplied tag.
 
