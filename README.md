@@ -191,6 +191,10 @@ The build embeds every PNG/SVG as a manifest resource and generates `FlagKind.g.
 - **Icon** — [Jellyfin UX](https://github.com/jellyfin/jellyfin-ux) (CC BY-SA 4.0)
 - **Inspiration** — [Material.Icons.Avalonia](https://github.com/SKProCH/Material.Icons) — templated-control + markup-extension pattern adapted from this project
 
+## Development
+
+Parts of this codebase — the per-platform `FlagIcon` wrappers, demo scaffolding, and CI/CD configuration — were developed with assistance from an audit-based AI workflow, with each change reviewed and verified by a human maintainer before being merged. Bug reports and PRs are welcome.
+
 ---
 
 *Release history in [CHANGELOG.md](CHANGELOG.md). Versions are driven by [Conventional Commits](https://www.conventionalcommits.org/) via [release-please](https://github.com/googleapis/release-please); branch ruleset details in [`.github/rulesets/README.md`](.github/rulesets/README.md).*
