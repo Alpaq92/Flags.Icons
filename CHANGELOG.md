@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.3...v1.2.4) (2026-05-24)
+
+
+### Bug Fixes
+
+* **ruleset:** drop approval gate + widen admin bypass to always ([3945fc8](https://github.com/Alpaq92/Flags.Icons/commit/3945fc898cb0d3eeb1c9481addb107f869ca6c83))
+
 ## [1.2.3](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.2...v1.2.3) (2026-05-24)
 
 
