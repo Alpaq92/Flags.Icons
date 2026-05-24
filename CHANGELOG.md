@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.1](https://github.com/Alpaq92/Flags.Icons/compare/v1.0.0...v1.0.1) (2026-05-24)
+
+
+### Bug Fixes
+
+* add macOS RuntimeIdentifiers to Eto demo for Mac64 bundling ([70d4221](https://github.com/Alpaq92/Flags.Icons/commit/70d42213aba7481d4ff64edd037439ba334ce562))
+* Addressed MAUI build issue ([25971f4](https://github.com/Alpaq92/Flags.Icons/commit/25971f4eadb0a2745b6ca952cf21a1b4cae0eb94))
+* align Avalonia compiled bindings + bump WinUI demo WindowsAppSDK to 2.1.3 ([e997958](https://github.com/Alpaq92/Flags.Icons/commit/e997958289e4b0a9da7aac288fef216394890e3c))
+* correct app.manifest reference to match on-disk app.manifest.xml ([0d808ac](https://github.com/Alpaq92/Flags.Icons/commit/0d808ac94efaa4f280a62690e31d894e1fb36be1))
+
 ## 1.0.0 (2026-05-24)
 
 
