@@ -6,6 +6,7 @@
 2. Go to **Settings → Rules → Rulesets → New ruleset → Import a ruleset**.
 3. Upload [`main-branch-protection.json`](main-branch-protection.json).
 4. Click **Create**.
+5. **After import**, add bot bypass actors via the UI (see *Bypass actors* below) — they're omitted from the JSON because GitHub's importer rejects `Integration` actor_ids that aren't pre-installed in the target account's context. The UI's actor picker autocomplete sidesteps that.
 
 ## What `main-branch-protection.json` enforces on `main`
 
@@ -34,11 +35,20 @@
 
 This repo runs three automated paths that would otherwise be blocked by the PR / approval rules. Each one is enabled by a targeted bypass entry rather than by weakening the rule itself.
 
-| Actor | `actor_id` | `bypass_mode` | Why it's needed |
+| Actor | Source | `bypass_mode` | Why it's needed |
 |---|---|---|---|
-| Repository admin (you) | `5` (`RepositoryRole`) | `pull_request` | Merge your own PRs on a solo repo without a second-account approval. **Direct push is still blocked** — even as admin you must go through a PR. |
-| `github-actions[bot]` | `15368` (`Integration`) | `always` | (1) `flagkit-refresh.yml` pushes the monthly submodule bump directly to `main`. (2) `dependabot-auto-merge.yml` calls `gh pr merge --auto --squash`; GitHub records the merge as `github-actions[bot]`, and auto-merge fires for that actor as soon as required status checks pass even though no human approval exists. |
-| `dependabot[bot]` | `29110` (`Integration`) | `pull_request` | Belt-and-suspenders for cases where Dependabot itself performs the merge (e.g. if you switch to `@dependabot squash and merge` comments). Has no effect on the current `gh pr merge --auto` path since github-actions is the merge actor there. |
+| Repository admin (you) | `RepositoryRole` (imported via JSON) | `pull_request` | Merge your own PRs on a solo repo without a second-account approval. **Direct push is still blocked** — even as admin you must go through a PR. |
+| `github-actions[bot]` | `Integration` (add via UI after import) | `always` | (1) `flagkit-refresh.yml` pushes the monthly submodule bump directly to `main`. (2) `dependabot-auto-merge.yml` calls `gh pr merge --auto --squash`; GitHub records the merge as `github-actions[bot]`, and auto-merge fires for that actor as soon as required status checks pass even though no human approval exists. |
+| `dependabot[bot]` | `Integration` (add via UI after import) | `pull_request` | Belt-and-suspenders for cases where Dependabot itself performs the merge (e.g. if you switch to `@dependabot squash and merge` comments). Has no effect on the current `gh pr merge --auto` path since github-actions is the merge actor there. |
+
+### Adding the bot bypasses via the UI
+
+After importing the JSON, open the ruleset in **Settings → Rules → Rulesets → `main-branch-protection`** and scroll to the **Bypass list** section:
+
+1. Click **Add bypass** → type `github-actions` → select **github-actions[bot]** from the picker → set bypass mode to **Always** → save.
+2. Click **Add bypass** → type `dependabot` → select **dependabot[bot]** from the picker → set bypass mode to **For pull requests only** → save.
+
+The JSON omits these because GitHub's *importer* validates `Integration` actor_ids against installed apps in the target account, and at least one of the well-known IDs (`15368` github-actions, `29110` dependabot) gets rejected as "invalid actor" depending on the account context. The UI's picker queries the right valid actor for *your* account.
 
 ### Trust model this assumes
 
