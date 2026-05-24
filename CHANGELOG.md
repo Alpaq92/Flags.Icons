@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.1...v1.2.2) (2026-05-24)
+
+
+### Bug Fixes
+
+* bump to ship trimmed nuget-readme.md to nuget.org ([b937f24](https://github.com/Alpaq92/Flags.Icons/commit/b937f24701236c8431117bba8d1129f12fd3aa71))
+
 ## [1.2.1](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.0...v1.2.1) (2026-05-24)
 
 
