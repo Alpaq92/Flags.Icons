@@ -13,10 +13,10 @@
         <AvaloniaResource Include="..\build\icon.ico" Link="Assets\icon.ico" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Themes.Simple" Version="11.0.10" />
+        <PackageReference Include="Avalonia" Version="12.0.3" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.3.16" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.16" />
+        <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.3" />
         <!-- Pin transitive (CVE GHSA-xrw6-gwf8-vvr9 fixed in 0.21.3) -->
         <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
     </ItemGroup>
