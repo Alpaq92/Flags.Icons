@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.2...v1.2.3) (2026-05-24)
+
+
+### Bug Fixes
+
+* properly register FlagKit submodule so CI populates the asset tree ([29b8e37](https://github.com/Alpaq92/Flags.Icons/commit/29b8e37e6e6b017fda5e9bb98f20e373b2967eaf))
+
 ## [1.2.2](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.1...v1.2.2) (2026-05-24)
 
 
