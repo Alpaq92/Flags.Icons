@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <IsPackable>true</IsPackable>
+
+        <PackageId>Flags.Icons.WPF</PackageId>
+        <Description>WPF control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). WPF-specific implementation of Flags.Icons.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SharpVectors.Reloaded" Version="1.8.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons\Flags.Icons.csproj" />
+    </ItemGroup>
+
+</Project>

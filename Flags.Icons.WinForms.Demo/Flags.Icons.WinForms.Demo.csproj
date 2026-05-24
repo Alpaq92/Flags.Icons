@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <UseWindowsForms>true</UseWindowsForms>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Flags.Icons.WinForms.Demo</RootNamespace>
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\build\icon.ico" LogicalName="Flags.Icons.WinForms.Demo.icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons.WinForms\Flags.Icons.WinForms.csproj" />
+        <ProjectReference Include="..\Flags.Demo.Shared\Flags.Demo.Shared.csproj" />
+    </ItemGroup>
+
+</Project>

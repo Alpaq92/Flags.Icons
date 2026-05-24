@@ -1,0 +1,57 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * 1'  # weekly Monday 06:00 UTC
+
+jobs:
+  analyze:
+    name: Analyze (csharp)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Init CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: csharp
+          build-mode: manual
+          queries: security-and-quality
+
+      # Scan the cross-platform core + the single-TFM wrappers that build
+      # cleanly on Linux without extra workloads. Skipped:
+      #   - Flags.Icons.Uno (multi-TFM including net10.0-browserwasm, which
+      #     needs the wasm-tools workload — see ci.yml's note)
+      #   - Flags.Icons.WPF / .WinForms / .WinUi / .MAUI (Windows-only stacks)
+      # All wrappers are thin adapters around the same core, so missing them
+      # doesn't materially shrink coverage.
+      - name: Build core + Linux-buildable wrappers
+        run: |
+          dotnet build Flags.Icons/Flags.Icons.csproj                  -c Release --nologo
+          dotnet build Flags.Icons.Avalonia/Flags.Icons.Avalonia.csproj -c Release --nologo
+          dotnet build Flags.Icons.Eto/Flags.Icons.Eto.csproj          -c Release --nologo
+          dotnet build Flags.Icons.MewUI/Flags.Icons.MewUI.csproj      -c Release --nologo
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:csharp"

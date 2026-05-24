@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <IsPackable>true</IsPackable>
+
+        <PackageId>Flags.Icons.Eto</PackageId>
+        <Description>Eto.Forms control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). Eto-specific implementation of Flags.Icons. SVG kinds are rasterized to PNG at runtime via Svg.Skia.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Eto.Forms" Version="2.11.0" />
+        <PackageReference Include="Svg.Skia" Version="1.0.0.16" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons\Flags.Icons.csproj" />
+    </ItemGroup>
+
+</Project>

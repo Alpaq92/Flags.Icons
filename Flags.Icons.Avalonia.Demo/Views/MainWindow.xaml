@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Flags.Icons.Avalonia.Demo.ViewModels;assembly=Flags.Icons.Avalonia.Demo"
+        xmlns:flag="clr-namespace:Flags.Icons.Avalonia;assembly=Flags.Icons.Avalonia"
+        xmlns:controls="clr-namespace:Flags.Icons.Avalonia.Demo.Controls"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        Width="900" Height="600"
+        x:Class="Flags.Icons.Avalonia.Demo.Views.MainWindow"
+        Icon="/Assets/icon.ico">
+
+    <Window.Styles>
+        <Style Selector="controls|SelectionWrapper:selectednow > Border">
+            <Setter Property="Background" Value="LightBlue" />
+        </Style>
+    </Window.Styles>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="8">
+            <TextBox Grid.Column="0"
+                     Text="{Binding SearchText}"
+                     Watermark="Search by country code (e.g. US, DE, FR, GB-ENG)" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="Variant:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox ItemsSource="{Binding Variants}"
+                          SelectedItem="{Binding Variant}"
+                          MinWidth="120" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Visible"
+                      HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding Flags}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:SelectionWrapper DataSource="{Binding .}"
+                                                   CurrentSelected="{Binding $parent[ItemsControl].DataContext.Selected, Mode=TwoWay}">
+                            <Border Name="MainBorder" CornerRadius="4" Padding="4">
+                                <DockPanel Margin="2"
+                                           ToolTip.Tip="{Binding Kind}"
+                                           Width="88"
+                                           Height="80"
+                                           Background="Transparent">
+                                    <TextBlock Text="{Binding Code}"
+                                               DockPanel.Dock="Bottom"
+                                               FontSize="11"
+                                               HorizontalAlignment="Center" />
+                                    <flag:FlagIcon Kind="{Binding Kind}"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   Width="56"
+                                                   Height="42" />
+                                </DockPanel>
+                            </Border>
+                        </controls:SelectionWrapper>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <TextBox Grid.Row="2"
+                 Margin="8"
+                 Text="{Binding CopyText, Mode=OneWay}"
+                 IsReadOnly="True"
+                 Watermark="Click a flag to copy the XAML snippet" />
+    </Grid>
+</Window>

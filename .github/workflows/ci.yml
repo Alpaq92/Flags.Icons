@@ -1,0 +1,194 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-core-and-avalonia:
+    name: Build core + Avalonia (linux)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Restore Flags.Icons
+        run: dotnet restore Flags.Icons/Flags.Icons.csproj
+
+      - name: Build Flags.Icons
+        run: dotnet build Flags.Icons/Flags.Icons.csproj --configuration Release --no-restore
+
+      # Shared (non-packable) demo VM project consumed by every Flags.Icons.*.Demo.
+      # Built early so a break here fails fast before any demo build.
+      - name: Restore Flags.Demo.Shared
+        run: dotnet restore Flags.Demo.Shared/Flags.Demo.Shared.csproj
+
+      - name: Build Flags.Demo.Shared
+        run: dotnet build Flags.Demo.Shared/Flags.Demo.Shared.csproj --configuration Release --no-restore
+
+      - name: Restore Flags.Icons.Avalonia
+        run: dotnet restore Flags.Icons.Avalonia/Flags.Icons.Avalonia.csproj
+
+      - name: Build Flags.Icons.Avalonia
+        run: dotnet build Flags.Icons.Avalonia/Flags.Icons.Avalonia.csproj --configuration Release --no-restore
+
+      - name: Restore Flags.Icons.Avalonia.Demo
+        run: dotnet restore Flags.Icons.Avalonia.Demo/Flags.Icons.Avalonia.Demo.csproj
+
+      - name: Build Flags.Icons.Avalonia.Demo
+        run: dotnet build Flags.Icons.Avalonia.Demo/Flags.Icons.Avalonia.Demo.csproj --configuration Release --no-restore
+
+      # Building Flags.Icons.Uno.Demo transitively builds the net10.0-desktop TFM of
+      # Flags.Icons.Uno that the demo consumes — the other library TFMs (net10.0,
+      # net10.0-browserwasm) are exercised at pack time in release.yml, so building the
+      # library standalone here would just rebuild the same TFM twice.
+      - name: Build Flags.Icons.Uno.Demo
+        run: dotnet build Flags.Icons.Uno.Demo/Flags.Icons.Uno.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.MewUI
+        run: dotnet build Flags.Icons.MewUI/Flags.Icons.MewUI.csproj --configuration Release
+
+      # Verifies the X11+MewVG cross-platform code path actually compiles on Linux —
+      # the csproj swaps to Aprillz.MewUI.Platform.X11 / Backend.MewVG.X11 via OS condition.
+      - name: Build Flags.Icons.MewUI.Demo (Linux variant)
+        run: dotnet build Flags.Icons.MewUI.Demo/Flags.Icons.MewUI.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.Eto
+        run: dotnet build Flags.Icons.Eto/Flags.Icons.Eto.csproj --configuration Release
+
+      # Verifies the Gtk cross-platform code path actually compiles on Linux —
+      # the csproj swaps to Eto.Platform.Gtk and drops -windows TFM via OS condition.
+      - name: Build Flags.Icons.Eto.Demo (Linux variant)
+        run: dotnet build Flags.Icons.Eto.Demo/Flags.Icons.Eto.Demo.csproj --configuration Release
+
+  build-windows:
+    name: Build WPF / MAUI (windows)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
+      # Shared (non-packable) demo VM project consumed by every Flags.Icons.*.Demo.
+      - name: Build Flags.Demo.Shared
+        run: dotnet build Flags.Demo.Shared/Flags.Demo.Shared.csproj --configuration Release
+
+      - name: Build Flags.Icons.WPF
+        run: dotnet build Flags.Icons.WPF/Flags.Icons.WPF.csproj --configuration Release
+
+      - name: Build Flags.Icons.WPF.Demo
+        run: dotnet build Flags.Icons.WPF.Demo/Flags.Icons.WPF.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.MAUI
+        run: dotnet build Flags.Icons.MAUI/Flags.Icons.MAUI.csproj --configuration Release
+
+      - name: Build Flags.Icons.WinUi
+        run: dotnet build Flags.Icons.WinUi/Flags.Icons.WinUi.csproj --configuration Release
+
+      - name: Build Flags.Icons.WinUi.Demo
+        run: dotnet build Flags.Icons.WinUi.Demo/Flags.Icons.WinUi.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.MewUI.Demo
+        run: dotnet build Flags.Icons.MewUI.Demo/Flags.Icons.MewUI.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.Eto.Demo
+        run: dotnet build Flags.Icons.Eto.Demo/Flags.Icons.Eto.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.WinForms
+        run: dotnet build Flags.Icons.WinForms/Flags.Icons.WinForms.csproj --configuration Release
+
+      - name: Build Flags.Icons.WinForms.Demo
+        run: dotnet build Flags.Icons.WinForms.Demo/Flags.Icons.WinForms.Demo.csproj --configuration Release
+
+  build-macos:
+    name: Build cross-platform demos (macos)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.props', '**/*.targets') }}
+          restore-keys: ${{ runner.os }}-nuget-
+
+      - name: Build Flags.Icons
+        run: dotnet build Flags.Icons/Flags.Icons.csproj --configuration Release
+
+      - name: Build Flags.Demo.Shared
+        run: dotnet build Flags.Demo.Shared/Flags.Demo.Shared.csproj --configuration Release
+
+      - name: Build Flags.Icons.Avalonia
+        run: dotnet build Flags.Icons.Avalonia/Flags.Icons.Avalonia.csproj --configuration Release
+
+      - name: Build Flags.Icons.Avalonia.Demo
+        run: dotnet build Flags.Icons.Avalonia.Demo/Flags.Icons.Avalonia.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.Uno.Demo
+        run: dotnet build Flags.Icons.Uno.Demo/Flags.Icons.Uno.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.MewUI
+        run: dotnet build Flags.Icons.MewUI/Flags.Icons.MewUI.csproj --configuration Release
+
+      # Verifies the MacOS+MewVG cross-platform code path actually compiles on macOS —
+      # the csproj swaps to Aprillz.MewUI.Platform.MacOS / Backend.MewVG.MacOS via OS condition.
+      - name: Build Flags.Icons.MewUI.Demo (macOS variant)
+        run: dotnet build Flags.Icons.MewUI.Demo/Flags.Icons.MewUI.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.Eto
+        run: dotnet build Flags.Icons.Eto/Flags.Icons.Eto.csproj --configuration Release
+
+      # Verifies the Mac64 cross-platform code path actually compiles on macOS —
+      # the csproj swaps to Eto.Platform.Mac64 and drops -windows TFM via OS condition.
+      - name: Build Flags.Icons.Eto.Demo (macOS variant)
+        run: dotnet build Flags.Icons.Eto.Demo/Flags.Icons.Eto.Demo.csproj --configuration Release

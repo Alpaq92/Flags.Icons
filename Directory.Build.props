@@ -1,0 +1,44 @@
+<Project>
+
+    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+
+        <!-- Default to non-packable; the 9 shipping libraries opt in with <IsPackable>true</IsPackable>. -->
+        <IsPackable>false</IsPackable>
+
+        <Authors>Alpaq92</Authors>
+        <Company>Alpaq92</Company>
+        <Copyright>Copyright (c) Alpaq92</Copyright>
+        <PackageProjectUrl>https://github.com/Alpaq92/Flags.Icons</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Alpaq92/Flags.Icons</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>flags flag-kit country svg png avalonia wpf maui uno winui mewui eto winforms</PackageTags>
+
+        <PackageOutputPath>$(MSBuildThisFileDirectory)nupkg</PackageOutputPath>
+
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <DebugType>portable</DebugType>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+
+        <FlagKitDirectory>$(MSBuildThisFileDirectory)FlagKit\Assets</FlagKitDirectory>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(IsPackable)' == 'true'">
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsPackable)' == 'true' And '$(ContinuousIntegrationBuild)' == 'true'">
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+    </ItemGroup>
+
+</Project>

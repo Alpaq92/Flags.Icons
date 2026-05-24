@@ -1,0 +1,28 @@
+<Project Sdk="Uno.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net10.0-browserwasm;net10.0-desktop</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.26100</TargetFrameworks>
+
+        <UnoSingleProject>true</UnoSingleProject>
+        <OutputType>Library</OutputType>
+        <GenerateLibraryLayout>true</GenerateLibraryLayout>
+        <ImplicitUsings>enable</ImplicitUsings>
+
+        <IsPackable>true</IsPackable>
+
+        <PackageId>Flags.Icons.Uno</PackageId>
+        <Description>Uno Platform control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). Uno-specific implementation of Flags.Icons.</Description>
+
+        <RootNamespace>Flags.Icons.Uno</RootNamespace>
+
+        <UnoFeatures>
+            SkiaRenderer;
+        </UnoFeatures>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons\Flags.Icons.csproj" />
+    </ItemGroup>
+
+</Project>

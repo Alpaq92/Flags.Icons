@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+        <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+
+        <UseWinUI>true</UseWinUI>
+        <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+
+        <PackageId>Flags.Icons.WinUi</PackageId>
+        <Description>WinUI 3 (Windows App SDK) control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). WinUI-specific implementation of Flags.Icons.</Description>
+
+        <RootNamespace>Flags.Icons.WinUi</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260416003" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons\Flags.Icons.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:flag="clr-namespace:Flags.Icons.Maui;assembly=Flags.Icons.MAUI"
+             xmlns:local="clr-namespace:Flags.Icons.Maui.Demo"
+             xmlns:shared="clr-namespace:Flags.Demo.Shared;assembly=Flags.Demo.Shared"
+             x:Class="Flags.Icons.Maui.Demo.MainPage"
+             x:Name="Page"
+             x:DataType="local:MainViewModel">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="8">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <Entry Grid.Column="0" Placeholder="Search code"
+                   Text="{Binding SearchText, Mode=TwoWay}" />
+            <Picker Grid.Column="1" Margin="8,0,0,0" MinimumWidthRequest="120"
+                    ItemsSource="{Binding Variants}"
+                    SelectedItem="{Binding Variant, Mode=TwoWay}" />
+        </Grid>
+        <ScrollView Grid.Row="1">
+            <FlexLayout BindableLayout.ItemsSource="{Binding Flags}"
+                        Wrap="Wrap"
+                        Direction="Row"
+                        JustifyContent="Center"
+                        AlignItems="Start">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="shared:FlagEntry">
+                        <VerticalStackLayout Padding="4" WidthRequest="88">
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </VerticalStackLayout.GestureRecognizers>
+                            <flag:FlagIcon Kind="{Binding Kind}" WidthRequest="56" HeightRequest="42" HorizontalOptions="Center" />
+                            <Label Text="{Binding Code}" FontSize="11" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </ScrollView>
+        <Entry Grid.Row="2" Margin="0,8,0,0"
+               Text="{Binding CopyText}"
+               IsReadOnly="True"
+               Placeholder="Click a flag to copy the XAML snippet" />
+    </Grid>
+</ContentPage>

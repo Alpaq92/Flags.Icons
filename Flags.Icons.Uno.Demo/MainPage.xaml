@@ -1,0 +1,55 @@
+<Page x:Class="Flags.Icons.Uno.Demo.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Flags.Icons.Uno.Demo"
+      xmlns:shared="using:Flags.Demo.Shared"
+      xmlns:flag="using:Flags.Icons.Uno"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Padding="8" RowSpacing="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" PlaceholderText="Search code"
+                     Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <ComboBox Grid.Column="1" MinWidth="120"
+                      ItemsSource="{x:Bind ViewModel.Variants}"
+                      SelectedItem="{x:Bind ViewModel.Variant, Mode=TwoWay}" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" HorizontalContentAlignment="Center">
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Flags, Mode=OneWay}"
+                           HorizontalAlignment="Center">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="80" MinItemHeight="68"
+                                       MinRowSpacing="4" MinColumnSpacing="4"
+                                       ItemsJustification="Center" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="shared:FlagEntry">
+                        <Button Background="Transparent" BorderThickness="0" Padding="4"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Click="OnFlagClicked" Tag="{x:Bind}">
+                            <StackPanel Orientation="Vertical" Spacing="2">
+                                <flag:FlagIcon Kind="{x:Bind Kind}" Width="56" Height="42" />
+                                <TextBlock Text="{x:Bind Code}" FontSize="11" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+
+        <TextBox Grid.Row="2"
+                 Text="{x:Bind ViewModel.CopyText, Mode=OneWay}"
+                 IsReadOnly="True"
+                 PlaceholderText="Click a flag to copy the XAML snippet" />
+    </Grid>
+</Page>

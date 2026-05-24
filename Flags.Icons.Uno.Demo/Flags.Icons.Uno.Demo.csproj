@@ -1,0 +1,41 @@
+<Project Sdk="Uno.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0-desktop</TargetFramework>
+
+        <OutputType>Exe</OutputType>
+        <OutputType Condition="$([MSBuild]::IsOSPlatform('windows'))">WinExe</OutputType>
+        <UnoSingleProject>true</UnoSingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+
+        <ApplicationTitle>Flags.Icons.Uno.Demo</ApplicationTitle>
+        <ApplicationId>com.alpaq92.flagsicons.uno.demo</ApplicationId>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationPublisher>Alpaq92</ApplicationPublisher>
+        <Description>Flags.Icons.Uno.Demo powered by Uno Platform.</Description>
+
+        <RootNamespace>Flags.Icons.Uno.Demo</RootNamespace>
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
+
+        <UnoFeatures>
+            SkiaRenderer;
+            Svg;
+        </UnoFeatures>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="..\build\icon.ico" Link="icon.ico" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons.Uno\Flags.Icons.Uno.csproj" />
+        <ProjectReference Include="..\Flags.Demo.Shared\Flags.Demo.Shared.csproj" />
+    </ItemGroup>
+
+    <!-- Pin transitive dep to a version that closes a known CVE (GHSA-xrw6-gwf8-vvr9) -->
+    <ItemGroup>
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+    </ItemGroup>
+
+</Project>

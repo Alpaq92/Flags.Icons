@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+    <ItemGroup>
+        <Resource Include="..\build\icon.ico" Link="icon.ico" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons.WPF\Flags.Icons.WPF.csproj" />
+        <ProjectReference Include="..\Flags.Demo.Shared\Flags.Demo.Shared.csproj" />
+    </ItemGroup>
+</Project>

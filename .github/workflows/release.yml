@@ -1,0 +1,106 @@
+name: Release
+
+# release-please reads Conventional Commits on main (`feat:`, `fix:`, `deps:`,
+# `BREAKING CHANGE`) and maintains a "Release PR" that bumps the version in
+# .release-please-manifest.json, updates CHANGELOG.md, and lists the entries.
+# Merging that PR creates the tag and GitHub Release. The publish job then packs
+# every library at the new tag and pushes to NuGet.org.
+#
+# Releases created by GITHUB_TOKEN don't trigger other workflows, so the publish
+# job lives in the same workflow as release-please (linked via `needs:`) rather
+# than listening on `on: release`.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Manually publish this existing tag (skips release-please)'
+        required: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: Open / merge release PR
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    outputs:
+      released: ${{ steps.rp.outputs.releases_created }}
+      tag: ${{ steps.rp.outputs.tag_name }}
+    steps:
+      - id: rp
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    name: Pack & Publish
+    runs-on: windows-latest
+    needs: release-please
+    if: ${{ always() && (needs.release-please.outputs.released == 'true' || github.event_name == 'workflow_dispatch') }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Resolve tag
+        id: tag
+        shell: bash
+        run: |
+          TAG="${{ needs.release-please.outputs.tag || inputs.tag }}"
+          echo "name=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.name }}
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui
+
+      - name: Pack Flags.Icons
+        run: dotnet pack Flags.Icons/Flags.Icons.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.Avalonia
+        run: dotnet pack Flags.Icons.Avalonia/Flags.Icons.Avalonia.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.WPF
+        run: dotnet pack Flags.Icons.WPF/Flags.Icons.WPF.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.MAUI
+        run: dotnet pack Flags.Icons.MAUI/Flags.Icons.MAUI.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.Uno
+        run: dotnet pack Flags.Icons.Uno/Flags.Icons.Uno.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.WinUi
+        run: dotnet pack Flags.Icons.WinUi/Flags.Icons.WinUi.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.MewUI
+        run: dotnet pack Flags.Icons.MewUI/Flags.Icons.MewUI.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.Eto
+        run: dotnet pack Flags.Icons.Eto/Flags.Icons.Eto.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Pack Flags.Icons.WinForms
+        run: dotnet pack Flags.Icons.WinForms/Flags.Icons.WinForms.csproj --configuration Release -p:Version=${{ steps.tag.outputs.version }} -p:PackageVersion=${{ steps.tag.outputs.version }} -o ./nupkg
+
+      - name: Push to NuGet.org
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Flags.Icons.MewUi.Demo</RootNamespace>
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <!--
+        OS-conditional define constants drive #if guards in Program.cs so we only refer to
+        platform/backend types whose assemblies are actually present on the build machine.
+    -->
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+        <DefineConstants>$(DefineConstants);MEWUI_WIN</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <DefineConstants>$(DefineConstants);MEWUI_LINUX</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <DefineConstants>$(DefineConstants);MEWUI_MAC</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aprillz.MewUI" Version="0.15.2" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+        <PackageReference Include="Aprillz.MewUI.Platform.Win32" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI.Backend.Direct2D" Version="0.15.2" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <PackageReference Include="Aprillz.MewUI.Platform.X11" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI.Backend.MewVG.X11" Version="0.15.2" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <PackageReference Include="Aprillz.MewUI.Platform.MacOS" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI.Backend.MewVG.MacOS" Version="0.15.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\build\icon.ico" LogicalName="icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons.MewUI\Flags.Icons.MewUI.csproj" />
+        <ProjectReference Include="..\Flags.Demo.Shared\Flags.Demo.Shared.csproj" />
+    </ItemGroup>
+
+</Project>

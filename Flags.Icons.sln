@@ -1,0 +1,123 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37216.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons", "Flags.Icons\Flags.Icons.csproj", "{1A0B0001-0000-0000-0000-000000000001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Avalonia", "Flags.Icons.Avalonia\Flags.Icons.Avalonia.csproj", "{1A0B0001-0000-0000-0000-000000000002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Avalonia.Demo", "Flags.Icons.Avalonia.Demo\Flags.Icons.Avalonia.Demo.csproj", "{1A0B0001-0000-0000-0000-000000000003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WPF", "Flags.Icons.WPF\Flags.Icons.WPF.csproj", "{1A0B0001-0000-0000-0000-000000000004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WPF.Demo", "Flags.Icons.WPF.Demo\Flags.Icons.WPF.Demo.csproj", "{1A0B0001-0000-0000-0000-000000000005}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.MAUI", "Flags.Icons.MAUI\Flags.Icons.MAUI.csproj", "{1A0B0001-0000-0000-0000-000000000008}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.MAUI.Demo", "Flags.Icons.MAUI.Demo\Flags.Icons.MAUI.Demo.csproj", "{1A0B0001-0000-0000-0000-000000000009}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Uno", "Flags.Icons.Uno\Flags.Icons.Uno.csproj", "{1A0B0001-0000-0000-0000-00000000000A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Uno.Demo", "Flags.Icons.Uno.Demo\Flags.Icons.Uno.Demo.csproj", "{1A0B0001-0000-0000-0000-00000000000B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WinUi", "Flags.Icons.WinUi\Flags.Icons.WinUi.csproj", "{1A0B0001-0000-0000-0000-00000000000C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WinUi.Demo", "Flags.Icons.WinUi.Demo\Flags.Icons.WinUi.Demo.csproj", "{1A0B0001-0000-0000-0000-00000000000D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.MewUI", "Flags.Icons.MewUI\Flags.Icons.MewUI.csproj", "{1A0B0001-0000-0000-0000-00000000000E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.MewUI.Demo", "Flags.Icons.MewUI.Demo\Flags.Icons.MewUI.Demo.csproj", "{1A0B0001-0000-0000-0000-00000000000F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Eto", "Flags.Icons.Eto\Flags.Icons.Eto.csproj", "{1A0B0001-0000-0000-0000-000000000010}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Eto.Demo", "Flags.Icons.Eto.Demo\Flags.Icons.Eto.Demo.csproj", "{1A0B0001-0000-0000-0000-000000000011}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WinForms", "Flags.Icons.WinForms\Flags.Icons.WinForms.csproj", "{1A0B0001-0000-0000-0000-000000000012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WinForms.Demo", "Flags.Icons.WinForms.Demo\Flags.Icons.WinForms.Demo.csproj", "{1A0B0001-0000-0000-0000-000000000013}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Demo.Shared", "Flags.Demo.Shared\Flags.Demo.Shared.csproj", "{1A0B0001-0000-0000-0000-000000000014}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A0B0001-0000-0000-0000-000000000001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000008}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000009}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{1A0B0001-0000-0000-0000-00000000000D}.Debug|Any CPU.Build.0 = Debug|x64
+		{1A0B0001-0000-0000-0000-00000000000D}.Release|Any CPU.ActiveCfg = Release|x64
+		{1A0B0001-0000-0000-0000-00000000000D}.Release|Any CPU.Build.0 = Release|x64
+		{1A0B0001-0000-0000-0000-00000000000E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-00000000000F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000014}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

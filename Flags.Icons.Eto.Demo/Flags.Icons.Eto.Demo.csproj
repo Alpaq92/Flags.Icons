@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework Condition="$([MSBuild]::IsOSPlatform('Windows'))">net8.0-windows</TargetFramework>
+        <TargetFramework Condition="!$([MSBuild]::IsOSPlatform('Windows'))">net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</UseWPF>
+        <RootNamespace>Flags.Icons.Eto.Demo</RootNamespace>
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Eto.Forms" Version="2.11.0" />
+    </ItemGroup>
+
+    <!-- Eto.Platform.* are pulled in only for the host OS — they ship native runtime bits. -->
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+        <PackageReference Include="Eto.Platform.Wpf" Version="2.11.0" />
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <PackageReference Include="Eto.Platform.Gtk" Version="2.11.0" />
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <PackageReference Include="Eto.Platform.Mac64" Version="2.11.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\build\icon.ico" LogicalName="Flags.Icons.Eto.Demo.icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons.Eto\Flags.Icons.Eto.csproj" />
+        <ProjectReference Include="..\Flags.Demo.Shared\Flags.Demo.Shared.csproj" />
+    </ItemGroup>
+
+</Project>

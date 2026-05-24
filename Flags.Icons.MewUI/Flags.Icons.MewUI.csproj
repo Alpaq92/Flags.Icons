@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+
+        <PackageId>Flags.Icons.MewUI</PackageId>
+        <Description>Aprillz.MewUI helpers that display country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). MewUI-specific implementation of Flags.Icons. SVG kinds are rasterized to PNG at runtime via Svg.Skia.</Description>
+
+        <RootNamespace>Flags.Icons.MewUi</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aprillz.MewUI" Version="0.15.2" />
+        <PackageReference Include="Svg.Skia" Version="1.0.0.16" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons\Flags.Icons.csproj" />
+    </ItemGroup>
+
+</Project>

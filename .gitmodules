@@ -1,0 +1,3 @@
+[submodule "FlagKit"]
+	path = FlagKit
+	url = https://github.com/madebybowtie/FlagKit

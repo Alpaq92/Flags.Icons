@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    # `fix(deps):` is a Conventional Commits type that release-please routes into
+    # the "Bug Fixes" / "Dependencies" sections of CHANGELOG.md and triggers a
+    # patch bump. Auto-merge squashes the PR using its title, so the squashed
+    # commit inherits this prefix.
+    commit-message:
+      prefix: "fix(deps)"
+    groups:
+      nuget-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    # `chore(deps):` is hidden from CHANGELOG and does not trigger a release —
+    # Actions bumps don't affect anything we ship to NuGet.
+    commit-message:
+      prefix: "chore(deps)"

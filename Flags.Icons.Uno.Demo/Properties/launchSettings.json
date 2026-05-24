@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Flags.Icons.Uno.Demo (Desktop)": {
+      "commandName": "Project",
+      "hotReloadEnabled": false,
+      "environmentVariables": {
+        "DOTNET_MODIFIABLE_ASSEMBLIES": ""
+      }
+    }
+  }
+}
