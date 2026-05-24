@@ -25,6 +25,13 @@
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
         <PackageReference Include="Eto.Platform.Mac64" Version="2.11.0" />
     </ItemGroup>
+    <!-- Eto.Platform.Mac64's BundleDotNetCore target requires explicit RIDs so it
+         knows which architectures to produce the .app bundle for. Without this
+         the build fails with "No RuntimeIdentifiers or MacRuntimeIdentifiers
+         have been specified." -->
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <RuntimeIdentifiers>osx-x64;osx-arm64</RuntimeIdentifiers>
+    </PropertyGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="..\build\icon.ico" LogicalName="Flags.Icons.Eto.Demo.icon.ico" />
