@@ -36,7 +36,13 @@ permissions:
 jobs:
   open-pr:
     name: Open PR if none exists
-    if: contains(fromJson('["Alpaq92", "github-actions[bot]", "dependabot[bot]"]'), github.actor)
+    # `github.event.deleted == false` skips branch-deletion events. The push
+    # trigger fires on deletions too, but `github.sha` reverts to the default
+    # branch's HEAD in that case — so the REST-API commit-message lookup and
+    # the PR-create call would target the wrong commit.
+    if: >
+      github.event.deleted == false &&
+      contains(fromJson('["Alpaq92", "github-actions[bot]", "dependabot[bot]"]'), github.actor)
     runs-on: ubuntu-latest
     steps:
       - name: Require RELEASE_PLEASE_PAT
