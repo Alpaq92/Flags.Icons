@@ -5,7 +5,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.Eto</PackageId>
-        <Description>Eto.Forms control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). Eto-specific implementation of Flags.Icons. SVG kinds are rasterized to PNG at runtime via Svg.Skia.</Description>
+        <Description>Eto.Forms control that displays flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). Eto-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
     </PropertyGroup>
 
     <ItemGroup>

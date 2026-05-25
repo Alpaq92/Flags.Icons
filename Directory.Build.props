@@ -32,8 +32,6 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <DebugType>portable</DebugType>
         <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
-
-        <FlagKitDirectory>$(MSBuildThisFileDirectory)FlagKit\Assets</FlagKitDirectory>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(IsPackable)' == 'true'">

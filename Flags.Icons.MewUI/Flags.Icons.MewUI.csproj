@@ -7,7 +7,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.MewUI</PackageId>
-        <Description>Aprillz.MewUI helpers that display country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). MewUI-specific implementation of Flags.Icons. SVG kinds are rasterized to PNG at runtime via Svg.Skia.</Description>
+        <Description>Aprillz.MewUI helpers that display flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). MewUI-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
 
         <RootNamespace>Flags.Icons.MewUi</RootNamespace>
     </PropertyGroup>

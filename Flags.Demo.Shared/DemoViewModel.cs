@@ -1,26 +1,32 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using Flags.Icons;
 
 namespace Flags.Demo.Shared {
     public class DemoViewModel : ObservableObject {
-        private IEnumerable<FlagEntry> _flags = Array.Empty<FlagEntry>();
+        private IReadOnlyList<FlagSection> _sections = System.Array.Empty<FlagSection>();
         private FlagEntry? _selected;
         private string _copyText = string.Empty;
         private string? _searchText;
-        private DemoVariant _variant = DemoVariant.SVG;
+        private DemoSource _source = DemoSource.Twemoji;
 
-        public DemoViewModel() => UpdateFlags();
+        public DemoViewModel() => UpdateSections();
 
-        public IEnumerable<FlagEntry> Flags {
-            get => _flags;
-            private set => Set(ref _flags, value);
+        /// <summary>Section groups for the current <see cref="Source"/> + <see cref="SearchText"/>.</summary>
+        public IReadOnlyList<FlagSection> Sections {
+            get => _sections;
+            private set => Set(ref _sections, value);
         }
+
+        /// <summary>Flat entry list (sections concatenated). Convenience for demos that don't render headers.</summary>
+        public IEnumerable<FlagEntry> Flags => _sections.SelectMany(s => s.Entries);
 
         public FlagEntry? Selected {
             get => _selected;
             set {
                 if (Set(ref _selected, value) && value != null) {
-                    CopyText = $"<flag:FlagIcon Kind=\"{value.Kind}\"/>";
+                    // FlagSource enum value names are the control's DP names (Twemoji/Circle/Square/Lipis).
+                    CopyText = $"<flag:FlagIcon {value.Source}=\"{value.Code}\"/>";
                 }
             }
         }
@@ -32,18 +38,18 @@ namespace Flags.Demo.Shared {
 
         public string? SearchText {
             get => _searchText;
-            set { if (Set(ref _searchText, value)) UpdateFlags(); }
+            set { if (Set(ref _searchText, value)) UpdateSections(); }
         }
 
-        public DemoVariant Variant {
-            get => _variant;
-            set { if (Set(ref _variant, value)) UpdateFlags(); }
+        public DemoSource Source {
+            get => _source;
+            set { if (Set(ref _source, value)) UpdateSections(); }
         }
 
-        public IReadOnlyList<DemoVariant> Variants => FlagCatalog.AllVariants;
+        public IReadOnlyList<DemoSource> Sources => FlagCatalog.AllSources;
 
         public void Select(FlagEntry entry) => Selected = entry;
 
-        private void UpdateFlags() => Flags = FlagCatalog.Filter(Variant, SearchText);
+        private void UpdateSections() => Sections = FlagCatalog.Sections(Source, SearchText);
     }
 }

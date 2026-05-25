@@ -378,3 +378,7 @@ Desktop.ini
 
 # Local Release output folder (CI publishes from here)
 nupkg/
+
+# Build output: assets/ is regenerated every build from submodules/ by
+# build/Flags.Icons.Assets.targets. See README "Building from source".
+/assets/

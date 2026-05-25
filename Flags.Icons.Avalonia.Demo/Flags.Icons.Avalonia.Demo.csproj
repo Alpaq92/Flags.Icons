@@ -2,6 +2,10 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
+        <!-- Embeds the icon into the .exe so File Explorer / Alt-Tab / pinned-to-Start show it.
+             AvaloniaResource below makes the same .ico available via Icon="/Assets/icon.ico" for
+             the in-app Window chrome. -->
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
         <Compile Update="**\*.xaml.cs">
@@ -14,11 +18,16 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="12.0.3" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.16" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.16" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
+        <!-- Avalonia.Diagnostics intentionally omitted — no 12.x release yet
+             (latest is 11.3.16) and pulling it in causes a TypeLoadException at
+             runtime via Avalonia.Base. AttachDevTools wiring removed from
+             MainWindow.xaml.cs to match. Re-add once a 12.x version ships. -->
         <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.3" />
-        <!-- Pin transitive (CVE GHSA-xrw6-gwf8-vvr9 fixed in 0.21.3) -->
-        <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+        <!-- Pin transitive (CVE GHSA-xrw6-gwf8-vvr9 fixed in 0.21.3).
+             Floor bumped to 0.92.0 to satisfy Avalonia 12.0.3's transitive demand
+             (Avalonia.Desktop → X11 → FreeDesktop → Tmds.DBus.Protocol ≥ 0.92.0). -->
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Flags.Icons.Avalonia\Flags.Icons.Avalonia.csproj" />

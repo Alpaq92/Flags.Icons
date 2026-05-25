@@ -9,7 +9,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.MAUI</PackageId>
-        <Description>.NET MAUI control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). MAUI-specific implementation of Flags.Icons.</Description>
+        <Description>.NET MAUI control that displays flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). MAUI-specific implementation of Flags.Icons.</Description>
 
         <RootNamespace>Flags.Icons.Maui</RootNamespace>
 

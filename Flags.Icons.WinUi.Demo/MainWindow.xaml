@@ -18,32 +18,45 @@
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" PlaceholderText="Search code"
                      Text="{x:Bind ViewModel.SearchText, Mode=TwoWay}" />
-            <ComboBox Grid.Column="1" MinWidth="120"
-                      ItemsSource="{x:Bind ViewModel.Variants}"
-                      SelectedItem="{x:Bind ViewModel.Variant, Mode=TwoWay}" />
+            <ComboBox Grid.Column="1" MinWidth="160"
+                      ItemsSource="{x:Bind ViewModel.Sources}"
+                      SelectedItem="{x:Bind ViewModel.Source, Mode=TwoWay}" />
         </Grid>
 
         <ScrollViewer Grid.Row="1" HorizontalContentAlignment="Center">
-            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Flags, Mode=OneWay}"
-                           HorizontalAlignment="Center">
-                <ItemsRepeater.Layout>
-                    <UniformGridLayout MinItemWidth="80" MinItemHeight="68"
-                                       MinRowSpacing="4" MinColumnSpacing="4"
-                                       ItemsJustification="Center" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="shared:FlagEntry">
-                        <Button Background="Transparent" BorderThickness="0" Padding="4"
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                Click="OnFlagClicked" Tag="{x:Bind}">
-                            <StackPanel Orientation="Vertical" Spacing="2">
-                                <flag:FlagIcon Kind="{x:Bind Kind}" Width="56" Height="42" />
-                                <TextBlock Text="{x:Bind Code}" FontSize="11" HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
+            <ItemsControl ItemsSource="{x:Bind ViewModel.Sections, Mode=OneWay}"
+                          HorizontalAlignment="Center">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="shared:FlagSection">
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="{x:Bind Title}" FontSize="14" FontWeight="SemiBold" Margin="8,4" />
+                            <ItemsRepeater ItemsSource="{x:Bind Entries}" HorizontalAlignment="Center">
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="80" MinItemHeight="68"
+                                                       MinRowSpacing="4" MinColumnSpacing="4"
+                                                       ItemsJustification="Center" />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate x:DataType="shared:FlagEntry">
+                                        <Button Background="Transparent" BorderThickness="0" Padding="4"
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                Click="OnFlagClicked" Tag="{x:Bind}">
+                                            <StackPanel Orientation="Vertical" Spacing="2">
+                                                <flag:FlagIcon Width="56" Height="42"
+                                                               Twemoji="{x:Bind Twemoji}"
+                                                               Circle="{x:Bind Circle}"
+                                                               Square="{x:Bind Square}"
+                                                               Lipis="{x:Bind Lipis}" />
+                                                <TextBlock Text="{x:Bind Code}" FontSize="11" HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+                        </StackPanel>
                     </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <TextBox Grid.Row="2"

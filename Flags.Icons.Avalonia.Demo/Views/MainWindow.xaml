@@ -14,7 +14,10 @@
 
     <Window.Styles>
         <Style Selector="controls|SelectionWrapper:selectednow > Border">
-            <Setter Property="Background" Value="LightBlue" />
+            <Setter Property="Background" Value="#1976D2" />
+        </Style>
+        <Style Selector="controls|SelectionWrapper:selectednow > Border TextBlock">
+            <Setter Property="Foreground" Value="White" />
         </Style>
     </Window.Styles>
 
@@ -28,44 +31,55 @@
                      Text="{Binding SearchText}"
                      PlaceholderText="Search by country code (e.g. US, DE, FR, GB-ENG)" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="Variant:" VerticalAlignment="Center" Margin="0,0,6,0" />
-                <ComboBox ItemsSource="{Binding Variants}"
-                          SelectedItem="{Binding Variant}"
-                          MinWidth="120" />
+                <TextBlock Text="Source:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox ItemsSource="{Binding Sources}"
+                          SelectedItem="{Binding Source}"
+                          MinWidth="160" />
             </StackPanel>
         </Grid>
 
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Visible"
                       HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding Flags}" HorizontalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+            <ItemsControl ItemsSource="{Binding Sections}" HorizontalAlignment="Center">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="shared:FlagEntry">
-                        <controls:SelectionWrapper DataSource="{Binding .}"
-                                                   CurrentSelected="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).Selected, Mode=TwoWay}">
-                            <Border Name="MainBorder" CornerRadius="4" Padding="4">
-                                <DockPanel Margin="2"
-                                           ToolTip.Tip="{Binding Kind}"
-                                           Width="88"
-                                           Height="80"
-                                           Background="Transparent">
-                                    <TextBlock Text="{Binding Code}"
-                                               DockPanel.Dock="Bottom"
-                                               FontSize="11"
-                                               HorizontalAlignment="Center" />
-                                    <flag:FlagIcon Kind="{Binding Kind}"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Center"
-                                                   Width="56"
-                                                   Height="42" />
-                                </DockPanel>
-                            </Border>
-                        </controls:SelectionWrapper>
+                    <DataTemplate DataType="shared:FlagSection">
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold" Margin="8,4" />
+                            <ItemsControl ItemsSource="{Binding Entries}" HorizontalAlignment="Center">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="shared:FlagEntry">
+                                        <controls:SelectionWrapper DataSource="{Binding .}"
+                                                                   CurrentSelected="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Selected, Mode=TwoWay}">
+                                            <Border Name="MainBorder" CornerRadius="4" Padding="4">
+                                                <DockPanel Margin="2"
+                                                           ToolTip.Tip="{Binding Code}"
+                                                           Width="88"
+                                                           Height="80"
+                                                           Background="Transparent">
+                                                    <TextBlock Text="{Binding Code}"
+                                                               DockPanel.Dock="Bottom"
+                                                               FontSize="11"
+                                                               HorizontalAlignment="Center" />
+                                                    <flag:FlagIcon VerticalAlignment="Center"
+                                                                   HorizontalAlignment="Center"
+                                                                   Width="56" Height="42"
+                                                                   Twemoji="{Binding Twemoji}"
+                                                                   Circle="{Binding Circle}"
+                                                                   Square="{Binding Square}"
+                                                                   Lipis="{Binding Lipis}" />
+                                                </DockPanel>
+                                            </Border>
+                                        </controls:SelectionWrapper>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

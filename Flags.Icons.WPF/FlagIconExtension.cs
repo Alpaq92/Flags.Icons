@@ -3,32 +3,24 @@ using System.Windows.Markup;
 
 namespace Flags.Icons.WPF {
     /// <summary>
-    /// XAML markup extension for inline use, e.g. <c>{flag:FlagIconExtension USSVG}</c>.
+    /// XAML markup extension. Set exactly one of the source properties:
+    /// <c>{flag:FlagIconExtension Twemoji=US, Size=24}</c>,
+    /// <c>{flag:FlagIconExtension Circle=us, Size=24}</c>, etc.
     /// </summary>
     public class FlagIconExtension : MarkupExtension {
-        public FlagIconExtension() { }
-
-        public FlagIconExtension(FlagKind kind) {
-            Kind = kind;
-        }
-
-        public FlagIconExtension(FlagKind kind, double size) {
-            Kind = kind;
-            Size = size;
-        }
-
-        [ConstructorArgument("kind")]
-        public FlagKind Kind { get; set; } = FlagKind.None;
-
-        [ConstructorArgument("size")]
+        public TwemojiFlag Twemoji { get; set; } = TwemojiFlag.None;
+        public CircleFlag Circle { get; set; } = CircleFlag.None;
+        public SquareFlag Square { get; set; } = SquareFlag.None;
+        public LipisFlag Lipis { get; set; } = LipisFlag.None;
         public double? Size { get; set; }
 
         public override object ProvideValue(IServiceProvider serviceProvider) {
-            var icon = new FlagIcon { Kind = Kind };
-            if (Size.HasValue) {
-                icon.Width = Size.Value;
-                icon.Height = Size.Value;
-            }
+            var icon = new FlagIcon();
+            if (Twemoji != TwemojiFlag.None) icon.Twemoji = Twemoji;
+            else if (Circle != CircleFlag.None) icon.Circle = Circle;
+            else if (Square != SquareFlag.None) icon.Square = Square;
+            else if (Lipis != LipisFlag.None) icon.Lipis = Lipis;
+            if (Size.HasValue) { icon.Width = Size.Value; icon.Height = Size.Value; }
             return icon;
         }
     }

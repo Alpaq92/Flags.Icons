@@ -3,30 +3,54 @@ using System.Reflection;
 
 namespace Flags.Icons {
     /// <summary>
-    /// Reads the raw bytes for a <see cref="FlagKind"/> from the <c>Flags.Icons</c> assembly's
-    /// embedded manifest resources. Platform-specific Flags.Icons.* packages turn the resulting
-    /// stream into their native image type (Avalonia <c>Bitmap</c>, WPF <c>BitmapImage</c>, etc.).
+    /// Reads the raw bytes for any of the 4 source enums (<see cref="TwemojiFlag"/>,
+    /// <see cref="CircleFlag"/>, <see cref="SquareFlag"/>, <see cref="LipisFlag"/>) from the
+    /// <c>Flags.Icons</c> assembly's embedded manifest resources. Platform-specific Flags.Icons.*
+    /// packages turn the resulting stream into their native image type (Avalonia <c>Bitmap</c>,
+    /// WPF <c>BitmapImage</c>, etc.).
     /// </summary>
     public static class FlagAssetLoader {
+        private const string TwemojiPrefix = "assets/twemoji/";
+        private const string CirclePrefix = "assets/circle-flags/";
+        private const string SquarePrefix = "assets/square-flags/";
+        private const string LipisPrefix = "assets/flag-icons/";
+
         private static readonly Assembly Assembly = typeof(FlagAssetLoader).GetTypeInfo().Assembly;
 
-        /// <summary>
-        /// Opens the embedded asset stream for <paramref name="kind"/>. Returns <c>null</c>
-        /// for <see cref="FlagKind.None"/>. Caller owns the returned stream.
-        /// </summary>
-        public static Stream? OpenStream(FlagKind kind) {
-            var info = FlagKindResolver.GetInfo(kind);
-            if (info == null) return null;
-            return Assembly.GetManifestResourceStream(info.ResourceName);
-        }
+        /// <summary>Opens the embedded SVG stream for <paramref name="flag"/>. Returns <c>null</c> for <see cref="TwemojiFlag.None"/>.</summary>
+        public static Stream? OpenStream(TwemojiFlag flag) => Open(TwemojiPrefix, TwemojiFlagFiles.GetFileName(flag));
 
-        /// <summary>Reads the embedded asset for <paramref name="kind"/> into a byte array.</summary>
-        public static byte[]? ReadAllBytes(FlagKind kind) {
-            using var stream = OpenStream(kind);
+        /// <summary>Opens the embedded SVG stream for <paramref name="flag"/>. Returns <c>null</c> for <see cref="CircleFlag.None"/>.</summary>
+        public static Stream? OpenStream(CircleFlag flag) => Open(CirclePrefix, CircleFlagFiles.GetFileName(flag));
+
+        /// <summary>Opens the embedded SVG stream for <paramref name="flag"/>. Returns <c>null</c> for <see cref="SquareFlag.None"/>.</summary>
+        public static Stream? OpenStream(SquareFlag flag) => Open(SquarePrefix, SquareFlagFiles.GetFileName(flag));
+
+        /// <summary>Opens the embedded SVG stream for <paramref name="flag"/>. Returns <c>null</c> for <see cref="LipisFlag.None"/>.</summary>
+        public static Stream? OpenStream(LipisFlag flag) => Open(LipisPrefix, LipisFlagFiles.GetFileName(flag));
+
+        /// <summary>Reads the embedded SVG for <paramref name="flag"/> into a byte array.</summary>
+        public static byte[]? ReadAllBytes(TwemojiFlag flag) => ReadAll(OpenStream(flag));
+
+        /// <inheritdoc cref="ReadAllBytes(TwemojiFlag)"/>
+        public static byte[]? ReadAllBytes(CircleFlag flag) => ReadAll(OpenStream(flag));
+
+        /// <inheritdoc cref="ReadAllBytes(TwemojiFlag)"/>
+        public static byte[]? ReadAllBytes(SquareFlag flag) => ReadAll(OpenStream(flag));
+
+        /// <inheritdoc cref="ReadAllBytes(TwemojiFlag)"/>
+        public static byte[]? ReadAllBytes(LipisFlag flag) => ReadAll(OpenStream(flag));
+
+        private static Stream? Open(string prefix, string? fileName)
+            => fileName == null ? null : Assembly.GetManifestResourceStream(prefix + fileName);
+
+        private static byte[]? ReadAll(Stream? stream) {
             if (stream == null) return null;
-            using var memory = new MemoryStream();
-            stream.CopyTo(memory);
-            return memory.ToArray();
+            using (stream) {
+                using var memory = new MemoryStream();
+                stream.CopyTo(memory);
+                return memory.ToArray();
+            }
         }
     }
 }

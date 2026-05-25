@@ -12,7 +12,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.Uno</PackageId>
-        <Description>Uno Platform control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). Uno-specific implementation of Flags.Icons.</Description>
+        <Description>Uno Platform control that displays flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). Uno-specific implementation of Flags.Icons.</Description>
 
         <RootNamespace>Flags.Icons.Uno</RootNamespace>
 

@@ -1,3 +1,12 @@
-[submodule "FlagKit"]
-	path = FlagKit
-	url = https://github.com/madebybowtie/FlagKit
+[submodule "submodules/circle-flags"]
+	path = submodules/circle-flags
+	url = https://github.com/HatScripts/circle-flags
+[submodule "submodules/square-flags"]
+	path = submodules/square-flags
+	url = https://github.com/kapowaz/square-flags
+[submodule "submodules/flag-icons"]
+	path = submodules/flag-icons
+	url = https://github.com/lipis/flag-icons
+[submodule "submodules/twemoji"]
+	path = submodules/twemoji
+	url = https://github.com/jdecked/twemoji

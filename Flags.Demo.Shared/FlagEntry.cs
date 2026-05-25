@@ -1,21 +1,44 @@
 using Flags.Icons;
 
 namespace Flags.Demo.Shared {
+    /// <summary>
+    /// Demo-grid row. Exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>,
+    /// <see cref="Lipis"/> is non-<c>None</c> — XAML can blindly bind all four to a single
+    /// <c>FlagIcon</c> and the control will pick the active one.
+    /// </summary>
     public class FlagEntry {
-        public FlagEntry(FlagKind kind) {
-            Kind = kind;
-            var info = FlagKindResolver.GetInfo(kind)!;
-            Code = info.Code;
-            Variant = info.Format == FlagFormat.Svg ? DemoVariant.SVG
-                : info.Scale switch {
-                    FlagScale.X3 => DemoVariant.PNG3x,
-                    FlagScale.X2 => DemoVariant.PNG2x,
-                    _ => DemoVariant.PNG1x,
-                };
+        public FlagEntry(TwemojiFlag flag) {
+            Source = FlagSource.Twemoji;
+            Twemoji = flag;
+            Code = flag.ToString();
+            Snippet = "TwemojiFlag." + flag;
+        }
+        public FlagEntry(CircleFlag flag) {
+            Source = FlagSource.Circle;
+            Circle = flag;
+            Code = flag.ToString();
+            Snippet = "CircleFlag." + flag;
+        }
+        public FlagEntry(SquareFlag flag) {
+            Source = FlagSource.Square;
+            Square = flag;
+            Code = flag.ToString();
+            Snippet = "SquareFlag." + flag;
+        }
+        public FlagEntry(LipisFlag flag) {
+            Source = FlagSource.Lipis;
+            Lipis = flag;
+            Code = flag.ToString();
+            Snippet = "LipisFlag." + flag;
         }
 
-        public FlagKind Kind { get; }
+        public FlagSource Source { get; }
         public string Code { get; }
-        public DemoVariant Variant { get; }
+        public string Snippet { get; }
+
+        public TwemojiFlag Twemoji { get; }
+        public CircleFlag Circle { get; }
+        public SquareFlag Square { get; }
+        public LipisFlag Lipis { get; }
     }
 }

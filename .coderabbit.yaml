@@ -3,7 +3,7 @@
 # Behavior tuned for a solo OSS .NET multi-package repo: auto-review every
 # PR (including bot-authored ones from release-please / Dependabot), use the
 # low-noise "chill" review profile, comments-only (not blocking), and skip
-# files that are either vendored (FlagKit submodule) or auto-generated.
+# files that are either vendored (twemoji submodule) or auto-generated.
 
 language: en-US
 
@@ -19,7 +19,8 @@ reviews:
   # Don't review these — vendored or generated content adds noise and burns
   # review budget on things humans don't author.
   path_filters:
-    - "!FlagKit/**"                    # vendored upstream submodule (madebybowtie/FlagKit)
+    - "!twemoji/**"                    # vendored upstream submodule (jdecked/twemoji)
+    - "!assets/twemoji/**"             # build-staged ISO-renamed copies of the above
     - "!**/*.g.cs"                     # build-time generated (FlagKind.g.cs etc.)
     - "!**/bin/**"
     - "!**/obj/**"

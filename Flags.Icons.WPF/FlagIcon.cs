@@ -1,55 +1,71 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using SharpVectors.Converters;
 using SharpVectors.Renderers.Wpf;
 
 namespace Flags.Icons.WPF {
+    /// <summary>
+    /// WPF control that renders a single flag SVG from one of the 4 bundled sources. Set exactly
+    /// one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>, <see cref="Lipis"/> —
+    /// assigning to one of them clears the others.
+    /// </summary>
     public class FlagIcon : Control {
         static FlagIcon() {
-            DefaultStyleKeyProperty.OverrideMetadata(
-                typeof(FlagIcon),
-                new FrameworkPropertyMetadata(typeof(FlagIcon)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FlagIcon), new FrameworkPropertyMetadata(typeof(FlagIcon)));
         }
 
-        public static readonly DependencyProperty KindProperty =
-            DependencyProperty.Register(
-                nameof(Kind),
-                typeof(FlagKind),
-                typeof(FlagIcon),
-                new FrameworkPropertyMetadata(FlagKind.None, OnKindChanged));
+        public static readonly DependencyProperty TwemojiProperty = DependencyProperty.Register(
+            nameof(Twemoji), typeof(TwemojiFlag), typeof(FlagIcon),
+            new FrameworkPropertyMetadata(TwemojiFlag.None, (d, e) => ((FlagIcon)d).OnKindChanged(FlagSource.Twemoji)));
 
-        private static readonly DependencyPropertyKey SourcePropertyKey =
-            DependencyProperty.RegisterReadOnly(
-                nameof(Source),
-                typeof(ImageSource),
-                typeof(FlagIcon),
-                new FrameworkPropertyMetadata(default(ImageSource)));
+        public static readonly DependencyProperty CircleProperty = DependencyProperty.Register(
+            nameof(Circle), typeof(CircleFlag), typeof(FlagIcon),
+            new FrameworkPropertyMetadata(CircleFlag.None, (d, e) => ((FlagIcon)d).OnKindChanged(FlagSource.Circle)));
+
+        public static readonly DependencyProperty SquareProperty = DependencyProperty.Register(
+            nameof(Square), typeof(SquareFlag), typeof(FlagIcon),
+            new FrameworkPropertyMetadata(SquareFlag.None, (d, e) => ((FlagIcon)d).OnKindChanged(FlagSource.Square)));
+
+        public static readonly DependencyProperty LipisProperty = DependencyProperty.Register(
+            nameof(Lipis), typeof(LipisFlag), typeof(FlagIcon),
+            new FrameworkPropertyMetadata(LipisFlag.None, (d, e) => ((FlagIcon)d).OnKindChanged(FlagSource.Lipis)));
+
+        private static readonly DependencyPropertyKey SourcePropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(Source), typeof(ImageSource), typeof(FlagIcon),
+            new FrameworkPropertyMetadata(default(ImageSource)));
 
         public static readonly DependencyProperty SourceProperty = SourcePropertyKey.DependencyProperty;
 
-        /// <summary>
-        /// Which FlagKit asset to render. The enum is generated at build time from the files in
-        /// <c>FlagKit/Assets/PNG</c> and <c>FlagKit/Assets/SVG</c>.
-        /// </summary>
-        public FlagKind Kind {
-            get => (FlagKind)GetValue(KindProperty);
-            set => SetValue(KindProperty, value);
-        }
+        /// <summary>Twemoji (jdecked/twemoji) flag to render.</summary>
+        public TwemojiFlag Twemoji { get => (TwemojiFlag)GetValue(TwemojiProperty); set => SetValue(TwemojiProperty, value); }
+        /// <summary>Circle (HatScripts/circle-flags) flag to render.</summary>
+        public CircleFlag Circle { get => (CircleFlag)GetValue(CircleProperty); set => SetValue(CircleProperty, value); }
+        /// <summary>Square (kapowaz/square-flags) flag to render.</summary>
+        public SquareFlag Square { get => (SquareFlag)GetValue(SquareProperty); set => SetValue(SquareProperty, value); }
+        /// <summary>Lipis (lipis/flag-icons 4x3) flag to render.</summary>
+        public LipisFlag Lipis { get => (LipisFlag)GetValue(LipisProperty); set => SetValue(LipisProperty, value); }
 
-        /// <summary>
-        /// The currently-resolved <see cref="ImageSource"/> (a <see cref="BitmapImage"/> for PNGs,
-        /// a <see cref="DrawingImage"/> for SVGs, or <c>null</c> when <see cref="Kind"/> is
-        /// <see cref="FlagKind.None"/>).
-        /// </summary>
+        /// <summary>The currently-resolved <see cref="ImageSource"/> for whichever source-DP is non-<c>None</c>.</summary>
         public ImageSource? Source {
             get => (ImageSource?)GetValue(SourceProperty);
             private set => SetValue(SourcePropertyKey, value);
         }
 
-        private static void OnKindChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            ((FlagIcon)d).UpdateSource();
+        private bool _suppress;
+
+        private void OnKindChanged(FlagSource changed) {
+            if (_suppress) return;
+            _suppress = true;
+            try {
+                if (changed != FlagSource.Twemoji && Twemoji != TwemojiFlag.None) Twemoji = TwemojiFlag.None;
+                if (changed != FlagSource.Circle && Circle != CircleFlag.None) Circle = CircleFlag.None;
+                if (changed != FlagSource.Square && Square != SquareFlag.None) Square = SquareFlag.None;
+                if (changed != FlagSource.Lipis && Lipis != LipisFlag.None) Lipis = LipisFlag.None;
+            } finally {
+                _suppress = false;
+            }
+            UpdateSource();
         }
 
         public override void OnApplyTemplate() {
@@ -58,27 +74,11 @@ namespace Flags.Icons.WPF {
         }
 
         private void UpdateSource() {
-            using var stream = FlagAssetLoader.OpenStream(Kind);
-            if (stream == null) {
-                Source = null;
-                return;
-            }
-
-            if (FlagKindResolver.IsSvg(Kind)) {
-                var settings = new WpfDrawingSettings();
-                var reader = new FileSvgReader(settings);
-                var drawing = reader.Read(stream);
-                Source = drawing != null ? new DrawingImage(drawing) : null;
-            }
-            else {
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.StreamSource = stream;
-                bitmap.EndInit();
-                bitmap.Freeze();
-                Source = bitmap;
-            }
+            using var stream = FlagSourceDispatch.OpenActive(Twemoji, Circle, Square, Lipis);
+            if (stream == null) { Source = null; return; }
+            var reader = new FileSvgReader(new WpfDrawingSettings());
+            var drawing = reader.Read(stream);
+            Source = drawing != null ? new DrawingImage(drawing) : null;
         }
     }
 }
