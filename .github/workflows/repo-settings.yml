@@ -1,0 +1,82 @@
+name: Apply repo settings
+
+# Enforces repository-level settings as code. Runs on:
+#   - changes to this file (auto-apply when the desired state is edited)
+#   - workflow_dispatch (force a re-apply, useful if a setting drifted)
+#
+# This complements the branch ruleset in .github/rulesets/ — the ruleset
+# governs branch protection, this file governs repo-wide knobs (auto-merge
+# enablement, allowed merge methods at the UI level, etc.).
+#
+# REQUIRED PAT SCOPE:
+#   RELEASE_PLEASE_PAT must include "Administration: read and write".
+#   PATCH /repos/{owner}/{repo} is an admin endpoint that GITHUB_TOKEN can't
+#   reach. To grant: https://github.com/settings/personal-access-tokens →
+#   edit the PAT → Permissions → Repository permissions → Administration →
+#   "Read and write". Save (the PAT is regenerated; update the secret).
+#
+# If the PAT lacks Administration, this workflow fails with a 403 and the
+# repo continues working with whatever the UI was last set to.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repo-settings.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repo-settings
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    name: PATCH repo settings via API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PAT is available
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
+        run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::error::RELEASE_PLEASE_PAT secret is unset — repo settings PATCH requires PAT with Administration scope. GITHUB_TOKEN can't be used here."
+            exit 1
+          fi
+
+      - name: Apply settings
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
+        run: |
+          set -euo pipefail
+          echo "Applying repo settings to $GITHUB_REPOSITORY..."
+
+          # Settings rationale:
+          #   allow_auto_merge        : true  — required by every gh pr merge --auto in
+          #                                     dependabot-auto-merge.yml, release.yml,
+          #                                     auto-merge-trusted.yml, auto-merge-approved.yml
+          #   allow_squash_merge      : true  — matches ruleset's allowed_merge_methods=[squash]
+          #   allow_merge_commit      : false — ruleset requires linear history, merge commits
+          #                                     would be blocked anyway; hiding the button
+          #                                     prevents confusion
+          #   allow_rebase_merge      : false — ruleset allows squash only; same UI alignment
+          #   delete_branch_on_merge  : true  — keeps the branch list clean after PRs land
+          #                                     (Dependabot/release-please branches auto-clean)
+          gh api "repos/$GITHUB_REPOSITORY" \
+            --method PATCH \
+            -F allow_auto_merge=true \
+            -F allow_squash_merge=true \
+            -F allow_merge_commit=false \
+            -F allow_rebase_merge=false \
+            -F delete_branch_on_merge=true
+
+          echo "Settings applied. Current state:"
+          gh api "repos/$GITHUB_REPOSITORY" --jq '{
+            allow_auto_merge,
+            allow_squash_merge,
+            allow_merge_commit,
+            allow_rebase_merge,
+            delete_branch_on_merge
+          }'
