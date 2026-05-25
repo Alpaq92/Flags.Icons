@@ -1,24 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Flags.Icons {
     /// <summary>
-    /// Runtime helpers for enumerating the flag assets bundled with the library.
+    /// Runtime indexes for enumerating every bundled flag, per source. Each list excludes the
+    /// <c>None</c> sentinel and is sorted by enum value.
     /// </summary>
     public static class FlagIcons {
-        private static readonly Lazy<IReadOnlyList<FlagKind>> AllLazy =
-            new Lazy<IReadOnlyList<FlagKind>>(BuildAll);
+        private static readonly Lazy<IReadOnlyList<TwemojiFlag>> TwemojiLazy = new(() => All<TwemojiFlag>(TwemojiFlag.None));
+        private static readonly Lazy<IReadOnlyList<CircleFlag>> CircleLazy = new(() => All<CircleFlag>(CircleFlag.None));
+        private static readonly Lazy<IReadOnlyList<SquareFlag>> SquareLazy = new(() => All<SquareFlag>(SquareFlag.None));
+        private static readonly Lazy<IReadOnlyList<LipisFlag>> LipisLazy = new(() => All<LipisFlag>(LipisFlag.None));
 
-        /// <summary>All <see cref="FlagKind"/> members except <see cref="FlagKind.None"/>.</summary>
-        public static IReadOnlyList<FlagKind> AvailableKinds => AllLazy.Value;
+        /// <summary>All <see cref="TwemojiFlag"/> members except <see cref="TwemojiFlag.None"/>.</summary>
+        public static IReadOnlyList<TwemojiFlag> TwemojiFlags => TwemojiLazy.Value;
 
-        private static IReadOnlyList<FlagKind> BuildAll() {
-            var values = (FlagKind[])Enum.GetValues(typeof(FlagKind));
-            var list = new List<FlagKind>(values.Length);
-            foreach (var v in values) {
-                if (v != FlagKind.None) list.Add(v);
-            }
-            return list;
-        }
+        /// <summary>All <see cref="CircleFlag"/> members except <see cref="CircleFlag.None"/>.</summary>
+        public static IReadOnlyList<CircleFlag> CircleFlags => CircleLazy.Value;
+
+        /// <summary>All <see cref="SquareFlag"/> members except <see cref="SquareFlag.None"/>.</summary>
+        public static IReadOnlyList<SquareFlag> SquareFlags => SquareLazy.Value;
+
+        /// <summary>All <see cref="LipisFlag"/> members except <see cref="LipisFlag.None"/>.</summary>
+        public static IReadOnlyList<LipisFlag> LipisFlags => LipisLazy.Value;
+
+        private static IReadOnlyList<T> All<T>(T none) where T : struct, Enum =>
+            ((T[])Enum.GetValues(typeof(T)))
+                .Where(v => !EqualityComparer<T>.Default.Equals(v, none))
+                .ToArray();
     }
 }

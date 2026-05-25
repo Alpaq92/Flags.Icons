@@ -1,23 +1,15 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using System.Diagnostics;
 
 namespace Flags.Icons.Avalonia.Demo.Views {
     public class MainWindow : Window {
         public MainWindow() {
             InitializeComponent();
             Title = GetType().Assembly.GetName().Name!;
-
-            var isDebug = false;
-            CheckIfDebug(ref isDebug);
-
-            if (isDebug) this.AttachDevTools();
+            // AttachDevTools removed alongside Avalonia.Diagnostics — re-wire once a 12.x build of
+            // the diagnostics package ships (see Flags.Icons.Avalonia.Demo.csproj for context).
         }
 
         private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
-
-        [Conditional("DEBUG")]
-        private static void CheckIfDebug(ref bool isDebug) => isDebug = true;
     }
 }

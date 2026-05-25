@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Flags.Demo.Shared;
-using Flags.Icons.WinForms;
+using Flags.Icons;
 
 namespace Flags.Icons.WinForms.Demo {
     public class MainForm : Form {
@@ -38,7 +38,7 @@ namespace Flags.Icons.WinForms.Demo {
             MinimumSize = new Size(480, 360);
             Icon = LoadAppIcon();
 
-            _variantBox.Items.AddRange(new object[] { "SVG", "PNG @1x", "PNG @2x", "PNG @3x" });
+            foreach (var s in FlagCatalog.AllSources) _variantBox.Items.Add(s);
             _variantBox.SelectedIndex = 0;
 
             _searchBox.TextChanged += (_, _) => Rebuild();
@@ -96,9 +96,10 @@ namespace Flags.Icons.WinForms.Demo {
                 _grid.Controls.Clear();
                 foreach (var c in oldTiles) c.Dispose();
 
-                var variant = FlagCatalog.AllVariants[Math.Max(0, _variantBox.SelectedIndex)];
-                foreach (var entry in FlagCatalog.Filter(variant, _searchBox.Text)) {
-                    _grid.Controls.Add(BuildTile(entry));
+                var source = FlagCatalog.AllSources[Math.Max(0, _variantBox.SelectedIndex)];
+                foreach (var section in FlagCatalog.Sections(source, _searchBox.Text)) {
+                    _grid.Controls.Add(BuildSectionHeader(section.Title));
+                    foreach (var entry in section.Entries) _grid.Controls.Add(BuildTile(entry));
                 }
             } finally {
                 _grid.ResumeLayout();
@@ -126,13 +127,25 @@ namespace Flags.Icons.WinForms.Demo {
             }
         }
 
+        private Control BuildSectionHeader(string title) {
+            // Section header spans the FlowLayoutPanel width by SetFlowBreak, plus has flowed siblings.
+            var lbl = new Label {
+                Text = title,
+                AutoSize = true,
+                Font = new Font(Font.FontFamily, 11f, FontStyle.Bold),
+                Margin = new Padding(4, 12, 4, 4),
+            };
+            _grid.SetFlowBreak(lbl, true);
+            return lbl;
+        }
+
         private Control BuildTile(FlagEntry entry) {
-            var icon = new FlagIcon {
-                Kind = entry.Kind,
+            var icon = new Flags.Icons.WinForms.FlagIcon {
                 Width = 56,
                 Height = 42,
                 Anchor = AnchorStyles.None,
             };
+            ApplyEntry(icon, entry);
             var label = new Label {
                 Text = entry.Code,
                 AutoSize = false,
@@ -156,12 +169,21 @@ namespace Flags.Icons.WinForms.Demo {
 
             // Make the whole tile clickable — propagate clicks from children up to the tile.
             void OnClick(object? sender, EventArgs e) =>
-                _snippetBox.Text = $"new FlagIcon {{ Kind = FlagKind.{entry.Kind} }}";
+                _snippetBox.Text = $"new FlagIcon {{ {entry.Source} = {entry.Snippet} }}";
             tile.Click += OnClick;
             icon.Click += OnClick;
             label.Click += OnClick;
 
             return tile;
+        }
+
+        private static void ApplyEntry(Flags.Icons.WinForms.FlagIcon icon, FlagEntry entry) {
+            switch (entry.Source) {
+                case FlagSource.Twemoji: icon.Twemoji = entry.Twemoji; break;
+                case FlagSource.Circle: icon.Circle = entry.Circle; break;
+                case FlagSource.Square: icon.Square = entry.Square; break;
+                case FlagSource.Lipis: icon.Lipis = entry.Lipis; break;
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
 
 ![Flags.Icons demo](https://raw.githubusercontent.com/Alpaq92/Flags.Icons/main/flag-icons-demo.png)
 
-Country flag icons from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. **~1020 assets across 255 country codes** ship as embedded resources in the core `Flags.Icons` package — no runtime download, no file-system access.
+Flag icons from **4 upstream sources** — Twemoji (262 country + subdivision emoji), Circle (430, HatScripts), Square (417, kapowaz), Lipis (271, lipis/flag-icons 4×3) — packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. Every SVG ships as an embedded resource in the core `Flags.Icons` package — no runtime download, no file-system access.
 
 ## Install
 
@@ -17,14 +17,17 @@ Every platform package transitively pulls in `Flags.Icons` core.
 
 ## Usage
 
-`FlagKind` members encode the country code, scale (for PNGs), and format — `USSVG`, `US2xPNG`, `GB_ENG2xPNG`, etc.
+One strongly-typed enum per source: `TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`. `FlagIcon` exposes one DependencyProperty per source; set exactly one.
 
 ```xml
-<flag:FlagIcon Kind="USSVG" Width="48" Height="36" />
+<flag:FlagIcon Twemoji="US" Width="48" Height="36" />
+<flag:FlagIcon Circle="us" Width="48" Height="36" />
+<flag:FlagIcon Square="us" Width="48" Height="36" />
+<flag:FlagIcon Lipis="us" Width="48" Height="36" />
 ```
 
 ```csharp
-var flag = new FlagIcon { Kind = FlagKind.USSVG };
+var flag = new FlagIcon { Twemoji = TwemojiFlag.US };
 ```
 
 Per-stack XAML namespaces and code-first usage examples in the [full README on GitHub →](https://github.com/Alpaq92/Flags.Icons#usage)
@@ -35,4 +38,4 @@ Per-stack XAML namespaces and code-first usage examples in the [full README on G
 - 🐛 [Issues](https://github.com/Alpaq92/Flags.Icons/issues)
 - 📝 [Changelog](https://github.com/Alpaq92/Flags.Icons/blob/main/CHANGELOG.md)
 
-Source: [MIT](https://github.com/Alpaq92/Flags.Icons/blob/main/LICENSE). Flag assets retain FlagKit's [MIT license](https://github.com/madebybowtie/FlagKit/blob/master/LICENSE).
+Source: [MIT](https://github.com/Alpaq92/Flags.Icons/blob/main/LICENSE). Bundled flag SVGs from [jdecked/twemoji](https://github.com/jdecked/twemoji) (graphics CC-BY 4.0, code MIT), [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags) (MIT), [kapowaz/square-flags](https://github.com/kapowaz/square-flags) (MIT), [lipis/flag-icons](https://github.com/lipis/flag-icons) (MIT).

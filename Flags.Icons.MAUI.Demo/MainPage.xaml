@@ -11,30 +11,41 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
             <Entry Grid.Column="0" Placeholder="Search code"
                    Text="{Binding SearchText, Mode=TwoWay}" />
-            <Picker Grid.Column="1" Margin="8,0,0,0" MinimumWidthRequest="120"
-                    ItemsSource="{Binding Variants}"
-                    SelectedItem="{Binding Variant, Mode=TwoWay}" />
+            <Picker Grid.Column="1" Margin="8,0,0,0" MinimumWidthRequest="160"
+                    ItemsSource="{Binding Sources}"
+                    SelectedItem="{Binding Source, Mode=TwoWay}" />
         </Grid>
         <ScrollView Grid.Row="1">
-            <FlexLayout BindableLayout.ItemsSource="{Binding Flags}"
-                        Wrap="Wrap"
-                        Direction="Row"
-                        JustifyContent="Center"
-                        AlignItems="Start">
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Sections}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="shared:FlagEntry">
-                        <VerticalStackLayout Padding="4" WidthRequest="88">
-                            <VerticalStackLayout.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectCommand}"
-                                    CommandParameter="{Binding .}" />
-                            </VerticalStackLayout.GestureRecognizers>
-                            <flag:FlagIcon Kind="{Binding Kind}" WidthRequest="56" HeightRequest="42" HorizontalOptions="Center" />
-                            <Label Text="{Binding Code}" FontSize="11" HorizontalOptions="Center" />
+                    <DataTemplate x:DataType="shared:FlagSection">
+                        <VerticalStackLayout Margin="0,0,0,12">
+                            <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" Margin="8,4" />
+                            <FlexLayout BindableLayout.ItemsSource="{Binding Entries}"
+                                        Wrap="Wrap" Direction="Row"
+                                        JustifyContent="Center" AlignItems="Start">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="shared:FlagEntry">
+                                        <VerticalStackLayout Padding="4" WidthRequest="88">
+                                            <VerticalStackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                            </VerticalStackLayout.GestureRecognizers>
+                                            <flag:FlagIcon WidthRequest="56" HeightRequest="42" HorizontalOptions="Center"
+                                                           Twemoji="{Binding Twemoji}"
+                                                           Circle="{Binding Circle}"
+                                                           Square="{Binding Square}"
+                                                           Lipis="{Binding Lipis}" />
+                                            <Label Text="{Binding Code}" FontSize="11" HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
                         </VerticalStackLayout>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
-            </FlexLayout>
+            </VerticalStackLayout>
         </ScrollView>
         <Entry Grid.Row="2" Margin="0,8,0,0"
                Text="{Binding CopyText}"

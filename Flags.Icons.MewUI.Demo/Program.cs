@@ -2,6 +2,7 @@ using System;
 using Aprillz.MewUI;
 using Aprillz.MewUI.Controls;
 using Flags.Demo.Shared;
+using Flags.Icons;
 using Flags.Icons.MewUi;
 
 namespace Flags.Icons.MewUi.Demo {
@@ -32,16 +33,14 @@ namespace Flags.Icons.MewUi.Demo {
             _search = new TextBox().Placeholder("Search code");
             _search.OnTextChanged(_ => Rebuild());
 
+            var sourceLabels = new System.Collections.Generic.List<string>();
+            foreach (var s in FlagCatalog.AllSources) sourceLabels.Add(s.ToString());
             var variantBox = new ComboBox()
-                .Items("SVG", "PNG @1x", "PNG @2x", "PNG @3x")
+                .Items(sourceLabels.ToArray())
                 .SelectedIndex(0)
                 .OnSelectionChanged(item => {
-                    _variantIndex = (item as string) switch {
-                        "PNG @1x" => 1,
-                        "PNG @2x" => 2,
-                        "PNG @3x" => 3,
-                        _ => 0,
-                    };
+                    var idx = sourceLabels.IndexOf(item as string ?? "");
+                    _variantIndex = idx < 0 ? 0 : idx;
                     Rebuild();
                 });
 
@@ -77,9 +76,13 @@ namespace Flags.Icons.MewUi.Demo {
 
         private static void Rebuild() {
             _grid.Clear();
-            var variant = FlagCatalog.AllVariants[_variantIndex];
-            foreach (var entry in FlagCatalog.Filter(variant, _search.Text)) {
-                _grid.Add(BuildTile(entry));
+            var source = FlagCatalog.AllSources[_variantIndex];
+            foreach (var section in FlagCatalog.Sections(source, _search.Text)) {
+                if (section.Entries.Count == 0) continue;
+                var header = new Label().Text(section.Title).FontSize(14);
+                // Force the header onto its own row by setting it to a large width.
+                _grid.Add(header);
+                foreach (var entry in section.Entries) _grid.Add(BuildTile(entry));
             }
         }
 
@@ -87,12 +90,20 @@ namespace Flags.Icons.MewUi.Demo {
             var content = new StackPanel { Orientation = Orientation.Vertical, Spacing = 2 };
             content.Padding(4);
             content.AddRange(
-                FlagIcon.Create(entry.Kind, 56, 42).CenterHorizontal(),
+                BuildFlagImage(entry).CenterHorizontal(),
                 new Label().Text(entry.Code).FontSize(11).CenterHorizontal());
 
             var btn = new Button().Content(content);
-            btn.OnClick(() => _snippet.Text = $"new Image().Flag(FlagKind.{entry.Kind})");
+            btn.OnClick(() => _snippet.Text = $"new Image().Flag({entry.Snippet})");
             return btn;
         }
+
+        private static Image BuildFlagImage(FlagEntry entry) => entry.Source switch {
+            FlagSource.Twemoji => FlagIcon.Create(entry.Twemoji, 56, 42),
+            FlagSource.Circle => FlagIcon.Create(entry.Circle, 56, 42),
+            FlagSource.Square => FlagIcon.Create(entry.Square, 56, 42),
+            FlagSource.Lipis => FlagIcon.Create(entry.Lipis, 56, 42),
+            _ => FlagIcon.Create(entry.Twemoji, 56, 42),
+        };
     }
 }

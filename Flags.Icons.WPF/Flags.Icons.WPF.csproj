@@ -6,7 +6,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.WPF</PackageId>
-        <Description>WPF control that displays country flag icons sourced from madebybowtie/FlagKit (PNG @1x/@2x/@3x and SVG). WPF-specific implementation of Flags.Icons.</Description>
+        <Description>WPF control that displays flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). WPF-specific implementation of Flags.Icons.</Description>
     </PropertyGroup>
 
     <ItemGroup>

@@ -3,11 +3,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:flag="clr-namespace:Flags.Icons.WPF;assembly=Flags.Icons.WPF"
         xmlns:local="clr-namespace:Flags.Icons.WPF.Demo"
+        xmlns:shared="clr-namespace:Flags.Demo.Shared;assembly=Flags.Demo.Shared"
         Icon="/icon.ico"
         Width="900" Height="600">
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <!-- Inner template: one flag tile. All 4 source DPs are bound; only the entry's actual
+             source has a non-None value, so the FlagIcon's clear-others logic shows the right one. -->
+        <DataTemplate x:Key="FlagTile" DataType="{x:Type shared:FlagEntry}">
+            <Button Background="Transparent" BorderThickness="0" Padding="4"
+                    Click="OnFlagClick" Tag="{Binding}">
+                <StackPanel Width="88" ToolTip="{Binding Code}">
+                    <flag:FlagIcon Width="56" Height="42" HorizontalAlignment="Center"
+                                   Twemoji="{Binding Twemoji}"
+                                   Circle="{Binding Circle}"
+                                   Square="{Binding Square}"
+                                   Lipis="{Binding Lipis}" />
+                    <TextBlock Text="{Binding Code}" FontSize="11" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </DataTemplate>
+        <!-- Outer template: one section (header + tiles wrapped). -->
+        <DataTemplate x:Key="FlagSection" DataType="{x:Type shared:FlagSection}">
+            <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold" Margin="8,4" />
+                <ItemsControl ItemsSource="{Binding Entries}"
+                              ItemTemplate="{StaticResource FlagTile}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,32 +54,14 @@
             <TextBox Grid.Column="0"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="Variant:" VerticalAlignment="Center" Margin="0,0,6,0" />
-                <ComboBox ItemsSource="{Binding Variants}" SelectedItem="{Binding Variant}" MinWidth="120" />
+                <TextBlock Text="Source:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox ItemsSource="{Binding Sources}" SelectedItem="{Binding Source}" MinWidth="120" />
             </StackPanel>
         </Grid>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding Flags}" HorizontalAlignment="Center">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Background="Transparent" BorderThickness="0" Padding="4"
-                                Command="{Binding DataContext.SelectCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                Click="OnFlagClick"
-                                Tag="{Binding}">
-                            <StackPanel Width="88" ToolTip="{Binding Kind}">
-                                <flag:FlagIcon Kind="{Binding Kind}" Width="56" Height="42"
-                                               HorizontalAlignment="Center" />
-                                <TextBlock Text="{Binding Code}" FontSize="11" HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <ItemsControl ItemsSource="{Binding Sections}"
+                          ItemTemplate="{StaticResource FlagSection}"
+                          HorizontalAlignment="Center" />
         </ScrollViewer>
         <TextBox Grid.Row="2" Margin="8" Text="{Binding CopyText, Mode=OneWay}" IsReadOnly="True" />
     </Grid>
