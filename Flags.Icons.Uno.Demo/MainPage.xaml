@@ -39,9 +39,16 @@
                                 </ItemsRepeater.Layout>
                                 <ItemsRepeater.ItemTemplate>
                                     <DataTemplate x:DataType="shared:FlagEntry">
-                                        <Button Background="Transparent" BorderThickness="0" Padding="4"
+                                        <Button Background="Transparent" BorderThickness="1" BorderBrush="Transparent"
+                                                Padding="4" CornerRadius="6"
                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                 Click="OnFlagClicked" Tag="{x:Bind}">
+                                            <Button.Resources>
+                                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#1976D2" Opacity="0.25" />
+                                                <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#1976D2" />
+                                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#1976D2" Opacity="0.45" />
+                                                <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#1976D2" />
+                                            </Button.Resources>
                                             <StackPanel Orientation="Vertical" Spacing="2">
                                                 <flag:FlagIcon Width="56" Height="42"
                                                                Twemoji="{x:Bind Twemoji}"
