@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.3.0...v2.0.0) (2026-05-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* FlagKind enum, FlagKindResolver, FlagInfo, FlagFormat, FlagScale, and FlagAssetLoader.OpenStream(FlagKind) are all removed. Migration: swap <flag:FlagIcon Kind="USSVG"/> for one of <flag:FlagIcon Twemoji="US"/> / Circle="us" / Square="us" / Lipis="us" depending on the icon style you want. Code-first consumers replace FlagAssetLoader.OpenStream(FlagKind.USSVG) with FlagAssetLoader.OpenStream(TwemojiFlag.US) (overload per source).
+
+### Features
+
+* replace abandoned FlagKit with 4 modern flag-icon sources ([#21](https://github.com/Alpaq92/Flags.Icons/issues/21)) ([a82a47c](https://github.com/Alpaq92/Flags.Icons/commit/a82a47ca5e3b31830a152bfcfd517e88db8d4b74))
+* **uno-demo:** prominent hover highlight + polished demo screenshot ([#22](https://github.com/Alpaq92/Flags.Icons/issues/22)) ([db27a16](https://github.com/Alpaq92/Flags.Icons/commit/db27a16fbdc686ae33f84ae74c421ad8ddee58df))
+
+
+### Bug Fixes
+
+* align MAUI demo with library — bump Microsoft.Maui.Controls + enable compiled bindings with Source ([972196f](https://github.com/Alpaq92/Flags.Icons/commit/972196ff3fd8e86fafe071cb3f4878374d06336d))
+
 ## [1.3.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.4...v1.3.0) (2026-05-25)
 
 
