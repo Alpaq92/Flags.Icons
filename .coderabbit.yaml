@@ -1,0 +1,33 @@
+# CodeRabbit configuration — https://docs.coderabbit.ai/reference/configuration
+#
+# Behavior tuned for a solo OSS .NET multi-package repo: auto-review every
+# PR (including bot-authored ones from release-please / Dependabot), use the
+# low-noise "chill" review profile, comments-only (not blocking), and skip
+# files that are either vendored (FlagKit submodule) or auto-generated.
+
+language: en-US
+
+reviews:
+  profile: chill                       # chill = fewer nits; assertive = more aggressive
+  request_changes_workflow: false      # post comments only; never block the PR via "Request changes"
+  high_level_summary: true             # generate the PR overview comment
+  poem: false                          # skip the AI-generated poem
+  review_status: true
+  collapse_walkthrough: false
+
+  # Don't review these — vendored or generated content adds noise and burns
+  # review budget on things humans don't author.
+  path_filters:
+    - "!FlagKit/**"                    # vendored upstream submodule (madebybowtie/FlagKit)
+    - "!**/*.g.cs"                     # build-time generated (FlagKind.g.cs etc.)
+    - "!**/bin/**"
+    - "!**/obj/**"
+    - "!nupkg/**"
+
+  auto_review:
+    enabled: true
+    drafts: false                      # don't auto-review draft PRs
+    base_branches:
+      - main
+    ignore_usernames: []               # explicit empty list = review bot PRs too
+                                       # (release-please, dependabot, flagkit-refresh)
