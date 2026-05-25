@@ -9,7 +9,8 @@ language: en-US
 
 reviews:
   profile: chill                       # chill = fewer nits; assertive = more aggressive
-  request_changes_workflow: false      # post comments only; never block the PR via "Request changes"
+  request_changes_workflow: true       # let CodeRabbit submit Approve / Request-changes reviews
+                                       # (clean PRs auto-approved; supports @coderabbitai approve / resolve)
   high_level_summary: true             # generate the PR overview comment
   poem: false                          # skip the AI-generated poem
   review_status: true
