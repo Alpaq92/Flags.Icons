@@ -72,11 +72,29 @@ jobs:
             -F allow_rebase_merge=false \
             -F delete_branch_on_merge=true
 
-          echo "Settings applied. Current state:"
+          echo "Repository settings applied. Current state:"
           gh api "repos/$GITHUB_REPOSITORY" --jq '{
             allow_auto_merge,
             allow_squash_merge,
             allow_merge_commit,
             allow_rebase_merge,
             delete_branch_on_merge
+          }'
+
+          # Security toggles — each has its own dedicated endpoint (the main PATCH
+          # repo endpoint doesn't expose these). PUT enables, DELETE disables; all
+          # return 204 No Content on success. Idempotent — safe to re-run.
+          echo
+          echo "Enabling Dependabot vulnerability alerts..."
+          gh api "repos/$GITHUB_REPOSITORY/vulnerability-alerts" --method PUT
+
+          echo "Enabling Dependabot automated security fixes..."
+          gh api "repos/$GITHUB_REPOSITORY/automated-security-fixes" --method PUT
+
+          echo "Enabling private vulnerability reporting..."
+          gh api "repos/$GITHUB_REPOSITORY/private-vulnerability-reporting" --method PUT
+
+          echo "Security toggle states (advanced security view):"
+          gh api "repos/$GITHUB_REPOSITORY" --jq '{
+            security_and_analysis: .security_and_analysis
           }'
