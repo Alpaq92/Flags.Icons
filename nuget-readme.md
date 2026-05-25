@@ -21,9 +21,9 @@ One strongly-typed enum per source: `TwemojiFlag`, `CircleFlag`, `SquareFlag`, `
 
 ```xml
 <flag:FlagIcon Twemoji="US" Width="48" Height="36" />
-<flag:FlagIcon Circle="us" Width="48" Height="36" />
-<flag:FlagIcon Square="us" Width="48" Height="36" />
-<flag:FlagIcon Lipis="us" Width="48" Height="36" />
+<flag:FlagIcon Circle="US" Width="48" Height="36" />
+<flag:FlagIcon Square="US" Width="48" Height="36" />
+<flag:FlagIcon Lipis="US" Width="48" Height="36" />
 ```
 
 ```csharp

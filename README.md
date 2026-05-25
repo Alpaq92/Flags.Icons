@@ -22,7 +22,7 @@
 
 Flag icons from **4 upstream sources** — Twemoji, Circle (HatScripts), Square (kapowaz), Lipis (lipis/flag-icons) — packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every SVG ships as an embedded resource in the core `Flags.Icons` package, reachable through a per-source strongly-typed enum (`TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`). No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
 
-> **v2 note:** v1 sourced everything from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), which has been unmaintained since 2019 (no flag refreshes, no support for newer subdivision codes). v2 drops it in favour of 4 actively-maintained upstreams and replaces the single `FlagKind` enum with one typed enum per source. Migration: swap `<flag:FlagIcon Kind="USSVG"/>` for `<flag:FlagIcon Twemoji="US"/>` (or `Circle="us"` / `Square="us"` / `Lipis="us"` for the other styles). API surface details in the [Usage](#usage) section.
+> **v2 note:** v1 sourced everything from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), which has been unmaintained since 2019 (no flag refreshes, no support for newer subdivision codes). v2 drops it in favour of 4 actively-maintained upstreams and replaces the single `FlagKind` enum with one typed enum per source. Migration: swap `<flag:FlagIcon Kind="USSVG"/>` for `<flag:FlagIcon Twemoji="US"/>` (or `Circle="US"` / `Square="US"` / `Lipis="US"` for the other styles — enum members are uppercase ISO codes regardless of how the upstream stores filenames). API surface details in the [Usage](#usage) section.
 
 ## Bundled sources
 
@@ -76,8 +76,8 @@ Then:
 ```xml
 <Window xmlns:flag="clr-namespace:Flags.Icons.Avalonia;assembly=Flags.Icons.Avalonia">
     <flag:FlagIcon Twemoji="US" Width="48" Height="36" />
-    <flag:FlagIcon Circle="us" Width="48" Height="36" />
-    <Button Content="{flag:FlagIconExt Lipis=fr, Size=24}" />
+    <flag:FlagIcon Circle="US" Width="48" Height="36" />
+    <Button Content="{flag:FlagIconExt Lipis=FR, Size=24}" />
 </Window>
 ```
 
@@ -94,7 +94,7 @@ var flag = new FlagIcon { Twemoji = TwemojiFlag.US, Size = new Size(48, 36) };
 
 ```xml
 <ContentPage xmlns:flag="clr-namespace:Flags.Icons.Maui;assembly=Flags.Icons.MAUI">
-    <flag:FlagIcon Square="us" WidthRequest="48" HeightRequest="36" />
+    <flag:FlagIcon Square="US" WidthRequest="48" HeightRequest="36" />
 </ContentPage>
 ```
 
@@ -105,14 +105,14 @@ using Flags.Icons;
 using Flags.Icons.MewUi;
 
 var flag = FlagIcon.Create(TwemojiFlag.US, 48, 36);
-var img  = new Image().Flag(CircleFlag.fr).Width(24).Height(18);
+var img  = new Image().Flag(CircleFlag.FR).Width(24).Height(18);
 ```
 
 ### Uno Platform
 
 ```xml
 <Page xmlns:flag="using:Flags.Icons.Uno">
-    <flag:FlagIcon Lipis="us" Width="48" Height="36" />
+    <flag:FlagIcon Lipis="US" Width="48" Height="36" />
 </Page>
 ```
 
@@ -129,7 +129,7 @@ var flag = new FlagIcon { Twemoji = TwemojiFlag.US, Width = 48, Height = 36 };
 
 ```xml
 <Window xmlns:flag="using:Flags.Icons.WinUi">
-    <flag:FlagIcon Circle="us" Width="48" Height="36" />
+    <flag:FlagIcon Circle="US" Width="48" Height="36" />
 </Window>
 ```
 
