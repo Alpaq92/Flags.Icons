@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.4...v1.3.0) (2026-05-25)
+
+
+### Features
+
+* **ci:** CodeRabbit auto-approve + 7-day cool-off auto-merge for approved PRs ([82f7108](https://github.com/Alpaq92/Flags.Icons/commit/82f7108d69346c4bcd607535274728725773ea01))
+
+
+### Bug Fixes
+
+* verify CodeRabbit AI review on PR pipeline ([3e873a5](https://github.com/Alpaq92/Flags.Icons/commit/3e873a52428e74ca51668539a15b2e90cc37cc45))
+
 ## [1.2.4](https://github.com/Alpaq92/Flags.Icons/compare/v1.2.3...v1.2.4) (2026-05-24)
 
 
