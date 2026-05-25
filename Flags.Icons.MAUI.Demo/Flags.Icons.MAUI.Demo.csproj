@@ -19,6 +19,13 @@
 
         <NoWarn>$(NoWarn);XC0022</NoWarn>
 
+        <!-- Compile XAML bindings that have an explicit Source (e.g. the page-reference
+             pattern used by TapGestureRecognizer.Command in MainPage.xaml). Silences
+             XC0025 and gets the perf bonus of compiled binding for those bindings too.
+             Requires correct x:DataType on the binding's enclosing template, which the
+             demo already supplies. -->
+        <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-ios'">14.2</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-android'">21.0</SupportedOSPlatformVersion>
@@ -29,7 +36,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.20" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.70" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
     </ItemGroup>
 
