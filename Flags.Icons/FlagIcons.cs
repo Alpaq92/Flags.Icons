@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Flags.Icons {
     /// <summary>
@@ -24,11 +25,9 @@ namespace Flags.Icons {
         /// <summary>All <see cref="LipisFlag"/> members except <see cref="LipisFlag.None"/>.</summary>
         public static IReadOnlyList<LipisFlag> LipisFlags => LipisLazy.Value;
 
-        private static IReadOnlyList<T> All<T>(T none) where T : struct, Enum {
-            var values = (T[])Enum.GetValues(typeof(T));
-            var list = new List<T>(values.Length - 1);
-            foreach (var v in values) if (!EqualityComparer<T>.Default.Equals(v, none)) list.Add(v);
-            return list;
-        }
+        private static IReadOnlyList<T> All<T>(T none) where T : struct, Enum =>
+            ((T[])Enum.GetValues(typeof(T)))
+                .Where(v => !EqualityComparer<T>.Default.Equals(v, none))
+                .ToArray();
     }
 }
