@@ -2,26 +2,32 @@ name: Auto-open PR for trusted-author push
 
 # Closes the "push a branch → still need to click Compare & pull request" gap.
 # When the owner or a known bot pushes a non-main branch and no PR exists yet
-# for it, this workflow opens one using the latest commit's subject + body.
+# for it, this workflow opens one using the head commit's subject + body.
 #
 # Once the PR is open, the existing automation chain takes over:
 #   - auto-merge-trusted.yml   → queues `gh pr merge --auto --squash`
-#   - auto-approve-chore.yml   → approves chore-prefixed PRs
+#   - CodeRabbit               → reviews and approves / requests changes
 #   - release.yml              → on resulting main push, release-please opens
 #                                the version-bump PR and the same chain ships
 #                                the nupkgs to NuGet
 #
 # Net effect: `git push <branch>` is the only manual step in the entire
-# release pipeline for owner/bot work.
+# release pipeline for owner/bot work (modulo CodeRabbit's eventual approval
+# or admin-bypass).
 #
 # Why an actor allowlist: a leaked PAT for any other user could otherwise
 # spam the repo with PRs. Restricting to Alpaq92 + the two bots that already
 # legitimately push branches (release-please's chore branches; Dependabot's
 # dependency-update branches) is conservative without blocking real work.
+#
+# Why no checkout: the head commit's message is fetched via the GitHub REST
+# API, so the workflow needs neither a working tree nor persisted git creds —
+# smaller attack surface, faster (skips a ~3s checkout step).
 
 on:
   push:
     branches-ignore: [main]
+    tags-ignore: ['**']                  # tag pushes carry tag refs in github.ref_name; this workflow only opens branch→main PRs
 
 permissions:
   pull-requests: write
@@ -33,20 +39,23 @@ jobs:
     if: contains(fromJson('["Alpaq92", "github-actions[bot]", "dependabot[bot]"]'), github.actor)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          # Need enough history for `git log -1 --pretty` to read the head commit.
-          fetch-depth: 1
+      - name: Require RELEASE_PLEASE_PAT
+        env:
+          PAT: ${{ secrets.RELEASE_PLEASE_PAT }}
+        run: |
+          if [ -z "$PAT" ]; then
+            echo "::error::RELEASE_PLEASE_PAT secret is required so the opened PR is attributed to a real user (otherwise downstream workflows like auto-merge-trusted.yml — which only allowlists 'Alpaq92' — would silently skip the resulting PR)." >&2
+            exit 1
+          fi
 
       - name: Open PR or report existing
         env:
-          # PAT preferred so the PR-open + any downstream events fire under a
-          # real-user identity (auto-merge-trusted.yml picks it up, etc.).
-          # Falls back to GITHUB_TOKEN if the secret isn't set.
-          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
+          # PAT-only — no GITHUB_TOKEN fallback. See the require-PAT step above
+          # for the silent-failure rationale.
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT }}
           BRANCH: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
+          SHA: ${{ github.sha }}
         run: |
           existing=$(gh pr list \
             --repo "$GITHUB_REPOSITORY" \
@@ -61,8 +70,11 @@ jobs:
             exit 0
           fi
 
-          subject=$(git log -1 --pretty=%s)
-          body=$(git log -1 --pretty=%b)
+          # Read the head commit's message via REST API rather than via
+          # `git log` on a checkout. No working tree, no persisted git creds.
+          commit_msg=$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA" --jq '.commit.message')
+          subject=$(printf '%s\n' "$commit_msg" | head -n1)
+          body=$(printf '%s\n' "$commit_msg" | tail -n +3)
           if [ -z "$body" ]; then
             body="_Auto-opened by .github/workflows/auto-open-pr.yml on push by $ACTOR. Head commit had no body — title is the commit subject._"
           fi
