@@ -30,5 +30,12 @@ reviews:
     drafts: false                      # don't auto-review draft PRs
     base_branches:
       - main
-    ignore_usernames: []               # explicit empty list = review bot PRs too
-                                       # (release-please, dependabot, flagkit-refresh)
+    # Trusted authors are auto-merged on their own dedicated paths (admin via
+    # auto-merge-trusted.yml; bots via dependabot-auto-merge.yml + release.yml's
+    # built-in auto-merge step). Reviewing their PRs would only delay the merge
+    # — review value is highest on external-contributor PRs, so keep it focused
+    # there.
+    ignore_usernames:
+      - Alpaq92                        # repo owner — own changes don't need bot review
+      - dependabot[bot]                # Dependabot PRs ship via dependabot-auto-merge.yml
+      - github-actions[bot]            # release-please / other automation

@@ -1,0 +1,47 @@
+name: Auto-merge trusted-author PRs
+
+# Queues PRs opened by the repo owner for auto-merge as soon as required
+# checks pass — no CodeRabbit review, no approval, no 7-day cool-off.
+#
+# Why a separate workflow:
+#   - Bot PRs (Dependabot, release-please) already have their own immediate
+#     auto-merge in dependabot-auto-merge.yml and release.yml — keeping those
+#     unchanged. This file only fills the gap for the owner's own PRs.
+#   - The 7-day cool-off (auto-merge-approved.yml) is for *external*
+#     contributors whose PRs need a review window. The owner doesn't.
+#   - CodeRabbit's .coderabbit.yaml lists this same author set in
+#     ignore_usernames, so trusted-author PRs never get a CodeRabbit review
+#     (which would otherwise produce an APPROVED state and pull the PR into
+#     the 7-day cool-off path).
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review, synchronize]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    name: Queue auto-merge for trusted author
+    if: >
+      !github.event.pull_request.draft &&
+      contains(fromJson('["Alpaq92"]'), github.event.pull_request.user.login)
+    runs-on: ubuntu-latest
+    steps:
+      - name: gh pr merge --auto --squash
+        env:
+          # PAT preferred so the eventual merge commit fires downstream
+          # workflows (CI on the bumped main, release.yml, etc.). Falls back
+          # to GITHUB_TOKEN if the secret isn't set.
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "Queueing PR #$PR_NUMBER (by ${{ github.event.pull_request.user.login }}) for auto-merge"
+          gh pr merge "$PR_NUMBER" \
+            --repo "$GITHUB_REPOSITORY" \
+            --squash \
+            --auto \
+            --delete-branch=false
