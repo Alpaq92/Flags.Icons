@@ -1,0 +1,76 @@
+name: Auto-open PR for trusted-author push
+
+# Closes the "push a branch → still need to click Compare & pull request" gap.
+# When the owner or a known bot pushes a non-main branch and no PR exists yet
+# for it, this workflow opens one using the latest commit's subject + body.
+#
+# Once the PR is open, the existing automation chain takes over:
+#   - auto-merge-trusted.yml   → queues `gh pr merge --auto --squash`
+#   - auto-approve-chore.yml   → approves chore-prefixed PRs
+#   - release.yml              → on resulting main push, release-please opens
+#                                the version-bump PR and the same chain ships
+#                                the nupkgs to NuGet
+#
+# Net effect: `git push <branch>` is the only manual step in the entire
+# release pipeline for owner/bot work.
+#
+# Why an actor allowlist: a leaked PAT for any other user could otherwise
+# spam the repo with PRs. Restricting to Alpaq92 + the two bots that already
+# legitimately push branches (release-please's chore branches; Dependabot's
+# dependency-update branches) is conservative without blocking real work.
+
+on:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  open-pr:
+    name: Open PR if none exists
+    if: contains(fromJson('["Alpaq92", "github-actions[bot]", "dependabot[bot]"]'), github.actor)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need enough history for `git log -1 --pretty` to read the head commit.
+          fetch-depth: 1
+
+      - name: Open PR or report existing
+        env:
+          # PAT preferred so the PR-open + any downstream events fire under a
+          # real-user identity (auto-merge-trusted.yml picks it up, etc.).
+          # Falls back to GITHUB_TOKEN if the secret isn't set.
+          GH_TOKEN: ${{ secrets.RELEASE_PLEASE_PAT || secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          existing=$(gh pr list \
+            --repo "$GITHUB_REPOSITORY" \
+            --head "$BRANCH" \
+            --base main \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
+
+          if [ -n "$existing" ]; then
+            echo "PR #$existing already open for branch '$BRANCH' — nothing to do."
+            exit 0
+          fi
+
+          subject=$(git log -1 --pretty=%s)
+          body=$(git log -1 --pretty=%b)
+          if [ -z "$body" ]; then
+            body="_Auto-opened by .github/workflows/auto-open-pr.yml on push by $ACTOR. Head commit had no body — title is the commit subject._"
+          fi
+
+          echo "Opening PR for '$BRANCH' (head subject: $subject)"
+          gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --head "$BRANCH" \
+            --base main \
+            --title "$subject" \
+            --body "$body"
