@@ -213,10 +213,33 @@
                         return;
                     }
 
+                    // CSS custom-property inlining. kapowaz/square-flags ships every fill as
+                    // `var(--flag-palette-NAME, #hex)` so its SVGs are themable via CSS. Svg.Skia
+                    // (used by Eto, MAUI, MewUI, WinForms) doesn't honour var() and renders the
+                    // fill as null — every Square tile shows up blank. Substitute each var() with
+                    // its hex fallback (which is the upstream-author-blessed default colour) at
+                    // staging time so every render stack sees a portable SVG. No-op on the other
+                    // four sources, which use direct hex fills.
+                    var varRx = new Regex(@"var\(\s*--[\w-]+\s*,\s*(#[0-9a-fA-F]+)\s*\)");
+                    int varInlined = 0;
+
                     foreach (var src in Directory.EnumerateFiles(sourceDirectory, "*.svg")) {
                         var result = resolve(src);
                         if (result == null) continue;
                         var (destName, contentBytes) = result.Value;
+
+                        // Inline-substitute only if the file actually contains a var() call —
+                        // skips a UTF-8 round-trip on the 1380/1635 SVGs that don't need it.
+                        if (System.Array.IndexOf(contentBytes, (byte)'v') >= 0) {
+                            var asText = System.Text.Encoding.UTF8.GetString(contentBytes);
+                            if (asText.IndexOf("var(", StringComparison.Ordinal) >= 0) {
+                                var rewritten = varRx.Replace(asText, "$1");
+                                if (!ReferenceEquals(rewritten, asText) && rewritten != asText) {
+                                    contentBytes = System.Text.Encoding.UTF8.GetBytes(rewritten);
+                                    varInlined++;
+                                }
+                            }
+                        }
 
                         var dest = Path.Combine(stagingDirectory, destName);
                         keepers.Add(destName);
@@ -242,8 +265,8 @@
                         log.LogMessage(MessageImportance.High, "{0} → {1}: {2} country + {3} subdivision SVGs.",
                             sourceLabel, stagingDirectory, country, subdiv);
                     } else {
-                        log.LogMessage(MessageImportance.High, "{0} → {1}: {2} SVGs ({3} resolved stubs, {4} dangling).",
-                            sourceLabel, stagingDirectory, kept, resolved, dangling);
+                        log.LogMessage(MessageImportance.High, "{0} → {1}: {2} SVGs ({3} resolved stubs, {4} dangling, {5} var()-inlined).",
+                            sourceLabel, stagingDirectory, kept, resolved, dangling, varInlined);
                     }
                 });
                 ]]>
