@@ -3,8 +3,8 @@ using Flags.Icons;
 namespace Flags.Demo.Shared {
     /// <summary>
     /// Demo-grid row. Exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>,
-    /// <see cref="Lipis"/> is non-<c>None</c> — XAML can blindly bind all four to a single
-    /// <c>FlagIcon</c> and the control will pick the active one.
+    /// <see cref="Lipis"/>, <see cref="FlagHub"/> is non-<c>None</c> — XAML can blindly bind all five to a
+    /// single <c>FlagIcon</c> and the control will pick the active one.
     /// </summary>
     public class FlagEntry {
         public FlagEntry(TwemojiFlag flag) {
@@ -31,6 +31,12 @@ namespace Flags.Demo.Shared {
             Code = flag.ToString();
             Snippet = "LipisFlag." + flag;
         }
+        public FlagEntry(FlagHubFlag flag) {
+            Source = FlagSource.FlagHub;
+            FlagHub = flag;
+            Code = flag.ToString();
+            Snippet = "FlagHubFlag." + flag;
+        }
 
         public FlagSource Source { get; }
         public string Code { get; }
@@ -40,5 +46,6 @@ namespace Flags.Demo.Shared {
         public CircleFlag Circle { get; }
         public SquareFlag Square { get; }
         public LipisFlag Lipis { get; }
+        public FlagHubFlag FlagHub { get; }
     }
 }

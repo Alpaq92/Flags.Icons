@@ -1,6 +1,6 @@
 namespace Flags.Icons {
     /// <summary>
-    /// Discriminator for the 4 bundled upstream icon sources. Used by demos and any consumer that
+    /// Discriminator for the 5 bundled upstream icon sources. Used by demos and any consumer that
     /// needs to switch between sources at runtime; controls expose one DependencyProperty per source
     /// for type-safe XAML, so this enum is purely informational at the control level.
     /// </summary>
@@ -13,5 +13,7 @@ namespace Flags.Icons {
         Square,
         /// <summary>lipis/flag-icons — rectangular 4:3 flags, full upstream set.</summary>
         Lipis,
+        /// <summary>Alpaq92/FlagHub — maintained fork of madebybowtie/FlagKit; rectangular flat flags.</summary>
+        FlagHub,
     }
 }

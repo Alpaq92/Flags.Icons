@@ -7,7 +7,7 @@ using Svg.Skia;
 
 namespace Flags.Icons.MewUi {
     /// <summary>
-    /// Builds an Aprillz.MewUI <see cref="IImageSource"/> for a flag from one of the 4 bundled
+    /// Builds an Aprillz.MewUI <see cref="IImageSource"/> for a flag from one of the 5 bundled
     /// sources. One overload per source enum; pass the explicit raster size if you need a sharper
     /// result than the default 512×384.
     /// </summary>
@@ -19,6 +19,7 @@ namespace Flags.Icons.MewUi {
         public static IImageSource? For(CircleFlag flag) => For(flag, DefaultSvgRasterWidth, DefaultSvgRasterHeight);
         public static IImageSource? For(SquareFlag flag) => For(flag, DefaultSvgRasterWidth, DefaultSvgRasterHeight);
         public static IImageSource? For(LipisFlag flag) => For(flag, DefaultSvgRasterWidth, DefaultSvgRasterHeight);
+        public static IImageSource? For(FlagHubFlag flag) => For(flag, DefaultSvgRasterWidth, DefaultSvgRasterHeight);
 
         public static IImageSource? For(TwemojiFlag flag, int width, int height)
             => flag == TwemojiFlag.None ? null : Rasterize(FlagAssetLoader.OpenStream(flag), width, height);
@@ -28,6 +29,8 @@ namespace Flags.Icons.MewUi {
             => flag == SquareFlag.None ? null : Rasterize(FlagAssetLoader.OpenStream(flag), width, height);
         public static IImageSource? For(LipisFlag flag, int width, int height)
             => flag == LipisFlag.None ? null : Rasterize(FlagAssetLoader.OpenStream(flag), width, height);
+        public static IImageSource? For(FlagHubFlag flag, int width, int height)
+            => flag == FlagHubFlag.None ? null : Rasterize(FlagAssetLoader.OpenStream(flag), width, height);
 
         private static IImageSource? Rasterize(Stream? raw, int width, int height) {
             if (raw == null) return null;

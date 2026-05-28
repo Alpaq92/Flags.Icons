@@ -113,6 +113,7 @@ namespace Flags.Icons.Eto.Demo {
                 case FlagSource.Circle: icon.Circle = entry.Circle; break;
                 case FlagSource.Square: icon.Square = entry.Square; break;
                 case FlagSource.Lipis: icon.Lipis = entry.Lipis; break;
+                case FlagSource.FlagHub: icon.FlagHub = entry.FlagHub; break;
             }
         }
     }

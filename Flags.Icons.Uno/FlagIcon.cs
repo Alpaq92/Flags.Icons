@@ -9,10 +9,10 @@ using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Flags.Icons.Uno {
     /// <summary>
-    /// Uno Platform control that renders a single flag SVG from one of the 4 bundled sources.
+    /// Uno Platform control that renders a single flag SVG from one of the 5 bundled sources.
     /// Set exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>,
-    /// <see cref="Lipis"/> — assigning to one of them clears the others. SVGs are loaded through
-    /// <see cref="SvgImageSource"/> so they scale crisply at any size.
+    /// <see cref="Lipis"/>, <see cref="FlagHub"/> — assigning to one of them clears the others.
+    /// SVGs are loaded through <see cref="SvgImageSource"/> so they scale crisply at any size.
     /// </summary>
     public sealed class FlagIcon : ContentControl {
         public static readonly DependencyProperty TwemojiProperty = DependencyProperty.Register(
@@ -30,6 +30,10 @@ namespace Flags.Icons.Uno {
         public static readonly DependencyProperty LipisProperty = DependencyProperty.Register(
             nameof(Lipis), typeof(LipisFlag), typeof(FlagIcon),
             new PropertyMetadata(LipisFlag.None, (d, _) => ((FlagIcon)d).OnKindChanged(FlagSource.Lipis)));
+
+        public static readonly DependencyProperty FlagHubProperty = DependencyProperty.Register(
+            nameof(FlagHub), typeof(FlagHubFlag), typeof(FlagIcon),
+            new PropertyMetadata(FlagHubFlag.None, (d, _) => ((FlagIcon)d).OnKindChanged(FlagSource.FlagHub)));
 
         private static readonly DependencyProperty SourcePropertyInternal = DependencyProperty.Register(
             nameof(Source), typeof(ImageSource), typeof(FlagIcon), new PropertyMetadata(null));
@@ -58,6 +62,7 @@ namespace Flags.Icons.Uno {
         public CircleFlag Circle { get => (CircleFlag)GetValue(CircleProperty); set => SetValue(CircleProperty, value); }
         public SquareFlag Square { get => (SquareFlag)GetValue(SquareProperty); set => SetValue(SquareProperty, value); }
         public LipisFlag Lipis { get => (LipisFlag)GetValue(LipisProperty); set => SetValue(LipisProperty, value); }
+        public FlagHubFlag FlagHub { get => (FlagHubFlag)GetValue(FlagHubProperty); set => SetValue(FlagHubProperty, value); }
 
         public ImageSource? Source {
             get => (ImageSource?)GetValue(SourcePropertyInternal);
@@ -72,6 +77,7 @@ namespace Flags.Icons.Uno {
                 if (changed != FlagSource.Circle && Circle != CircleFlag.None) Circle = CircleFlag.None;
                 if (changed != FlagSource.Square && Square != SquareFlag.None) Square = SquareFlag.None;
                 if (changed != FlagSource.Lipis && Lipis != LipisFlag.None) Lipis = LipisFlag.None;
+                if (changed != FlagSource.FlagHub && FlagHub != FlagHubFlag.None) FlagHub = FlagHubFlag.None;
             } finally {
                 _suppress = false;
             }
@@ -95,6 +101,7 @@ namespace Flags.Icons.Uno {
             if (Circle != CircleFlag.None) return GetOrExtractUri("circle-flags", CircleFlagFiles.GetFileName(Circle), () => FlagAssetLoader.OpenStream(Circle));
             if (Square != SquareFlag.None) return GetOrExtractUri("square-flags", SquareFlagFiles.GetFileName(Square), () => FlagAssetLoader.OpenStream(Square));
             if (Lipis != LipisFlag.None) return GetOrExtractUri("flag-icons", LipisFlagFiles.GetFileName(Lipis), () => FlagAssetLoader.OpenStream(Lipis));
+            if (FlagHub != FlagHubFlag.None) return GetOrExtractUri("flaghub", FlagHubFlagFiles.GetFileName(FlagHub), () => FlagAssetLoader.OpenStream(FlagHub));
             return null;
         }
 

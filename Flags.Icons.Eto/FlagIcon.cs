@@ -9,10 +9,10 @@ using Svg.Skia;
 
 namespace Flags.Icons.Eto {
     /// <summary>
-    /// Eto.Forms <see cref="ImageView"/> subclass that renders a single flag SVG from one of the 4
+    /// Eto.Forms <see cref="ImageView"/> subclass that renders a single flag SVG from one of the 5
     /// bundled sources. Set exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>,
-    /// <see cref="Square"/>, <see cref="Lipis"/> — assigning to one of them clears the others.
-    /// SVGs are rasterized to PNG via <c>Svg.Skia</c> and cached per (source, value).
+    /// <see cref="Square"/>, <see cref="Lipis"/>, <see cref="FlagHub"/> — assigning to one of them
+    /// clears the others. SVGs are rasterized to PNG via <c>Svg.Skia</c> and cached per (source, value).
     /// </summary>
     public class FlagIcon : ImageView {
         public const int DefaultSvgRasterWidth = 512;
@@ -25,6 +25,7 @@ namespace Flags.Icons.Eto {
         private CircleFlag _circle = CircleFlag.None;
         private SquareFlag _square = SquareFlag.None;
         private LipisFlag _lipis = LipisFlag.None;
+        private FlagHubFlag _flagHub = FlagHubFlag.None;
         private bool _suppress;
 
         public TwemojiFlag Twemoji {
@@ -43,6 +44,10 @@ namespace Flags.Icons.Eto {
             get => _lipis;
             set { if (_lipis == value) return; _lipis = value; OnKindChanged(FlagSource.Lipis); }
         }
+        public FlagHubFlag FlagHub {
+            get => _flagHub;
+            set { if (_flagHub == value) return; _flagHub = value; OnKindChanged(FlagSource.FlagHub); }
+        }
 
         private void OnKindChanged(FlagSource changed) {
             if (_suppress) return;
@@ -52,6 +57,7 @@ namespace Flags.Icons.Eto {
                 if (changed != FlagSource.Circle && _circle != CircleFlag.None) _circle = CircleFlag.None;
                 if (changed != FlagSource.Square && _square != SquareFlag.None) _square = SquareFlag.None;
                 if (changed != FlagSource.Lipis && _lipis != LipisFlag.None) _lipis = LipisFlag.None;
+                if (changed != FlagSource.FlagHub && _flagHub != FlagHubFlag.None) _flagHub = FlagHubFlag.None;
             } finally {
                 _suppress = false;
             }
@@ -59,9 +65,9 @@ namespace Flags.Icons.Eto {
         }
 
         private Image? LoadImage() {
-            var key = FlagSourceDispatch.GetActive(_twemoji, _circle, _square, _lipis);
+            var key = FlagSourceDispatch.GetActive(_twemoji, _circle, _square, _lipis, _flagHub);
             if (key == null) return null;
-            return GetOrCreate(key.Value, () => FlagSourceDispatch.OpenActive(_twemoji, _circle, _square, _lipis));
+            return GetOrCreate(key.Value, () => FlagSourceDispatch.OpenActive(_twemoji, _circle, _square, _lipis, _flagHub));
         }
 
         private static Bitmap? GetOrCreate((FlagSource, int) key, Func<Stream?> openStream) {

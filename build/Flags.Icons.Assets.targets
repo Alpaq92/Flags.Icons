@@ -1,7 +1,12 @@
 <Project>
 
     <!--
-        Assets pipeline for 4 upstream flag-icon sources, all consumed live from git submodules.
+        Assets pipeline for N upstream flag-icon sources, all consumed live from git submodules.
+
+        Single source of truth: the `_FlagSource` ItemGroup below. Each row describes one upstream
+        and every downstream target (staging, embed, enum generation, compile-include) batches over
+        it via MSBuild metadata. Adding a sixth source = one new <_FlagSource> row plus a matching
+        entry in .gitmodules — no other edits to this file.
 
         Pipeline (runs on every build):
         (a) _AutoSyncSubmodulesOnFirstBuild: local only, only when submodules/ is empty. Invokes
@@ -9,16 +14,15 @@
             an XML-legal comment). CI skips this; actions/checkout with submodules: true already
             hydrated them.
         (b) _StageFlagAssets: extracts SVGs from each submodule into assets/{source}/ at repo root.
-              twemoji        : filter for country (1f1XX-1f1YY) + subdivision (1f3f4..e007f) only,
-                               rename to ISO codes (US.svg, GB-ENG.svg, ...)
-              circle-flags   : copy all, resolving symlink-stub Windows-clone artifacts in place
-              square-flags   : copy all (curated flags/, ignoring flags-original/)
-              flag-icons     : copy all from flags/4x3/
+              Mode="TwemojiFilter" : filter for country (1f1XX-1f1YY) + subdivision
+                                     (1f3f4..e007f) only, rename to ISO codes (US.svg, GB-ENG.svg, ...)
+              Mode="RawCopy"       : copy *.svg verbatim, resolving Windows-clone symlink-stub
+                                     artifacts in place
             assets/ is .gitignored. It is build output, regenerated every build.
         (c) _CollectFlagAssets: registers each staged SVG as EmbeddedResource at
             assets/{source}/{filename}.svg.
-        (d) _GenerateFlagEnums: emits 4 strongly-typed enums (TwemojiFlag/CircleFlag/SquareFlag/
-            LipisFlag) plus per-source GetFileName lookup classes.
+        (d) _GenerateFlagEnums: emits one strongly-typed enum per source plus its GetFileName
+            lookup class.
 
         Staging tasks use content-equal short-circuit (skip the write if dest already matches the
         source byte-for-byte), so subsequent builds keep stable mtimes and MSBuild can skip
@@ -30,17 +34,51 @@
 
     <PropertyGroup>
         <SubmodulesDir>$(MSBuildThisFileDirectory)..\submodules</SubmodulesDir>
-        <TwemojiUpstreamDir>$(SubmodulesDir)\twemoji\assets\svg</TwemojiUpstreamDir>
-        <CircleFlagsUpstreamDir>$(SubmodulesDir)\circle-flags\flags</CircleFlagsUpstreamDir>
-        <SquareFlagsUpstreamDir>$(SubmodulesDir)\square-flags\flags</SquareFlagsUpstreamDir>
-        <LipisFlagsUpstreamDir>$(SubmodulesDir)\flag-icons\flags\4x3</LipisFlagsUpstreamDir>
-
         <AssetsOutDir>$(MSBuildThisFileDirectory)..\assets</AssetsOutDir>
-        <TwemojiAssetDir>$(AssetsOutDir)\twemoji</TwemojiAssetDir>
-        <CircleFlagsAssetDir>$(AssetsOutDir)\circle-flags</CircleFlagsAssetDir>
-        <SquareFlagsAssetDir>$(AssetsOutDir)\square-flags</SquareFlagsAssetDir>
-        <LipisFlagsAssetDir>$(AssetsOutDir)\flag-icons</LipisFlagsAssetDir>
     </PropertyGroup>
+
+    <ItemGroup>
+        <_FlagSource Include="Twemoji">
+            <Mode>TwemojiFilter</Mode>
+            <UpstreamPath>$(SubmodulesDir)\twemoji\assets\svg</UpstreamPath>
+            <StagingDir>$(AssetsOutDir)\twemoji</StagingDir>
+            <LogicalPrefix>assets/twemoji/</LogicalPrefix>
+            <EnumName>TwemojiFlag</EnumName>
+            <SourceLabel>jdecked/twemoji</SourceLabel>
+        </_FlagSource>
+        <_FlagSource Include="Circle">
+            <Mode>RawCopy</Mode>
+            <UpstreamPath>$(SubmodulesDir)\circle-flags\flags</UpstreamPath>
+            <StagingDir>$(AssetsOutDir)\circle-flags</StagingDir>
+            <LogicalPrefix>assets/circle-flags/</LogicalPrefix>
+            <EnumName>CircleFlag</EnumName>
+            <SourceLabel>HatScripts/circle-flags</SourceLabel>
+        </_FlagSource>
+        <_FlagSource Include="Square">
+            <Mode>RawCopy</Mode>
+            <UpstreamPath>$(SubmodulesDir)\square-flags\flags</UpstreamPath>
+            <StagingDir>$(AssetsOutDir)\square-flags</StagingDir>
+            <LogicalPrefix>assets/square-flags/</LogicalPrefix>
+            <EnumName>SquareFlag</EnumName>
+            <SourceLabel>kapowaz/square-flags</SourceLabel>
+        </_FlagSource>
+        <_FlagSource Include="Lipis">
+            <Mode>RawCopy</Mode>
+            <UpstreamPath>$(SubmodulesDir)\flag-icons\flags\4x3</UpstreamPath>
+            <StagingDir>$(AssetsOutDir)\flag-icons</StagingDir>
+            <LogicalPrefix>assets/flag-icons/</LogicalPrefix>
+            <EnumName>LipisFlag</EnumName>
+            <SourceLabel>lipis/flag-icons (4x3)</SourceLabel>
+        </_FlagSource>
+        <_FlagSource Include="FlagHub">
+            <Mode>RawCopy</Mode>
+            <UpstreamPath>$(SubmodulesDir)\flaghub\Assets\SVG</UpstreamPath>
+            <StagingDir>$(AssetsOutDir)\flaghub</StagingDir>
+            <LogicalPrefix>assets/flaghub/</LogicalPrefix>
+            <EnumName>FlagHubFlag</EnumName>
+            <SourceLabel>Alpaq92/FlagHub (FlagKit fork)</SourceLabel>
+        </_FlagSource>
+    </ItemGroup>
 
     <!--
         Single staging task that processes 1..N sources in parallel via Parallel.ForEach. Each job
@@ -61,10 +99,10 @@
               substitutes the target file's actual SVG content; dangling stubs dropped with
               a warning.
 
-        Parallelism: 4-way across sources (one task thread per job). Within a source files
-        are processed sequentially since each source's `keepers` set + stats counters would
-        otherwise need locking; the contention savings are tiny because the per-file work is
-        I/O-bound and the disk is the bottleneck regardless.
+        Parallelism: one task thread per job. Within a source files are processed sequentially
+        since each source's `keepers` set + stats counters would otherwise need locking; the
+        contention savings are tiny because the per-file work is I/O-bound and the disk is the
+        bottleneck regardless.
     -->
     <UsingTask TaskName="StageFlagAssets"
                TaskFactory="RoslynCodeTaskFactory"
@@ -133,6 +171,18 @@
                         };
                     } else if (mode == "RawCopy") {
                         var stubRx = new Regex(@"^\s*[A-Za-z0-9_./-]+\.svg\s*$", RegexOptions.Singleline);
+                        // Containment root for symlink-stub dereferencing. The stub regex allows '.'
+                        // and '/' so a malicious or accidental stub like "../../outside.svg" would
+                        // otherwise let RawCopy import a file from outside the submodule. Resolve
+                        // each candidate's full path and reject anything that escapes this prefix.
+                        // Trailing separator avoids the '/foo' matching '/foobar' false-positive.
+                        var sourceRoot = Path.GetFullPath(sourceDirectory)
+                                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                            + Path.DirectorySeparatorChar;
+                        // Windows path comparisons are case-insensitive; Unix filesystems differ but
+                        // git submodule trees use stable casing in practice. OrdinalIgnoreCase across
+                        // the board matches the typical git-on-Windows checkout that contributors hit.
+                        var pathComparison = StringComparison.OrdinalIgnoreCase;
 
                         resolve = src => {
                             var srcBytes = File.ReadAllBytes(src);
@@ -140,6 +190,12 @@
                                 var text = System.Text.Encoding.UTF8.GetString(srcBytes).Trim();
                                 if (stubRx.IsMatch(text)) {
                                     var targetPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(src), text));
+                                    if (!targetPath.StartsWith(sourceRoot, pathComparison)) {
+                                        log.LogWarning("Symlink stub {0} → '{1}' resolves to '{2}', outside source root '{3}'; skipping.",
+                                            src, text, targetPath, sourceRoot);
+                                        dangling++;
+                                        return ((string, byte[])?)null;
+                                    }
                                     if (File.Exists(targetPath)) {
                                         srcBytes = File.ReadAllBytes(targetPath);
                                         resolved++;
@@ -157,10 +213,33 @@
                         return;
                     }
 
+                    // CSS custom-property inlining. kapowaz/square-flags ships every fill as
+                    // `var(--flag-palette-NAME, #hex)` so its SVGs are themable via CSS. Svg.Skia
+                    // (used by Eto, MAUI, MewUI, WinForms) doesn't honour var() and renders the
+                    // fill as null — every Square tile shows up blank. Substitute each var() with
+                    // its hex fallback (which is the upstream-author-blessed default colour) at
+                    // staging time so every render stack sees a portable SVG. No-op on the other
+                    // four sources, which use direct hex fills.
+                    var varRx = new Regex(@"var\(\s*--[\w-]+\s*,\s*(#[0-9a-fA-F]+)\s*\)");
+                    int varInlined = 0;
+
                     foreach (var src in Directory.EnumerateFiles(sourceDirectory, "*.svg")) {
                         var result = resolve(src);
                         if (result == null) continue;
                         var (destName, contentBytes) = result.Value;
+
+                        // Inline-substitute only if the file actually contains a var() call —
+                        // skips a UTF-8 round-trip on the 1380/1635 SVGs that don't need it.
+                        if (System.Array.IndexOf(contentBytes, (byte)'v') >= 0) {
+                            var asText = System.Text.Encoding.UTF8.GetString(contentBytes);
+                            if (asText.IndexOf("var(", StringComparison.Ordinal) >= 0) {
+                                var rewritten = varRx.Replace(asText, "$1");
+                                if (!ReferenceEquals(rewritten, asText) && rewritten != asText) {
+                                    contentBytes = System.Text.Encoding.UTF8.GetBytes(rewritten);
+                                    varInlined++;
+                                }
+                            }
+                        }
 
                         var dest = Path.Combine(stagingDirectory, destName);
                         keepers.Add(destName);
@@ -186,8 +265,8 @@
                         log.LogMessage(MessageImportance.High, "{0} → {1}: {2} country + {3} subdivision SVGs.",
                             sourceLabel, stagingDirectory, country, subdiv);
                     } else {
-                        log.LogMessage(MessageImportance.High, "{0} → {1}: {2} SVGs ({3} resolved stubs, {4} dangling).",
-                            sourceLabel, stagingDirectory, kept, resolved, dangling);
+                        log.LogMessage(MessageImportance.High, "{0} → {1}: {2} SVGs ({3} resolved stubs, {4} dangling, {5} var()-inlined).",
+                            sourceLabel, stagingDirectory, kept, resolved, dangling, varInlined);
                     }
                 });
                 ]]>
@@ -201,6 +280,7 @@
         <ParameterGroup>
             <EnumName ParameterType="System.String" Required="true" />
             <SourceLabel ParameterType="System.String" Required="true" />
+            <SourceId ParameterType="System.String" Required="true" />
             <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
             <OutputPath ParameterType="System.String" Required="true" />
         </ParameterGroup>
@@ -225,7 +305,11 @@
 
                 var pairs = new SortedDictionary<string, string>(StringComparer.Ordinal);
                 var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                // Files arrives as the *full* staged-SVG set across every source — filtering by
+                // SourceId in here avoids the @(Items->WithMetadataValue(..., %(Batch.X))) cross-batch
+                // pitfall in the calling target.
                 foreach (var item in Files) {
+                    if (item.GetMetadata("SourceId") != SourceId) continue;
                     var path = item.ItemSpec;
                     var stem = Path.GetFileNameWithoutExtension(path);
                     var member = ToEnumMember(stem);
@@ -284,40 +368,31 @@
               ContinueOnError="true" />
     </Target>
 
-    <!-- Local-only first-build sync: if submodules/ is empty (e.g. fresh `git clone` without the
-         recurse-submodules flag), pull them so the build has something to stage. Skipped on CI
-         (actions/checkout submodules:true already did it) and skipped if there's no .git dir
+    <!-- Local-only first-build sync: if any submodule upstream is missing (e.g. fresh `git clone`
+         without recurse-submodules), pull them all so the build has something to stage. Skipped on
+         CI (actions/checkout submodules:true already did it) and skipped if there's no .git dir
          (release tarball / NuGet restore). -->
     <Target Name="_AutoSyncSubmodulesOnFirstBuild"
             BeforeTargets="_StageFlagAssets"
-            Condition="Exists('$(MSBuildThisFileDirectory)..\.git') And '$(GITHUB_ACTIONS)' != 'true' And !Exists('$(TwemojiUpstreamDir)')">
-        <Message Text="submodules/ looks empty — running `git submodule update --init --recursive`..." Importance="high" />
+            Condition="Exists('$(MSBuildThisFileDirectory)..\.git') And '$(GITHUB_ACTIONS)' != 'true'">
+        <ItemGroup>
+            <_MissingFlagSourceUpstream Include="@(_FlagSource)" Condition="!Exists('%(UpstreamPath)')" />
+        </ItemGroup>
+        <Message Text="submodules/ looks empty — running `git submodule update --init --recursive`..."
+                 Importance="high"
+                 Condition="'@(_MissingFlagSourceUpstream)' != ''" />
         <Exec Command="git -C &quot;$(MSBuildThisFileDirectory)..&quot; submodule update --init --recursive submodules"
-              ContinueOnError="true" />
+              ContinueOnError="true"
+              Condition="'@(_MissingFlagSourceUpstream)' != ''" />
     </Target>
 
     <Target Name="_StageFlagAssets"
             BeforeTargets="_CollectFlagAssets;PrepareResourceNames;BeforeBuild">
         <ItemGroup>
-            <_FlagStagingJob Include="Twemoji">
-                <Mode>TwemojiFilter</Mode>
-                <SourceDirectory>$(TwemojiUpstreamDir)</SourceDirectory>
-                <StagingDirectory>$(TwemojiAssetDir)\</StagingDirectory>
-            </_FlagStagingJob>
-            <_FlagStagingJob Include="Circle">
-                <Mode>RawCopy</Mode>
-                <SourceDirectory>$(CircleFlagsUpstreamDir)</SourceDirectory>
-                <StagingDirectory>$(CircleFlagsAssetDir)\</StagingDirectory>
-            </_FlagStagingJob>
-            <_FlagStagingJob Include="Square">
-                <Mode>RawCopy</Mode>
-                <SourceDirectory>$(SquareFlagsUpstreamDir)</SourceDirectory>
-                <StagingDirectory>$(SquareFlagsAssetDir)\</StagingDirectory>
-            </_FlagStagingJob>
-            <_FlagStagingJob Include="Lipis">
-                <Mode>RawCopy</Mode>
-                <SourceDirectory>$(LipisFlagsUpstreamDir)</SourceDirectory>
-                <StagingDirectory>$(LipisFlagsAssetDir)\</StagingDirectory>
+            <_FlagStagingJob Include="@(_FlagSource)">
+                <Mode>%(Mode)</Mode>
+                <SourceDirectory>%(UpstreamPath)</SourceDirectory>
+                <StagingDirectory>%(StagingDir)\</StagingDirectory>
             </_FlagStagingJob>
         </ItemGroup>
         <StageFlagAssets Jobs="@(_FlagStagingJob)" />
@@ -326,55 +401,52 @@
     <Target Name="_CollectFlagAssets"
             DependsOnTargets="_StageFlagAssets"
             BeforeTargets="_GenerateFlagEnums;PrepareResourceNames;BeforeBuild">
+        <!-- Two-step: step 1 cross-batches over _FlagSource to glob each source's staging dir and
+             stamp per-source metadata. Step 2 then references each item's *own* metadata to compute
+             LogicalName — necessary because using %(Filename) inside step 1's cross-batched metadata
+             block would bind to %(_FlagSource.Filename) (= "Twemoji" etc.) instead of the matched
+             file's filename, collapsing every SVG to one collision. -->
         <ItemGroup>
-            <_TwemojiSvg Include="$(TwemojiAssetDir)\*.svg" />
-            <_CircleSvg Include="$(CircleFlagsAssetDir)\*.svg" />
-            <_SquareSvg Include="$(SquareFlagsAssetDir)\*.svg" />
-            <_LipisSvg Include="$(LipisFlagsAssetDir)\*.svg" />
-
-            <EmbeddedResource Include="@(_TwemojiSvg)">
-                <LogicalName>assets/twemoji/%(Filename)%(Extension)</LogicalName>
-            </EmbeddedResource>
-            <EmbeddedResource Include="@(_CircleSvg)">
-                <LogicalName>assets/circle-flags/%(Filename)%(Extension)</LogicalName>
-            </EmbeddedResource>
-            <EmbeddedResource Include="@(_SquareSvg)">
-                <LogicalName>assets/square-flags/%(Filename)%(Extension)</LogicalName>
-            </EmbeddedResource>
-            <EmbeddedResource Include="@(_LipisSvg)">
-                <LogicalName>assets/flag-icons/%(Filename)%(Extension)</LogicalName>
-            </EmbeddedResource>
+            <_StagedFlagSvg Include="%(_FlagSource.StagingDir)\*.svg">
+                <SourceId>%(_FlagSource.Identity)</SourceId>
+                <EnumName>%(_FlagSource.EnumName)</EnumName>
+                <LogicalPrefix>%(_FlagSource.LogicalPrefix)</LogicalPrefix>
+            </_StagedFlagSvg>
+        </ItemGroup>
+        <ItemGroup>
+            <_StagedFlagSvg>
+                <LogicalName>%(LogicalPrefix)%(Filename)%(Extension)</LogicalName>
+            </_StagedFlagSvg>
+            <EmbeddedResource Include="@(_StagedFlagSvg)" />
         </ItemGroup>
     </Target>
 
     <Target Name="_GenerateFlagEnums"
             DependsOnTargets="_CollectFlagAssets"
             BeforeTargets="BeforeCompile;CoreCompile"
-            Inputs="@(_TwemojiSvg);@(_CircleSvg);@(_SquareSvg);@(_LipisSvg);$(MSBuildThisFileFullPath)"
-            Outputs="$(IntermediateOutputPath)TwemojiFlag.g.cs;$(IntermediateOutputPath)CircleFlag.g.cs;$(IntermediateOutputPath)SquareFlag.g.cs;$(IntermediateOutputPath)LipisFlag.g.cs">
-        <GenerateFlagEnum EnumName="TwemojiFlag" SourceLabel="jdecked/twemoji" Files="@(_TwemojiSvg)" OutputPath="$(IntermediateOutputPath)TwemojiFlag.g.cs" />
-        <GenerateFlagEnum EnumName="CircleFlag" SourceLabel="HatScripts/circle-flags" Files="@(_CircleSvg)" OutputPath="$(IntermediateOutputPath)CircleFlag.g.cs" />
-        <GenerateFlagEnum EnumName="SquareFlag" SourceLabel="kapowaz/square-flags" Files="@(_SquareSvg)" OutputPath="$(IntermediateOutputPath)SquareFlag.g.cs" />
-        <GenerateFlagEnum EnumName="LipisFlag" SourceLabel="lipis/flag-icons (4x3)" Files="@(_LipisSvg)" OutputPath="$(IntermediateOutputPath)LipisFlag.g.cs" />
-
+            Inputs="@(_StagedFlagSvg);$(MSBuildThisFileFullPath)"
+            Outputs="@(_FlagSource->'$(IntermediateOutputPath)%(EnumName).g.cs')">
+        <!-- Batched: one GenerateFlagEnum call per _FlagSource item. The task filters the full
+             staged-SVG set internally by SourceId — see comment in the task body. -->
+        <GenerateFlagEnum EnumName="%(_FlagSource.EnumName)"
+                          SourceLabel="%(_FlagSource.SourceLabel)"
+                          SourceId="%(_FlagSource.Identity)"
+                          Files="@(_StagedFlagSvg)"
+                          OutputPath="$(IntermediateOutputPath)%(_FlagSource.EnumName).g.cs" />
         <ItemGroup>
-            <Compile Include="$(IntermediateOutputPath)TwemojiFlag.g.cs" />
-            <Compile Include="$(IntermediateOutputPath)CircleFlag.g.cs" />
-            <Compile Include="$(IntermediateOutputPath)SquareFlag.g.cs" />
-            <Compile Include="$(IntermediateOutputPath)LipisFlag.g.cs" />
-            <FileWrites Include="$(IntermediateOutputPath)TwemojiFlag.g.cs" />
-            <FileWrites Include="$(IntermediateOutputPath)CircleFlag.g.cs" />
-            <FileWrites Include="$(IntermediateOutputPath)SquareFlag.g.cs" />
-            <FileWrites Include="$(IntermediateOutputPath)LipisFlag.g.cs" />
+            <Compile Include="@(_FlagSource->'$(IntermediateOutputPath)%(EnumName).g.cs')" />
+            <FileWrites Include="@(_FlagSource->'$(IntermediateOutputPath)%(EnumName).g.cs')" />
         </ItemGroup>
     </Target>
 
+    <!-- Safety net for incremental builds: _GenerateFlagEnums is skipped (Inputs/Outputs up-to-date)
+         on the second+ build, so its inline Compile-add never runs. Re-add any already-generated
+         .g.cs that isn't yet in the Compile set. -->
     <Target Name="_IncludeGeneratedFlagEnums" BeforeTargets="CoreCompile">
         <ItemGroup>
-            <Compile Include="$(IntermediateOutputPath)TwemojiFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)TwemojiFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)TwemojiFlag.g.cs'))" />
-            <Compile Include="$(IntermediateOutputPath)CircleFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)CircleFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)CircleFlag.g.cs'))" />
-            <Compile Include="$(IntermediateOutputPath)SquareFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)SquareFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)SquareFlag.g.cs'))" />
-            <Compile Include="$(IntermediateOutputPath)LipisFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)LipisFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)LipisFlag.g.cs'))" />
+            <_GeneratedEnumFile Include="@(_FlagSource->'$(IntermediateOutputPath)%(EnumName).g.cs')"
+                                Condition="Exists('$(IntermediateOutputPath)%(EnumName).g.cs')" />
+            <Compile Include="@(_GeneratedEnumFile)" KeepDuplicates="false" />
         </ItemGroup>
     </Target>
 

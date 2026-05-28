@@ -10,3 +10,6 @@
 [submodule "submodules/twemoji"]
 	path = submodules/twemoji
 	url = https://github.com/jdecked/twemoji
+[submodule "submodules/flaghub"]
+	path = submodules/flaghub
+	url = https://github.com/Alpaq92/FlagHub

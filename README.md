@@ -20,9 +20,12 @@
   <img src="flag-icons-demo.png" alt="Flags.Icons demo" />
 </p>
 
-Flag icons from **4 upstream sources** — Twemoji, Circle (HatScripts), Square (kapowaz), Lipis (lipis/flag-icons) — packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every SVG ships as an embedded resource in the core `Flags.Icons` package, reachable through a per-source strongly-typed enum (`TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`). No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
+Flag icons from **5 upstream sources** — Twemoji, Circle (HatScripts), Square (kapowaz), Lipis (lipis/flag-icons), FlagHub (Alpaq92 — maintained FlagKit fork) — packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every SVG ships as an embedded resource in the core `Flags.Icons` package, reachable through a per-source strongly-typed enum (`TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`, `FlagHubFlag`). No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
 
-> **v2 note:** v1 sourced everything from [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), which has been unmaintained since 2019 (no flag refreshes, no support for newer subdivision codes). v2 drops it in favour of 4 actively-maintained upstreams and replaces the single `FlagKind` enum with one typed enum per source. Migration: swap `<flag:FlagIcon Kind="USSVG"/>` for `<flag:FlagIcon Twemoji="US"/>` (or `Circle="US"` / `Square="US"` / `Lipis="US"` for the other styles — enum members are uppercase ISO codes regardless of how the upstream stores filenames). API surface details in the [Usage](#usage) section.
+> **Version notes**
+>
+> - **v3** brings back the FlagKit-style artwork that originally shipped in v1 — now sourced from [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub), a maintained fork of the abandoned [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit) with open upstream PRs merged and packaging fixed. It joins the v2 line-up as a fifth source via the new `FlagHubFlag` enum / `FlagHub="US"` DP. **Additive, non-breaking on top of v2** — existing `Twemoji` / `Circle` / `Square` / `Lipis` code keeps working unchanged. Still breaking vs **v1**: there is no `FlagKind` enum anywhere — use `FlagHub="US"` (or any of the other four sources) instead of the old `Kind="USSVG"`.
+> - **v2** dropped the unmaintained `FlagKit` submodule (no flag refreshes since 2019, no newer subdivision codes) and replaced the single `FlagKind` enum with one typed enum per source. Migration from v1: swap `<flag:FlagIcon Kind="USSVG"/>` for `<flag:FlagIcon Twemoji="US"/>` (or `Circle="US"` / `Square="US"` / `Lipis="US"` / now `FlagHub="US"` — enum members are uppercase ISO codes regardless of how the upstream stores filenames). API surface details in the [Usage](#usage) section.
 
 ## Bundled sources
 
@@ -32,8 +35,9 @@ Flag icons from **4 upstream sources** — Twemoji, Circle (HatScripts), Square 
 | [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags) | Circular        | 430   | `CircleFlag.US`, `CircleFlag.AF_EMIRATE` |
 | [kapowaz/square-flags](https://github.com/kapowaz/square-flags)   | Square             | 417   | `SquareFlag.US`                   |
 | [lipis/flag-icons](https://github.com/lipis/flag-icons)           | Rectangular (4×3)  | 271   | `LipisFlag.US`                    |
+| [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) (FlagKit fork) | Rectangular flat | 255   | `FlagHubFlag.US`                  |
 
-All 4 sources live as git submodules under `submodules/`. The build pipeline (run on every `dotnet build`) syncs submodules → extracts SVGs into `assets/{source}/` (regenerated each build, gitignored) → embeds them as manifest resources → code-generates 4 strongly-typed enums.
+All 5 sources live as git submodules under `submodules/`. The build pipeline (run on every `dotnet build`) syncs submodules → extracts SVGs into `assets/{source}/` (regenerated each build, gitignored) → embeds them as manifest resources → code-generates 5 strongly-typed enums.
 
 ## Packages
 
@@ -61,7 +65,7 @@ Every platform package transitively pulls in `Flags.Icons` core, so you don't ne
 
 ## Usage
 
-`FlagIcon` exposes one property per source — `Twemoji`, `Circle`, `Square`, `Lipis`. Set exactly one; the others are cleared automatically.
+`FlagIcon` exposes one property per source — `Twemoji`, `Circle`, `Square`, `Lipis`, `FlagHub`. Set exactly one; the others are cleared automatically.
 
 ### Avalonia
 
@@ -77,6 +81,7 @@ Then:
 <Window xmlns:flag="clr-namespace:Flags.Icons.Avalonia;assembly=Flags.Icons.Avalonia">
     <flag:FlagIcon Twemoji="US" Width="48" Height="36" />
     <flag:FlagIcon Circle="US" Width="48" Height="36" />
+    <flag:FlagIcon FlagHub="US" Width="48" Height="36" />
     <Button Content="{flag:FlagIconExt Lipis=FR, Size=24}" />
 </Window>
 ```
@@ -151,6 +156,7 @@ foreach (var f in FlagIcons.TwemojiFlags) { /* TwemojiFlag values, e.g. US, FR, 
 foreach (var f in FlagIcons.CircleFlags)  { /* CircleFlag values  */ }
 foreach (var f in FlagIcons.SquareFlags)  { /* SquareFlag values  */ }
 foreach (var f in FlagIcons.LipisFlags)   { /* LipisFlag values   */ }
+foreach (var f in FlagIcons.FlagHubFlags) { /* FlagHubFlag values */ }
 
 // Open the raw embedded SVG
 using Stream? raw = FlagAssetLoader.OpenStream(TwemojiFlag.US);
@@ -158,11 +164,12 @@ using Stream? raw = FlagAssetLoader.OpenStream(TwemojiFlag.US);
 // Original on-disk filename (preserves upstream casing)
 string? fileName = TwemojiFlagFiles.GetFileName(TwemojiFlag.US);   // "US.svg"
 string? fileName2 = CircleFlagFiles.GetFileName(CircleFlag.US);    // "us.svg"
+string? fileName3 = FlagHubFlagFiles.GetFileName(FlagHubFlag.US);  // "US.svg"
 ```
 
 ## Demos
 
-Each UI stack ships a demo that renders every flag in a wrapping grid with country-code search, source picker (Twemoji / Circle / Square / Lipis / All), section headers, and click-to-copy markup snippets.
+Each UI stack ships a demo that renders every flag in a wrapping grid with country-code search, source picker (Twemoji / Circle / Square / Lipis / FlagHub / All), section headers, and click-to-copy markup snippets.
 
 ```bash
 dotnet run --project Flags.Icons.Avalonia.Demo
@@ -177,7 +184,7 @@ dotnet run --project Flags.Icons.WPF.Demo       # Windows
 
 ## Building from source
 
-All 4 upstream sources are git submodules under `submodules/`. Clone with submodules:
+All 5 upstream sources are git submodules under `submodules/`. Clone with submodules:
 
 ```bash
 git clone --recurse-submodules https://github.com/Alpaq92/Flags.Icons.git
@@ -197,21 +204,22 @@ git submodule update --init --recursive
 | `submodules/circle-flags/` | HatScripts/circle-flags | `flags/*.svg` (full set; ~24 Windows-clone symlink stubs auto-resolved) |
 | `submodules/square-flags/` | kapowaz/square-flags | `flags/*.svg` (curated subset, not `flags-original/`) |
 | `submodules/flag-icons/` | lipis/flag-icons | `flags/4x3/*.svg` |
+| `submodules/flaghub/` | Alpaq92/FlagHub | `Assets/SVG/*.svg` (maintained fork of madebybowtie/FlagKit) |
 
 ### Build pipeline
 
-Every `dotnet build` runs `build/Flags.Icons.Assets.targets`, which orchestrates one shared `StageFlagAssets` MSBuild task across all 4 sources:
+`build/Flags.Icons.Assets.targets` runs on every `dotnet build` and is **data-driven**: a single `<_FlagSource>` MSBuild ItemGroup describes every upstream (mode, submodule path, staging dir, logical-name prefix, enum name, human label) and every downstream target batches over it. Adding a sixth source = one new row in that ItemGroup plus a matching `<submodule>` entry in `.gitmodules` — nothing else in the targets file changes.
 
-1. **Sync submodules** — local-only auto-init if `submodules/` is empty (CI's `actions/checkout submodules:true` already does this). Manual force-sync: `dotnet msbuild Flags.Icons/Flags.Icons.csproj -t:SyncSubmodules`.
-2. **Stage assets** — one `StageFlagAssets` invocation per source. Two modes:
+1. **Sync submodules** — `_AutoSyncSubmodulesOnFirstBuild` checks each `_FlagSource`'s `UpstreamPath` and runs `git submodule update --init --recursive` if any are missing. Skipped on CI (`actions/checkout submodules:true` already did it). Manual force-sync: `dotnet msbuild Flags.Icons/Flags.Icons.csproj -t:SyncSubmodules`.
+2. **Stage assets** — `_StageFlagAssets` transforms `_FlagSource` into one `_FlagStagingJob` per source and hands the batch to a single `StageFlagAssets` task that processes them in parallel (`Parallel.ForEach`). Two modes:
    - `Mode="TwemojiFilter"` for twemoji — regex-filters for country + subdivision codepoints and renames to ISO codes.
-   - `Mode="RawCopy"` for the other 3 — copies every `*.svg` verbatim, resolving Windows-clone symlink stubs along the way.
+   - `Mode="RawCopy"` for the other 4 — copies every `*.svg` verbatim, resolving Windows-clone symlink stubs along the way.
 
    Both modes share write-if-different + prune-stale logic in the same task, so subsequent builds keep stable mtimes (incremental-friendly) and upstream-removed files disappear from `assets/`. `assets/` is **gitignored** — pure build output.
-3. **Embed** — each `assets/{source}/{filename}.svg` becomes a manifest resource of the same path.
-4. **Generate enums** — `TwemojiFlag.g.cs`, `CircleFlag.g.cs`, `SquareFlag.g.cs`, `LipisFlag.g.cs` in `obj/`, each with the enum + a `{Source}FlagFiles.GetFileName(flag)` lookup that preserves upstream filename casing. `_GenerateFlagEnums` short-circuits via `Inputs`/`Outputs` when the staged set is unchanged.
+3. **Collect & embed** — `_CollectFlagAssets` uses a two-step cross-batch: step 1 globs each source's staging dir (`Include="%(_FlagSource.StagingDir)\*.svg"`) and stamps per-source metadata on each match; step 2 then references each item's *own* `%(LogicalPrefix)` + well-known `%(Filename)%(Extension)` to build the LogicalName (the split avoids the `%(Filename)` cross-batch ambiguity where it would otherwise bind to the `_FlagSource` identity). Each staged SVG becomes an `EmbeddedResource` at `assets/{source}/{filename}.svg`.
+4. **Generate enums** — `_GenerateFlagEnums` invokes `GenerateFlagEnum` once per `_FlagSource`, producing `{EnumName}.g.cs` in `obj/` (e.g. `TwemojiFlag.g.cs`) with the enum + a `{EnumName}Files.GetFileName(flag)` lookup that preserves upstream filename casing. The task receives the full staged-SVG set plus the current `SourceId` and filters internally — simpler than fighting MSBuild's `WithMetadataValue(..., %(batch))` cross-batch resolution. `_GenerateFlagEnums` short-circuits via `Inputs`/`Outputs` when the staged set is unchanged; `_IncludeGeneratedFlagEnums` is a safety net that re-adds any existing `.g.cs` to Compile on those skipped second-build runs.
 
-Runtime helpers in `Flags.Icons` (the core package): `FlagAssetLoader.OpenStream` has 4 typed overloads (one per source enum); `FlagSourceDispatch.OpenActive`/`GetActive` is the shared dispatch the 8 per-stack `FlagIcon` controls use to walk their 4 source DPs and pick the active one.
+Runtime helpers in `Flags.Icons` (the core package): `FlagAssetLoader.OpenStream` has 5 typed overloads (one per source enum); `FlagSourceDispatch.OpenActive`/`GetActive` is the shared dispatch the 8 per-stack `FlagIcon` controls use to walk their 5 source properties (DependencyProperty / BindableProperty / StyledProperty / plain CLR property depending on the stack) and pick the active one.
 
 If a submodule is missing (e.g. CI checked out without submodules), the corresponding enum will only contain `None = 0` and a warning is emitted.
 
@@ -223,12 +231,13 @@ If a submodule is missing (e.g. CI checked out without submodules), the correspo
 - [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags) — [MIT](https://github.com/HatScripts/circle-flags/blob/master/LICENSE.md).
 - [kapowaz/square-flags](https://github.com/kapowaz/square-flags) — [MIT](https://github.com/kapowaz/square-flags/blob/main/LICENSE.md).
 - [lipis/flag-icons](https://github.com/lipis/flag-icons) — [MIT](https://github.com/lipis/flag-icons/blob/main/LICENSE).
+- [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) — [MIT](https://github.com/Alpaq92/FlagHub/blob/main/LICENSE) (maintained fork of [madebybowtie/FlagKit](https://github.com/madebybowtie/FlagKit), MIT; artwork identical to upstream).
 
 The project icon (`icon.png`) is from the [Jellyfin UX icon set](https://github.com/jellyfin/jellyfin-ux), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
 ## Credits
 
-- **Flag assets** — [jdecked/twemoji](https://github.com/jdecked/twemoji), [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags), [kapowaz/square-flags](https://github.com/kapowaz/square-flags), [lipis/flag-icons](https://github.com/lipis/flag-icons)
+- **Flag assets** — [jdecked/twemoji](https://github.com/jdecked/twemoji), [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags), [kapowaz/square-flags](https://github.com/kapowaz/square-flags), [lipis/flag-icons](https://github.com/lipis/flag-icons), [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) (FlagKit fork)
 - **Icon** — [Jellyfin UX](https://github.com/jellyfin/jellyfin-ux) (CC BY-SA 4.0)
 - **Inspiration** — [Material.Icons.Avalonia](https://github.com/SKProCH/Material.Icons) — templated-control + markup-extension pattern adapted from this project
 

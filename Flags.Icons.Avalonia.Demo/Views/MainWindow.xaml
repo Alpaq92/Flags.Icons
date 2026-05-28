@@ -72,7 +72,8 @@
                                                                    Twemoji="{Binding Twemoji}"
                                                                    Circle="{Binding Circle}"
                                                                    Square="{Binding Square}"
-                                                                   Lipis="{Binding Lipis}" />
+                                                                   Lipis="{Binding Lipis}"
+                                                                   FlagHub="{Binding FlagHub}" />
                                                 </DockPanel>
                                             </Border>
                                         </controls:SelectionWrapper>
