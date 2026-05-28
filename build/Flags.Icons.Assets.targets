@@ -171,6 +171,18 @@
                         };
                     } else if (mode == "RawCopy") {
                         var stubRx = new Regex(@"^\s*[A-Za-z0-9_./-]+\.svg\s*$", RegexOptions.Singleline);
+                        // Containment root for symlink-stub dereferencing. The stub regex allows '.'
+                        // and '/' so a malicious or accidental stub like "../../outside.svg" would
+                        // otherwise let RawCopy import a file from outside the submodule. Resolve
+                        // each candidate's full path and reject anything that escapes this prefix.
+                        // Trailing separator avoids the '/foo' matching '/foobar' false-positive.
+                        var sourceRoot = Path.GetFullPath(sourceDirectory)
+                                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                            + Path.DirectorySeparatorChar;
+                        // Windows path comparisons are case-insensitive; Unix filesystems differ but
+                        // git submodule trees use stable casing in practice. OrdinalIgnoreCase across
+                        // the board matches the typical git-on-Windows checkout that contributors hit.
+                        var pathComparison = StringComparison.OrdinalIgnoreCase;
 
                         resolve = src => {
                             var srcBytes = File.ReadAllBytes(src);
@@ -178,6 +190,12 @@
                                 var text = System.Text.Encoding.UTF8.GetString(srcBytes).Trim();
                                 if (stubRx.IsMatch(text)) {
                                     var targetPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(src), text));
+                                    if (!targetPath.StartsWith(sourceRoot, pathComparison)) {
+                                        log.LogWarning("Symlink stub {0} → '{1}' resolves to '{2}', outside source root '{3}'; skipping.",
+                                            src, text, targetPath, sourceRoot);
+                                        dangling++;
+                                        return ((string, byte[])?)null;
+                                    }
                                     if (File.Exists(targetPath)) {
                                         srcBytes = File.ReadAllBytes(targetPath);
                                         resolved++;
