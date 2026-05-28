@@ -208,16 +208,16 @@ git submodule update --init --recursive
 
 ### Build pipeline
 
-Every `dotnet build` runs `build/Flags.Icons.Assets.targets`, which orchestrates one shared `StageFlagAssets` MSBuild task across all 5 sources:
+`build/Flags.Icons.Assets.targets` runs on every `dotnet build` and is **data-driven**: a single `<_FlagSource>` MSBuild ItemGroup describes every upstream (mode, submodule path, staging dir, logical-name prefix, enum name, human label) and every downstream target batches over it. Adding a sixth source = one new row in that ItemGroup plus a matching `<submodule>` entry in `.gitmodules` — nothing else in the targets file changes.
 
-1. **Sync submodules** — local-only auto-init if `submodules/` is empty (CI's `actions/checkout submodules:true` already does this). Manual force-sync: `dotnet msbuild Flags.Icons/Flags.Icons.csproj -t:SyncSubmodules`.
-2. **Stage assets** — one `StageFlagAssets` invocation per source. Two modes:
+1. **Sync submodules** — `_AutoSyncSubmodulesOnFirstBuild` checks each `_FlagSource`'s `UpstreamPath` and runs `git submodule update --init --recursive` if any are missing. Skipped on CI (`actions/checkout submodules:true` already did it). Manual force-sync: `dotnet msbuild Flags.Icons/Flags.Icons.csproj -t:SyncSubmodules`.
+2. **Stage assets** — `_StageFlagAssets` transforms `_FlagSource` into one `_FlagStagingJob` per source and hands the batch to a single `StageFlagAssets` task that processes them in parallel (`Parallel.ForEach`). Two modes:
    - `Mode="TwemojiFilter"` for twemoji — regex-filters for country + subdivision codepoints and renames to ISO codes.
    - `Mode="RawCopy"` for the other 4 — copies every `*.svg` verbatim, resolving Windows-clone symlink stubs along the way.
 
    Both modes share write-if-different + prune-stale logic in the same task, so subsequent builds keep stable mtimes (incremental-friendly) and upstream-removed files disappear from `assets/`. `assets/` is **gitignored** — pure build output.
-3. **Embed** — each `assets/{source}/{filename}.svg` becomes a manifest resource of the same path.
-4. **Generate enums** — `TwemojiFlag.g.cs`, `CircleFlag.g.cs`, `SquareFlag.g.cs`, `LipisFlag.g.cs`, `FlagHubFlag.g.cs` in `obj/`, each with the enum + a `{Source}FlagFiles.GetFileName(flag)` lookup that preserves upstream filename casing. `_GenerateFlagEnums` short-circuits via `Inputs`/`Outputs` when the staged set is unchanged.
+3. **Collect & embed** — `_CollectFlagAssets` uses a two-step cross-batch: step 1 globs each source's staging dir (`Include="%(_FlagSource.StagingDir)\*.svg"`) and stamps per-source metadata on each match; step 2 then references each item's *own* `%(LogicalPrefix)` + well-known `%(Filename)%(Extension)` to build the LogicalName (the split avoids the `%(Filename)` cross-batch ambiguity where it would otherwise bind to the `_FlagSource` identity). Each staged SVG becomes an `EmbeddedResource` at `assets/{source}/{filename}.svg`.
+4. **Generate enums** — `_GenerateFlagEnums` invokes `GenerateFlagEnum` once per `_FlagSource`, producing `{EnumName}.g.cs` in `obj/` (e.g. `TwemojiFlag.g.cs`) with the enum + a `{EnumName}Files.GetFileName(flag)` lookup that preserves upstream filename casing. The task receives the full staged-SVG set plus the current `SourceId` and filters internally — simpler than fighting MSBuild's `WithMetadataValue(..., %(batch))` cross-batch resolution. `_GenerateFlagEnums` short-circuits via `Inputs`/`Outputs` when the staged set is unchanged; `_IncludeGeneratedFlagEnums` is a safety net that re-adds any existing `.g.cs` to Compile on those skipped second-build runs.
 
 Runtime helpers in `Flags.Icons` (the core package): `FlagAssetLoader.OpenStream` has 5 typed overloads (one per source enum); `FlagSourceDispatch.OpenActive`/`GetActive` is the shared dispatch the 8 per-stack `FlagIcon` controls use to walk their 5 source DPs and pick the active one.
 

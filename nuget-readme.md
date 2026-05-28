@@ -1,8 +1,5 @@
 # Flags.Icons
 
-[![Flags.Icons](https://img.shields.io/nuget/v/Flags.Icons.svg?label=Flags.Icons)](https://www.nuget.org/packages/Flags.Icons)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Alpaq92/Flags.Icons/blob/main/LICENSE)
-
 ![Flags.Icons demo](https://raw.githubusercontent.com/Alpaq92/Flags.Icons/main/flag-icons-demo.png)
 
 Flag icons from **5 upstream sources** — Twemoji (262 country + subdivision emoji), Circle (430, HatScripts), Square (417, kapowaz), Lipis (271, lipis/flag-icons 4×3), FlagHub (255, Alpaq92's maintained fork of madebybowtie/FlagKit) — packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. Every SVG ships as an embedded resource in the core `Flags.Icons` package — no runtime download, no file-system access.
