@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Flags.Demo.Shared;
 using Flags.Icons;
@@ -85,6 +87,41 @@ namespace Flags.Icons.WinForms.Demo {
         private static Icon? LoadAppIcon() {
             using var stream = typeof(MainForm).Assembly.GetManifestResourceStream("Flags.Icons.WinForms.Demo.icon.ico");
             return stream == null ? null : new Icon(stream);
+        }
+
+        // Form.Icon (set in the ctor) handles the title-bar slot via WinForms' internal Win32
+        // plumbing, but Windows 11's taskbar / Alt-Tab also reads ICON_BIG (32×32) explicitly —
+        // and WinForms' single-icon assignment doesn't always surface that LOD to the shell
+        // (especially on multi-image .ico files where the framework picks just one entry).
+        // Re-set both ICON_SMALL and ICON_BIG via WM_SETICON once the HWND exists so every
+        // surface picks its own LOD from the .ico directly.
+        protected override void OnHandleCreated(EventArgs e) {
+            base.OnHandleCreated(e);
+            TrySetWindowIconViaWin32();
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr LoadImageW(IntPtr hinst, string lpszName, uint uType, int cxDesired, int cyDesired, uint fuLoad);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        private const uint IMAGE_ICON = 1;
+        private const uint LR_LOADFROMFILE = 0x00000010;
+        private const uint WM_SETICON = 0x0080;
+        private const int ICON_SMALL = 0;
+        private const int ICON_BIG = 1;
+
+        private void TrySetWindowIconViaWin32() {
+            try {
+                var iconPath = Path.Combine(AppContext.BaseDirectory, "icon.ico");
+                if (!File.Exists(iconPath)) return;
+                var small = LoadImageW(IntPtr.Zero, iconPath, IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+                var big = LoadImageW(IntPtr.Zero, iconPath, IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
+                if (small != IntPtr.Zero) SendMessage(Handle, WM_SETICON, (IntPtr)ICON_SMALL, small);
+                if (big != IntPtr.Zero) SendMessage(Handle, WM_SETICON, (IntPtr)ICON_BIG, big);
+            }
+            catch { /* best-effort cosmetic; never block form load */ }
         }
 
         private void Rebuild() {
