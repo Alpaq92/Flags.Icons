@@ -46,7 +46,8 @@
                                                                Twemoji="{x:Bind Twemoji}"
                                                                Circle="{x:Bind Circle}"
                                                                Square="{x:Bind Square}"
-                                                               Lipis="{x:Bind Lipis}" />
+                                                               Lipis="{x:Bind Lipis}"
+                                                               FlagHub="{x:Bind FlagHub}" />
                                                 <TextBlock Text="{x:Bind Code}" FontSize="11" HorizontalAlignment="Center" />
                                             </StackPanel>
                                         </Button>

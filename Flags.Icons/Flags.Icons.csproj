@@ -5,7 +5,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons</PackageId>
-        <Description>Generic, UI-framework-agnostic core for the Flags.Icons.* family of packages. Bundles flag SVGs from 4 upstream sources (jdecked/twemoji, HatScripts/circle-flags, kapowaz/square-flags, lipis/flag-icons) as embedded resources and exposes 4 strongly-typed enums — TwemojiFlag, CircleFlag, SquareFlag, LipisFlag — generated at build time, plus stream-based asset loading.</Description>
+        <Description>Generic, UI-framework-agnostic core for the Flags.Icons.* family of packages. Bundles flag SVGs from 5 upstream sources (jdecked/twemoji, HatScripts/circle-flags, kapowaz/square-flags, lipis/flag-icons, Alpaq92/FlagHub — a maintained FlagKit fork) as embedded resources and exposes 5 strongly-typed enums — TwemojiFlag, CircleFlag, SquareFlag, LipisFlag, FlagHubFlag — generated at build time, plus stream-based asset loading.</Description>
     </PropertyGroup>
 
     <Import Project="..\build\Flags.Icons.Assets.targets" />

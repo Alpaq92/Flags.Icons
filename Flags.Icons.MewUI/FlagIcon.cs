@@ -6,7 +6,7 @@ using Flags.Icons;
 namespace Flags.Icons.MewUi {
     /// <summary>
     /// Convenience factory that returns a preconfigured <see cref="Image"/> rendering a flag from
-    /// one of the 4 bundled sources. Provided for naming parity with the other Flags.Icons.*
+    /// one of the 5 bundled sources. Provided for naming parity with the other Flags.Icons.*
     /// packages — Aprillz.MewUI's <see cref="Image"/> control is sealed, so this is a factory
     /// rather than a custom subclass.
     /// </summary>
@@ -18,6 +18,7 @@ namespace Flags.Icons.MewUi {
         public static Image Create(CircleFlag flag) => NewImage().Flag(flag);
         public static Image Create(SquareFlag flag) => NewImage().Flag(flag);
         public static Image Create(LipisFlag flag) => NewImage().Flag(flag);
+        public static Image Create(FlagHubFlag flag) => NewImage().Flag(flag);
 
         public static Image Create(TwemojiFlag flag, double width, double height) {
             var (w, h) = OversampleRaster(width, height);
@@ -38,6 +39,12 @@ namespace Flags.Icons.MewUi {
             return img.Width(width).Height(height);
         }
         public static Image Create(LipisFlag flag, double width, double height) {
+            var (w, h) = OversampleRaster(width, height);
+            var img = NewImage();
+            img.Source = FlagImageSource.For(flag, w, h);
+            return img.Width(width).Height(height);
+        }
+        public static Image Create(FlagHubFlag flag, double width, double height) {
             var (w, h) = OversampleRaster(width, height);
             var img = NewImage();
             img.Source = FlagImageSource.For(flag, w, h);

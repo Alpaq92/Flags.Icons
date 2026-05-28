@@ -9,10 +9,10 @@ using Svg.Skia;
 
 namespace Flags.Icons.Maui {
     /// <summary>
-    /// .NET MAUI view that renders a single flag SVG from one of the 4 bundled sources. Set exactly
-    /// one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>, <see cref="Lipis"/> —
-    /// assigning to one of them clears the others. SVGs are rasterized to PNG at the control's
-    /// actual pixel size (display density-aware) so the result stays crisp.
+    /// .NET MAUI view that renders a single flag SVG from one of the 5 bundled sources. Set exactly
+    /// one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>, <see cref="Lipis"/>,
+    /// <see cref="FlagHub"/> — assigning to one of them clears the others. SVGs are rasterized to PNG
+    /// at the control's actual pixel size (display density-aware) so the result stays crisp.
     /// </summary>
     public class FlagIcon : ContentView {
         public static readonly BindableProperty TwemojiProperty = BindableProperty.Create(
@@ -30,6 +30,10 @@ namespace Flags.Icons.Maui {
         public static readonly BindableProperty LipisProperty = BindableProperty.Create(
             nameof(Lipis), typeof(LipisFlag), typeof(FlagIcon), LipisFlag.None,
             propertyChanged: (b, _, __) => ((FlagIcon)b).OnKindChanged(FlagSource.Lipis));
+
+        public static readonly BindableProperty FlagHubProperty = BindableProperty.Create(
+            nameof(FlagHub), typeof(FlagHubFlag), typeof(FlagIcon), FlagHubFlag.None,
+            propertyChanged: (b, _, __) => ((FlagIcon)b).OnKindChanged(FlagSource.FlagHub));
 
         private readonly Image _image = new Image { Aspect = Aspect.AspectFit };
         private FlagSource? _lastSource;
@@ -49,6 +53,7 @@ namespace Flags.Icons.Maui {
         public CircleFlag Circle { get => (CircleFlag)GetValue(CircleProperty); set => SetValue(CircleProperty, value); }
         public SquareFlag Square { get => (SquareFlag)GetValue(SquareProperty); set => SetValue(SquareProperty, value); }
         public LipisFlag Lipis { get => (LipisFlag)GetValue(LipisProperty); set => SetValue(LipisProperty, value); }
+        public FlagHubFlag FlagHub { get => (FlagHubFlag)GetValue(FlagHubProperty); set => SetValue(FlagHubProperty, value); }
 
         private void OnKindChanged(FlagSource changed) {
             if (_suppress) return;
@@ -58,6 +63,7 @@ namespace Flags.Icons.Maui {
                 if (changed != FlagSource.Circle && Circle != CircleFlag.None) Circle = CircleFlag.None;
                 if (changed != FlagSource.Square && Square != SquareFlag.None) Square = SquareFlag.None;
                 if (changed != FlagSource.Lipis && Lipis != LipisFlag.None) Lipis = LipisFlag.None;
+                if (changed != FlagSource.FlagHub && FlagHub != FlagHubFlag.None) FlagHub = FlagHubFlag.None;
             } finally {
                 _suppress = false;
             }
@@ -65,7 +71,7 @@ namespace Flags.Icons.Maui {
         }
 
         private void UpdateSource() {
-            var active = FlagSourceDispatch.GetActive(Twemoji, Circle, Square, Lipis);
+            var active = FlagSourceDispatch.GetActive(Twemoji, Circle, Square, Lipis, FlagHub);
             if (active == null) {
                 _image.Source = null;
                 _lastSource = null;
@@ -87,7 +93,7 @@ namespace Flags.Icons.Maui {
             _lastWidthPx = w;
             _lastHeightPx = h;
 
-            _image.Source = ImageSource.FromStream(() => RasterizeSvg(FlagSourceDispatch.OpenActive(Twemoji, Circle, Square, Lipis), w, h));
+            _image.Source = ImageSource.FromStream(() => RasterizeSvg(FlagSourceDispatch.OpenActive(Twemoji, Circle, Square, Lipis, FlagHub), w, h));
         }
 
         private static Stream RasterizeSvg(Stream? raw, int width, int height) {

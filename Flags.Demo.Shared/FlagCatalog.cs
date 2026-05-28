@@ -7,7 +7,7 @@ namespace Flags.Demo.Shared {
     /// <summary>
     /// Demo-side catalog of every flag from every source. Always returns a list of
     /// <see cref="FlagSection"/>s so XAML and code-first demos can render section headers
-    /// uniformly (single-source views are 1 section; <see cref="DemoSource.All"/> is 4 sections).
+    /// uniformly (single-source views are 1 section; <see cref="DemoSource.All"/> is 5 sections).
     /// </summary>
     public static class FlagCatalog {
         private static readonly Lazy<IReadOnlyList<FlagEntry>> TwemojiLazy =
@@ -18,10 +18,12 @@ namespace Flags.Demo.Shared {
             new(() => FlagIcons.SquareFlags.Select(f => new FlagEntry(f)).OrderBy(e => e.Code, StringComparer.Ordinal).ToArray());
         private static readonly Lazy<IReadOnlyList<FlagEntry>> LipisLazy =
             new(() => FlagIcons.LipisFlags.Select(f => new FlagEntry(f)).OrderBy(e => e.Code, StringComparer.Ordinal).ToArray());
+        private static readonly Lazy<IReadOnlyList<FlagEntry>> FlagHubLazy =
+            new(() => FlagIcons.FlagHubFlags.Select(f => new FlagEntry(f)).OrderBy(e => e.Code, StringComparer.Ordinal).ToArray());
 
-        /// <summary>The 5 options surfaced by the demos' source-picker combobox.</summary>
+        /// <summary>The 6 options surfaced by the demos' source-picker combobox.</summary>
         public static IReadOnlyList<DemoSource> AllSources { get; } = new[] {
-            DemoSource.Twemoji, DemoSource.Circle, DemoSource.Square, DemoSource.Lipis, DemoSource.All,
+            DemoSource.Twemoji, DemoSource.Circle, DemoSource.Square, DemoSource.Lipis, DemoSource.FlagHub, DemoSource.All,
         };
 
         public static IReadOnlyList<FlagSection> Sections(DemoSource source, string? search) {
@@ -31,6 +33,7 @@ namespace Flags.Demo.Shared {
                     Make("Circle (HatScripts)", CircleLazy.Value, search),
                     Make("Square (kapowaz)", SquareLazy.Value, search),
                     Make("Lipis (lipis/flag-icons 4x3)", LipisLazy.Value, search),
+                    Make("FlagHub (Alpaq92 — FlagKit fork)", FlagHubLazy.Value, search),
                 };
             }
             var (title, entries) = source switch {
@@ -38,6 +41,7 @@ namespace Flags.Demo.Shared {
                 DemoSource.Circle => ("Circle (HatScripts)", CircleLazy.Value),
                 DemoSource.Square => ("Square (kapowaz)", SquareLazy.Value),
                 DemoSource.Lipis => ("Lipis (lipis/flag-icons 4x3)", LipisLazy.Value),
+                DemoSource.FlagHub => ("FlagHub (Alpaq92 — FlagKit fork)", FlagHubLazy.Value),
                 _ => (string.Empty, (IReadOnlyList<FlagEntry>)Array.Empty<FlagEntry>()),
             };
             return new[] { Make(title, entries, search) };

@@ -103,6 +103,7 @@ namespace Flags.Icons.MewUi.Demo {
             FlagSource.Circle => FlagIcon.Create(entry.Circle, 56, 42),
             FlagSource.Square => FlagIcon.Create(entry.Square, 56, 42),
             FlagSource.Lipis => FlagIcon.Create(entry.Lipis, 56, 42),
+            FlagSource.FlagHub => FlagIcon.Create(entry.FlagHub, 56, 42),
             _ => FlagIcon.Create(entry.Twemoji, 56, 42),
         };
     }

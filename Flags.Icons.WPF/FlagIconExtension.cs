@@ -12,6 +12,7 @@ namespace Flags.Icons.WPF {
         public CircleFlag Circle { get; set; } = CircleFlag.None;
         public SquareFlag Square { get; set; } = SquareFlag.None;
         public LipisFlag Lipis { get; set; } = LipisFlag.None;
+        public FlagHubFlag FlagHub { get; set; } = FlagHubFlag.None;
         public double? Size { get; set; }
 
         public override object ProvideValue(IServiceProvider serviceProvider) {
@@ -20,6 +21,7 @@ namespace Flags.Icons.WPF {
             else if (Circle != CircleFlag.None) icon.Circle = Circle;
             else if (Square != SquareFlag.None) icon.Square = Square;
             else if (Lipis != LipisFlag.None) icon.Lipis = Lipis;
+            else if (FlagHub != FlagHubFlag.None) icon.FlagHub = FlagHub;
             if (Size.HasValue) { icon.Width = Size.Value; icon.Height = Size.Value; }
             return icon;
         }

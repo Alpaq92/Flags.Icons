@@ -11,9 +11,9 @@ using Svg.Skia;
 namespace Flags.Icons.WinForms {
     /// <summary>
     /// Windows Forms <see cref="PictureBox"/> subclass that renders a single flag SVG from one of the
-    /// 4 bundled sources. Set exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>,
-    /// <see cref="Square"/>, <see cref="Lipis"/> — assigning to one of them clears the others.
-    /// SVGs are rasterized to PNG via <c>Svg.Skia</c> at <see cref="DefaultSvgRasterWidth"/>×
+    /// 5 bundled sources. Set exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>,
+    /// <see cref="Square"/>, <see cref="Lipis"/>, <see cref="FlagHub"/> — assigning to one of them
+    /// clears the others. SVGs are rasterized to PNG via <c>Svg.Skia</c> at <see cref="DefaultSvgRasterWidth"/>×
     /// <see cref="DefaultSvgRasterHeight"/> and cached per (source, value) so repeated layouts
     /// don't re-rasterize.
     /// </summary>
@@ -28,6 +28,7 @@ namespace Flags.Icons.WinForms {
         private CircleFlag _circle = CircleFlag.None;
         private SquareFlag _square = SquareFlag.None;
         private LipisFlag _lipis = LipisFlag.None;
+        private FlagHubFlag _flagHub = FlagHubFlag.None;
 
         public FlagIcon() {
             SizeMode = PictureBoxSizeMode.Zoom;
@@ -53,6 +54,11 @@ namespace Flags.Icons.WinForms {
             get => _lipis;
             set { if (_lipis == value) return; _lipis = value; OnKindChanged(FlagSource.Lipis); }
         }
+        [DefaultValue(FlagHubFlag.None)]
+        public FlagHubFlag FlagHub {
+            get => _flagHub;
+            set { if (_flagHub == value) return; _flagHub = value; OnKindChanged(FlagSource.FlagHub); }
+        }
 
         private bool _suppress;
 
@@ -64,6 +70,7 @@ namespace Flags.Icons.WinForms {
                 if (changed != FlagSource.Circle && _circle != CircleFlag.None) _circle = CircleFlag.None;
                 if (changed != FlagSource.Square && _square != SquareFlag.None) _square = SquareFlag.None;
                 if (changed != FlagSource.Lipis && _lipis != LipisFlag.None) _lipis = LipisFlag.None;
+                if (changed != FlagSource.FlagHub && _flagHub != FlagHubFlag.None) _flagHub = FlagHubFlag.None;
             } finally {
                 _suppress = false;
             }
@@ -72,9 +79,9 @@ namespace Flags.Icons.WinForms {
         }
 
         private Image? LoadImage() {
-            var active = FlagSourceDispatch.GetActive(_twemoji, _circle, _square, _lipis);
+            var active = FlagSourceDispatch.GetActive(_twemoji, _circle, _square, _lipis, _flagHub);
             if (active == null) return null;
-            var bytes = GetOrCreateSvgPng(active.Value, () => FlagSourceDispatch.OpenActive(_twemoji, _circle, _square, _lipis));
+            var bytes = GetOrCreateSvgPng(active.Value, () => FlagSourceDispatch.OpenActive(_twemoji, _circle, _square, _lipis, _flagHub));
             if (bytes == null) return null;
             // Use a copy that owns its memory so the Image survives even if the cache is
             // mutated; Image.FromStream requires the stream to stay open for the lifetime

@@ -5,7 +5,9 @@
 
 ![Flags.Icons demo](https://raw.githubusercontent.com/Alpaq92/Flags.Icons/main/flag-icons-demo.png)
 
-Flag icons from **4 upstream sources** — Twemoji (262 country + subdivision emoji), Circle (430, HatScripts), Square (417, kapowaz), Lipis (271, lipis/flag-icons 4×3) — packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. Every SVG ships as an embedded resource in the core `Flags.Icons` package — no runtime download, no file-system access.
+Flag icons from **5 upstream sources** — Twemoji (262 country + subdivision emoji), Circle (430, HatScripts), Square (417, kapowaz), Lipis (271, lipis/flag-icons 4×3), FlagHub (255, Alpaq92's maintained fork of madebybowtie/FlagKit) — packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. Every SVG ships as an embedded resource in the core `Flags.Icons` package — no runtime download, no file-system access.
+
+> **v3:** the FlagKit-style artwork from v1 is back, sourced from the maintained [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) fork and surfaced as a fifth source (`FlagHub="US"` / `FlagHubFlag.US`). Additive on top of v2, still breaking vs v1 (no `FlagKind` enum — use one of the five typed source DPs).
 
 ## Install
 
@@ -17,13 +19,14 @@ Every platform package transitively pulls in `Flags.Icons` core.
 
 ## Usage
 
-One strongly-typed enum per source: `TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`. `FlagIcon` exposes one DependencyProperty per source; set exactly one.
+One strongly-typed enum per source: `TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`, `FlagHubFlag`. `FlagIcon` exposes one DependencyProperty per source; set exactly one.
 
 ```xml
 <flag:FlagIcon Twemoji="US" Width="48" Height="36" />
-<flag:FlagIcon Circle="US" Width="48" Height="36" />
-<flag:FlagIcon Square="US" Width="48" Height="36" />
-<flag:FlagIcon Lipis="US" Width="48" Height="36" />
+<flag:FlagIcon Circle="US"  Width="48" Height="36" />
+<flag:FlagIcon Square="US"  Width="48" Height="36" />
+<flag:FlagIcon Lipis="US"   Width="48" Height="36" />
+<flag:FlagIcon FlagHub="US" Width="48" Height="36" />
 ```
 
 ```csharp
@@ -38,4 +41,4 @@ Per-stack XAML namespaces and code-first usage examples in the [full README on G
 - 🐛 [Issues](https://github.com/Alpaq92/Flags.Icons/issues)
 - 📝 [Changelog](https://github.com/Alpaq92/Flags.Icons/blob/main/CHANGELOG.md)
 
-Source: [MIT](https://github.com/Alpaq92/Flags.Icons/blob/main/LICENSE). Bundled flag SVGs from [jdecked/twemoji](https://github.com/jdecked/twemoji) (graphics CC-BY 4.0, code MIT), [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags) (MIT), [kapowaz/square-flags](https://github.com/kapowaz/square-flags) (MIT), [lipis/flag-icons](https://github.com/lipis/flag-icons) (MIT).
+Source: [MIT](https://github.com/Alpaq92/Flags.Icons/blob/main/LICENSE). Bundled flag SVGs from [jdecked/twemoji](https://github.com/jdecked/twemoji) (graphics CC-BY 4.0, code MIT), [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags) (MIT), [kapowaz/square-flags](https://github.com/kapowaz/square-flags) (MIT), [lipis/flag-icons](https://github.com/lipis/flag-icons) (MIT), [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) (MIT, FlagKit fork).

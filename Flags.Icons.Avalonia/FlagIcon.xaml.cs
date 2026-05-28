@@ -5,9 +5,9 @@ using Avalonia.Svg.Skia;
 
 namespace Flags.Icons.Avalonia {
     /// <summary>
-    /// Avalonia templated control that renders a single flag SVG from one of the 4 bundled sources.
+    /// Avalonia templated control that renders a single flag SVG from one of the 5 bundled sources.
     /// Set exactly one of <see cref="Twemoji"/>, <see cref="Circle"/>, <see cref="Square"/>,
-    /// <see cref="Lipis"/> — assigning to one of them clears the others.
+    /// <see cref="Lipis"/>, <see cref="FlagHub"/> — assigning to one of them clears the others.
     /// </summary>
     public class FlagIcon : TemplatedControl {
         public static readonly StyledProperty<TwemojiFlag> TwemojiProperty =
@@ -22,6 +22,9 @@ namespace Flags.Icons.Avalonia {
         public static readonly StyledProperty<LipisFlag> LipisProperty =
             AvaloniaProperty.Register<FlagIcon, LipisFlag>(nameof(Lipis), LipisFlag.None);
 
+        public static readonly StyledProperty<FlagHubFlag> FlagHubProperty =
+            AvaloniaProperty.Register<FlagIcon, FlagHubFlag>(nameof(FlagHub), FlagHubFlag.None);
+
         public static readonly DirectProperty<FlagIcon, IImage?> SourceProperty =
             AvaloniaProperty.RegisterDirect<FlagIcon, IImage?>(nameof(Source), icon => icon.Source);
 
@@ -30,12 +33,14 @@ namespace Flags.Icons.Avalonia {
             CircleProperty.Changed.AddClassHandler<FlagIcon>((x, _) => x.OnKindChanged(FlagSource.Circle));
             SquareProperty.Changed.AddClassHandler<FlagIcon>((x, _) => x.OnKindChanged(FlagSource.Square));
             LipisProperty.Changed.AddClassHandler<FlagIcon>((x, _) => x.OnKindChanged(FlagSource.Lipis));
+            FlagHubProperty.Changed.AddClassHandler<FlagIcon>((x, _) => x.OnKindChanged(FlagSource.FlagHub));
         }
 
         public TwemojiFlag Twemoji { get => GetValue(TwemojiProperty); set => SetValue(TwemojiProperty, value); }
         public CircleFlag Circle { get => GetValue(CircleProperty); set => SetValue(CircleProperty, value); }
         public SquareFlag Square { get => GetValue(SquareProperty); set => SetValue(SquareProperty, value); }
         public LipisFlag Lipis { get => GetValue(LipisProperty); set => SetValue(LipisProperty, value); }
+        public FlagHubFlag FlagHub { get => GetValue(FlagHubProperty); set => SetValue(FlagHubProperty, value); }
 
         private IImage? _source;
         public IImage? Source {
@@ -53,6 +58,7 @@ namespace Flags.Icons.Avalonia {
                 if (changed != FlagSource.Circle && Circle != CircleFlag.None) Circle = CircleFlag.None;
                 if (changed != FlagSource.Square && Square != SquareFlag.None) Square = SquareFlag.None;
                 if (changed != FlagSource.Lipis && Lipis != LipisFlag.None) Lipis = LipisFlag.None;
+                if (changed != FlagSource.FlagHub && FlagHub != FlagHubFlag.None) FlagHub = FlagHubFlag.None;
             } finally {
                 _suppress = false;
             }
@@ -65,7 +71,7 @@ namespace Flags.Icons.Avalonia {
         }
 
         private void UpdateSource() {
-            using var stream = FlagSourceDispatch.OpenActive(Twemoji, Circle, Square, Lipis);
+            using var stream = FlagSourceDispatch.OpenActive(Twemoji, Circle, Square, Lipis, FlagHub);
             Source = stream == null ? null : new SvgImage { Source = SvgSource.LoadFromStream(stream) };
         }
     }

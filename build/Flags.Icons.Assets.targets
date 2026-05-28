@@ -1,7 +1,7 @@
 <Project>
 
     <!--
-        Assets pipeline for 4 upstream flag-icon sources, all consumed live from git submodules.
+        Assets pipeline for 5 upstream flag-icon sources, all consumed live from git submodules.
 
         Pipeline (runs on every build):
         (a) _AutoSyncSubmodulesOnFirstBuild: local only, only when submodules/ is empty. Invokes
@@ -14,11 +14,12 @@
               circle-flags   : copy all, resolving symlink-stub Windows-clone artifacts in place
               square-flags   : copy all (curated flags/, ignoring flags-original/)
               flag-icons     : copy all from flags/4x3/
+              flaghub        : copy all from Assets/SVG/ (FlagKit fork, maintained)
             assets/ is .gitignored. It is build output, regenerated every build.
         (c) _CollectFlagAssets: registers each staged SVG as EmbeddedResource at
             assets/{source}/{filename}.svg.
-        (d) _GenerateFlagEnums: emits 4 strongly-typed enums (TwemojiFlag/CircleFlag/SquareFlag/
-            LipisFlag) plus per-source GetFileName lookup classes.
+        (d) _GenerateFlagEnums: emits 5 strongly-typed enums (TwemojiFlag/CircleFlag/SquareFlag/
+            LipisFlag/FlagHubFlag) plus per-source GetFileName lookup classes.
 
         Staging tasks use content-equal short-circuit (skip the write if dest already matches the
         source byte-for-byte), so subsequent builds keep stable mtimes and MSBuild can skip
@@ -34,12 +35,14 @@
         <CircleFlagsUpstreamDir>$(SubmodulesDir)\circle-flags\flags</CircleFlagsUpstreamDir>
         <SquareFlagsUpstreamDir>$(SubmodulesDir)\square-flags\flags</SquareFlagsUpstreamDir>
         <LipisFlagsUpstreamDir>$(SubmodulesDir)\flag-icons\flags\4x3</LipisFlagsUpstreamDir>
+        <FlagHubUpstreamDir>$(SubmodulesDir)\flaghub\Assets\SVG</FlagHubUpstreamDir>
 
         <AssetsOutDir>$(MSBuildThisFileDirectory)..\assets</AssetsOutDir>
         <TwemojiAssetDir>$(AssetsOutDir)\twemoji</TwemojiAssetDir>
         <CircleFlagsAssetDir>$(AssetsOutDir)\circle-flags</CircleFlagsAssetDir>
         <SquareFlagsAssetDir>$(AssetsOutDir)\square-flags</SquareFlagsAssetDir>
         <LipisFlagsAssetDir>$(AssetsOutDir)\flag-icons</LipisFlagsAssetDir>
+        <FlagHubAssetDir>$(AssetsOutDir)\flaghub</FlagHubAssetDir>
     </PropertyGroup>
 
     <!--
@@ -319,6 +322,11 @@
                 <SourceDirectory>$(LipisFlagsUpstreamDir)</SourceDirectory>
                 <StagingDirectory>$(LipisFlagsAssetDir)\</StagingDirectory>
             </_FlagStagingJob>
+            <_FlagStagingJob Include="FlagHub">
+                <Mode>RawCopy</Mode>
+                <SourceDirectory>$(FlagHubUpstreamDir)</SourceDirectory>
+                <StagingDirectory>$(FlagHubAssetDir)\</StagingDirectory>
+            </_FlagStagingJob>
         </ItemGroup>
         <StageFlagAssets Jobs="@(_FlagStagingJob)" />
     </Target>
@@ -331,6 +339,7 @@
             <_CircleSvg Include="$(CircleFlagsAssetDir)\*.svg" />
             <_SquareSvg Include="$(SquareFlagsAssetDir)\*.svg" />
             <_LipisSvg Include="$(LipisFlagsAssetDir)\*.svg" />
+            <_FlagHubSvg Include="$(FlagHubAssetDir)\*.svg" />
 
             <EmbeddedResource Include="@(_TwemojiSvg)">
                 <LogicalName>assets/twemoji/%(Filename)%(Extension)</LogicalName>
@@ -344,28 +353,34 @@
             <EmbeddedResource Include="@(_LipisSvg)">
                 <LogicalName>assets/flag-icons/%(Filename)%(Extension)</LogicalName>
             </EmbeddedResource>
+            <EmbeddedResource Include="@(_FlagHubSvg)">
+                <LogicalName>assets/flaghub/%(Filename)%(Extension)</LogicalName>
+            </EmbeddedResource>
         </ItemGroup>
     </Target>
 
     <Target Name="_GenerateFlagEnums"
             DependsOnTargets="_CollectFlagAssets"
             BeforeTargets="BeforeCompile;CoreCompile"
-            Inputs="@(_TwemojiSvg);@(_CircleSvg);@(_SquareSvg);@(_LipisSvg);$(MSBuildThisFileFullPath)"
-            Outputs="$(IntermediateOutputPath)TwemojiFlag.g.cs;$(IntermediateOutputPath)CircleFlag.g.cs;$(IntermediateOutputPath)SquareFlag.g.cs;$(IntermediateOutputPath)LipisFlag.g.cs">
+            Inputs="@(_TwemojiSvg);@(_CircleSvg);@(_SquareSvg);@(_LipisSvg);@(_FlagHubSvg);$(MSBuildThisFileFullPath)"
+            Outputs="$(IntermediateOutputPath)TwemojiFlag.g.cs;$(IntermediateOutputPath)CircleFlag.g.cs;$(IntermediateOutputPath)SquareFlag.g.cs;$(IntermediateOutputPath)LipisFlag.g.cs;$(IntermediateOutputPath)FlagHubFlag.g.cs">
         <GenerateFlagEnum EnumName="TwemojiFlag" SourceLabel="jdecked/twemoji" Files="@(_TwemojiSvg)" OutputPath="$(IntermediateOutputPath)TwemojiFlag.g.cs" />
         <GenerateFlagEnum EnumName="CircleFlag" SourceLabel="HatScripts/circle-flags" Files="@(_CircleSvg)" OutputPath="$(IntermediateOutputPath)CircleFlag.g.cs" />
         <GenerateFlagEnum EnumName="SquareFlag" SourceLabel="kapowaz/square-flags" Files="@(_SquareSvg)" OutputPath="$(IntermediateOutputPath)SquareFlag.g.cs" />
         <GenerateFlagEnum EnumName="LipisFlag" SourceLabel="lipis/flag-icons (4x3)" Files="@(_LipisSvg)" OutputPath="$(IntermediateOutputPath)LipisFlag.g.cs" />
+        <GenerateFlagEnum EnumName="FlagHubFlag" SourceLabel="Alpaq92/FlagHub (FlagKit fork)" Files="@(_FlagHubSvg)" OutputPath="$(IntermediateOutputPath)FlagHubFlag.g.cs" />
 
         <ItemGroup>
             <Compile Include="$(IntermediateOutputPath)TwemojiFlag.g.cs" />
             <Compile Include="$(IntermediateOutputPath)CircleFlag.g.cs" />
             <Compile Include="$(IntermediateOutputPath)SquareFlag.g.cs" />
             <Compile Include="$(IntermediateOutputPath)LipisFlag.g.cs" />
+            <Compile Include="$(IntermediateOutputPath)FlagHubFlag.g.cs" />
             <FileWrites Include="$(IntermediateOutputPath)TwemojiFlag.g.cs" />
             <FileWrites Include="$(IntermediateOutputPath)CircleFlag.g.cs" />
             <FileWrites Include="$(IntermediateOutputPath)SquareFlag.g.cs" />
             <FileWrites Include="$(IntermediateOutputPath)LipisFlag.g.cs" />
+            <FileWrites Include="$(IntermediateOutputPath)FlagHubFlag.g.cs" />
         </ItemGroup>
     </Target>
 
@@ -375,6 +390,7 @@
             <Compile Include="$(IntermediateOutputPath)CircleFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)CircleFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)CircleFlag.g.cs'))" />
             <Compile Include="$(IntermediateOutputPath)SquareFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)SquareFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)SquareFlag.g.cs'))" />
             <Compile Include="$(IntermediateOutputPath)LipisFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)LipisFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)LipisFlag.g.cs'))" />
+            <Compile Include="$(IntermediateOutputPath)FlagHubFlag.g.cs" Condition="Exists('$(IntermediateOutputPath)FlagHubFlag.g.cs') And !@(Compile->AnyHaveMetadataValue('Identity', '$(IntermediateOutputPath)FlagHubFlag.g.cs'))" />
         </ItemGroup>
     </Target>
 

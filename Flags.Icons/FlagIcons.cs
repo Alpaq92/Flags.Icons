@@ -12,6 +12,7 @@ namespace Flags.Icons {
         private static readonly Lazy<IReadOnlyList<CircleFlag>> CircleLazy = new(() => All<CircleFlag>(CircleFlag.None));
         private static readonly Lazy<IReadOnlyList<SquareFlag>> SquareLazy = new(() => All<SquareFlag>(SquareFlag.None));
         private static readonly Lazy<IReadOnlyList<LipisFlag>> LipisLazy = new(() => All<LipisFlag>(LipisFlag.None));
+        private static readonly Lazy<IReadOnlyList<FlagHubFlag>> FlagHubLazy = new(() => All<FlagHubFlag>(FlagHubFlag.None));
 
         /// <summary>All <see cref="TwemojiFlag"/> members except <see cref="TwemojiFlag.None"/>.</summary>
         public static IReadOnlyList<TwemojiFlag> TwemojiFlags => TwemojiLazy.Value;
@@ -24,6 +25,9 @@ namespace Flags.Icons {
 
         /// <summary>All <see cref="LipisFlag"/> members except <see cref="LipisFlag.None"/>.</summary>
         public static IReadOnlyList<LipisFlag> LipisFlags => LipisLazy.Value;
+
+        /// <summary>All <see cref="FlagHubFlag"/> members except <see cref="FlagHubFlag.None"/>.</summary>
+        public static IReadOnlyList<FlagHubFlag> FlagHubFlags => FlagHubLazy.Value;
 
         private static IReadOnlyList<T> All<T>(T none) where T : struct, Enum =>
             ((T[])Enum.GetValues(typeof(T)))

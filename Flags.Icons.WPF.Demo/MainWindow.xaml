@@ -20,7 +20,8 @@
                                    Twemoji="{Binding Twemoji}"
                                    Circle="{Binding Circle}"
                                    Square="{Binding Square}"
-                                   Lipis="{Binding Lipis}" />
+                                   Lipis="{Binding Lipis}"
+                                   FlagHub="{Binding FlagHub}" />
                     <TextBlock Text="{Binding Code}" FontSize="11" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
