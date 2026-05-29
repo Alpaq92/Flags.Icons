@@ -38,6 +38,11 @@ jobs:
       - name: Checkout main with submodules at their pinned commits
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
+          # Pin to main explicitly: without this, workflow_dispatch would
+          # checkout whichever ref the maintainer picked from the UI dropdown
+          # (the action's default is github.ref), and the bump PR would end
+          # up based on the wrong branch.
+          ref: main
           submodules: true
           fetch-depth: 0
           # PAT so the eventual push triggers the auto-open-pr workflow and
