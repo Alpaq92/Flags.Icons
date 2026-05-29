@@ -1,11 +1,11 @@
 # Changelog
 
-## [2.1.0](https://github.com/Alpaq92/Flags.Icons/compare/v2.0.0...v2.1.0) (2026-05-28)
+## [3.0.0](https://github.com/Alpaq92/Flags.Icons/compare/v2.1.0...v3.0.0) (2026-05-28)
 
 
 ### Features
 
-* add FlagHub as fifth flag source (maintained FlagKit fork) ([#29](https://github.com/Alpaq92/Flags.Icons/issues/29)) ([d2e3d19](https://github.com/Alpaq92/Flags.Icons/commit/d2e3d196a4595410622da4b5b81bc5c5158c2b7e))
+* add FlagHub as fifth flag source (maintained FlagKit fork) ([#32](https://github.com/Alpaq92/Flags.Icons/issues/32)) ([04b0b46](https://github.com/Alpaq92/Flags.Icons/commit/04b0b460b2cd5b1141fdbcd3049237aff9a747ac))
 
 ## [2.0.0](https://github.com/Alpaq92/Flags.Icons/compare/v1.3.0...v2.0.0) (2026-05-25)
 

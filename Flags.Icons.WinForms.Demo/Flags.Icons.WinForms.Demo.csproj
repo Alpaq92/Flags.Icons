@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <EmbeddedResource Include="..\build\icon.ico" LogicalName="Flags.Icons.WinForms.Demo.icon.ico" />
+        <Content Include="..\build\icon.ico" Link="icon.ico" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>
