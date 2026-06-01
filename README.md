@@ -29,6 +29,8 @@ Flag icons from **5 upstream sources** — Twemoji, Circle (HatScripts), Square 
 
 ## Bundled sources
 
+Counts as of **2026-06-01** (latest monthly submodule bump — see [`.github/workflows/monthly-submodule-bump.yml`](.github/workflows/monthly-submodule-bump.yml)). Actual numbers in any given build are whatever the upstream submodule pins currently contain; check the staging log line `<Source> → assets/<dir>: N SVGs ...` printed by `dotnet build` for the live count.
+
 | Source                                                            | Style              | Count | Member name shape (ISO uppercase) |
 |-------------------------------------------------------------------|--------------------|-------|-----------------------------------|
 | [jdecked/twemoji](https://github.com/jdecked/twemoji)             | Emoji-style flat   | 262   | `TwemojiFlag.US`, `TwemojiFlag.GB_ENG` |
