@@ -2,7 +2,7 @@
 
 ![Flags.Icons demo](https://raw.githubusercontent.com/Alpaq92/Flags.Icons/main/flag-icons-demo.png)
 
-Flag icons from **5 upstream sources** — Twemoji (262 country + subdivision emoji), Circle (430, HatScripts), Square (417, kapowaz), Lipis (271, lipis/flag-icons 4×3), FlagHub (255, Alpaq92's maintained fork of madebybowtie/FlagKit) — packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. Every SVG ships as an embedded resource in the core `Flags.Icons` package — no runtime download, no file-system access.
+Flag icons from **5 upstream sources** — Twemoji (262 country + subdivision emoji), Circle (430, HatScripts), Square (417, kapowaz), Lipis (271, lipis/flag-icons 4×3), FlagHub (259, Alpaq92's maintained fork of madebybowtie/FlagKit) — packaged as drop-in controls for Avalonia, Eto.Forms, .NET MAUI, Aprillz.MewUI, Uno Platform, Windows Forms, WinUI 3 and WPF. Every SVG ships as an embedded resource in the core `Flags.Icons` package — no runtime download, no file-system access.
 
 > *Counts as of 2026-06-01; refreshed monthly via the upstream-bump workflow, so any given release may carry slightly different totals — the actual numbers print in the build log.*
 

@@ -37,7 +37,7 @@ Counts as of **2026-06-01** (latest monthly submodule bump — see [`.github/wor
 | [HatScripts/circle-flags](https://github.com/HatScripts/circle-flags) | Circular        | 430   | `CircleFlag.US`, `CircleFlag.AF_EMIRATE` |
 | [kapowaz/square-flags](https://github.com/kapowaz/square-flags)   | Square             | 417   | `SquareFlag.US`                   |
 | [lipis/flag-icons](https://github.com/lipis/flag-icons)           | Rectangular (4×3)  | 271   | `LipisFlag.US`                    |
-| [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) (FlagKit fork) | Rectangular flat | 255   | `FlagHubFlag.US`                  |
+| [Alpaq92/FlagHub](https://github.com/Alpaq92/FlagHub) (FlagKit fork) | Rectangular flat | 259   | `FlagHubFlag.US`                  |
 
 All 5 sources live as git submodules under `submodules/`. The build pipeline (run on every `dotnet build`) syncs submodules → extracts SVGs into `assets/{source}/` (regenerated each build, gitignored) → embeds them as manifest resources → code-generates 5 strongly-typed enums.
 
