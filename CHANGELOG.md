@@ -3,9 +3,9 @@
 ## [3.1.1](https://github.com/Alpaq92/Flags.Icons/compare/v3.1.0...v3.1.1) (2026-06-03)
 
 
-### Bug Fixes
+### Dependencies
 
-* **deps:** Bump the nuget-minor-and-patch group with 4 updates ([#42](https://github.com/Alpaq92/Flags.Icons/issues/42)) ([9d1cd30](https://github.com/Alpaq92/Flags.Icons/commit/9d1cd30be5ebb7fe3dd1002a63d34c872a94eb32))
+* Bump the nuget-minor-and-patch group with 4 updates ([#42](https://github.com/Alpaq92/Flags.Icons/issues/42)) ([9d1cd30](https://github.com/Alpaq92/Flags.Icons/commit/9d1cd30be5ebb7fe3dd1002a63d34c872a94eb32))
 
 ## [3.1.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.0.0...v3.1.0) (2026-06-01)
 
