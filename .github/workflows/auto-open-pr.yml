@@ -16,9 +16,18 @@ name: Auto-open PR for trusted-author push
 # or admin-bypass).
 #
 # Why an actor allowlist: a leaked PAT for any other user could otherwise
-# spam the repo with PRs. Restricting to Alpaq92 + the two bots that already
-# legitimately push branches (release-please's chore branches; Dependabot's
-# dependency-update branches) is conservative without blocking real work.
+# spam the repo with PRs. Restricting to Alpaq92 + release-please's bot
+# (which pushes the version-bump chore branches) is conservative without
+# blocking real work.
+#
+# Why dependabot[bot] is NOT on the allowlist: Dependabot opens its own
+# PR as part of its branch push (that's its native contract), so this
+# workflow was redundant for it. Worse, Dependabot-triggered workflow
+# runs read secrets from a *separate* store (Settings → Secrets →
+# Dependabot, walled off from the Actions store as a supply-chain
+# defense), so secrets.RELEASE_PLEASE_PAT resolves empty and the
+# Require-PAT guard below hard-failed every Dependabot push. Excluding
+# Dependabot here is cleaner than mirroring the PAT into a second store.
 #
 # Why no checkout: the head commit's message is fetched via the GitHub REST
 # API, so the workflow needs neither a working tree nor persisted git creds —
@@ -42,7 +51,7 @@ jobs:
     # the PR-create call would target the wrong commit.
     if: >
       github.event.deleted == false &&
-      contains(fromJson('["Alpaq92", "github-actions[bot]", "dependabot[bot]"]'), github.actor)
+      contains(fromJson('["Alpaq92", "github-actions[bot]"]'), github.actor)
     runs-on: ubuntu-latest
     steps:
       - name: Require RELEASE_PLEASE_PAT
