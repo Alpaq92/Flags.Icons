@@ -25,7 +25,7 @@ name: Auto-open PR for trusted-author push
 # workflow was redundant for it. Worse, Dependabot-triggered workflow
 # runs read secrets from a *separate* store (Settings → Secrets →
 # Dependabot, walled off from the Actions store as a supply-chain
-# defense), so secrets.RELEASE_PLEASE_PAT resolves empty and the
+# attack defense), so secrets.RELEASE_PLEASE_PAT resolves empty and the
 # Require-PAT guard below hard-failed every Dependabot push. Excluding
 # Dependabot here is cleaner than mirroring the PAT into a second store.
 #
