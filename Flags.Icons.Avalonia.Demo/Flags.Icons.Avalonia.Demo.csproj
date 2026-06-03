@@ -17,13 +17,13 @@
         <AvaloniaResource Include="..\build\icon.ico" Link="Assets\icon.ico" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="12.0.3" />
-        <PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
+        <PackageReference Include="Avalonia" Version="12.0.4" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
         <!-- Avalonia.Diagnostics intentionally omitted — no 12.x release yet
              (latest is 11.3.16) and pulling it in causes a TypeLoadException at
              runtime via Avalonia.Base. AttachDevTools wiring removed from
              MainWindow.xaml.cs to match. Re-add once a 12.x version ships. -->
-        <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.3" />
+        <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.4" />
         <!-- Pin transitive (CVE GHSA-xrw6-gwf8-vvr9 fixed in 0.21.3).
              Floor bumped to 0.92.0 to satisfy Avalonia 12.0.3's transitive demand
              (Avalonia.Desktop → X11 → FreeDesktop → Tmds.DBus.Protocol ≥ 0.92.0). -->
