@@ -7,10 +7,20 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
-    # `fix(deps):` is a Conventional Commits type that release-please routes into
-    # the "Bug Fixes" / "Dependencies" sections of CHANGELOG.md and triggers a
-    # patch bump. Auto-merge squashes the PR using its title, so the squashed
-    # commit inherits this prefix.
+    # `fix(deps):` triggers a release-please patch bump (the bump rule keys off
+    # the conventional-commits type `fix`, irrespective of scope). Auto-merge
+    # squashes the PR using its title, so the squashed commit inherits this
+    # prefix.
+    #
+    # Categorization caveat: release-please's `changelog-sections` mapping
+    # matches on TYPE ONLY — it does not look at scope. So `fix(deps):`
+    # always lands under the "Bug Fixes" section, never "Dependencies"
+    # (which would require a literal `deps:` typed commit, but that wouldn't
+    # bump the version). If you want the entry under "Dependencies" — as the
+    # release-please-config.json mapping advertises — hand-edit CHANGELOG.md
+    # on the release-please branch before it auto-merges, as we did for
+    # v3.1.1 in 5c344d0. There's no clean release-please-side fix without
+    # a custom plugin.
     commit-message:
       prefix: "fix(deps)"
     groups:
