@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.1.1...v3.2.0) (2026-07-01)
+
+
+### Features
+
+* **deps:** bump bundled flag SVG sources to 2026-07-01 upstream HEAD ([#50](https://github.com/Alpaq92/Flags.Icons/issues/50)) ([f1d20e7](https://github.com/Alpaq92/Flags.Icons/commit/f1d20e7d5f3cdc6e88ef13314d43f5cdd55daf58))
+
+
+### Bug Fixes
+
+* **deps:** Bump the nuget-minor-and-patch group with 11 updates ([#49](https://github.com/Alpaq92/Flags.Icons/issues/49)) ([305dd49](https://github.com/Alpaq92/Flags.Icons/commit/305dd493a7990abeb9dd4ca4b0a80691d80123e1))
+
 ## [3.1.1](https://github.com/Alpaq92/Flags.Icons/compare/v3.1.0...v3.1.1) (2026-06-03)
 
 
