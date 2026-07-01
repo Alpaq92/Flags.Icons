@@ -1,0 +1,61 @@
+name: Deploy live demo to GitHub Pages
+
+# Builds the Flags.Icons.Avalonia.Demo WebAssembly head and publishes it to GitHub Pages.
+# Enable once in the repo: Settings → Pages → Build and deployment → Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, and let an in-progress production deploy COMPLETE rather
+# than cancelling it — a burst of pushes to main would otherwise supersede each other's deploys
+# mid-run. Runs still queue so the newest content wins; only intermediate queued runs are skipped.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2 # v5.3.0
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Install WASM tools
+        run: dotnet workload install wasm-tools
+
+      - name: Publish Browser head
+        run: dotnet publish Flags.Icons.Avalonia.Demo.Browser/Flags.Icons.Avalonia.Demo.Browser.csproj -c Release -o publish
+
+      - name: Disable Jekyll (keep _framework, leading-underscore files)
+        run: touch publish/wwwroot/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: publish/wwwroot
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5

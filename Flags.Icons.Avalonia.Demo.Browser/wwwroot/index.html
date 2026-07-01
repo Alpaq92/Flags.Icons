@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#1976D2" />
+    <title>Flags.Icons.Avalonia.Demo</title>
+    <meta name="description" content="Browse every flag bundled with Flags.Icons — Twemoji, Circle, Square, Lipis and FlagHub — right in your browser via Avalonia's WebAssembly head." />
+    <link rel="canonical" href="https://alpaq92.github.io/Flags.Icons/" />
+
+    <!-- Relative hrefs on purpose: the site is served under /Flags.Icons/. -->
+    <link rel="icon" href="favicon.png" type="image/png" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+
+    <style>
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        body { background: #f3f3f3; }
+        #out { width: 100%; height: 100%; }
+
+        /* Loading splash — shown until the WASM runtime mounts the app. */
+        #loading {
+            position: fixed; inset: 0; z-index: 10;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 20px;
+            font-family: system-ui, 'Segoe UI', -apple-system, sans-serif;
+            background: #f3f3f3;
+            transition: opacity 0.3s ease;
+        }
+        #loading.hide { opacity: 0; pointer-events: none; }
+
+        .splash-logo { width: 72px; height: 72px; }
+
+        .splash-bar {
+            position: relative; width: 220px; max-width: 70vw; height: 4px;
+            border-radius: 2px; overflow: hidden;
+            background: rgba(0, 0, 0, 0.10);
+        }
+        .splash-bar::before {
+            content: ''; position: absolute; top: 0; bottom: 0; width: 40%;
+            border-radius: 2px; background: #1976D2;
+            animation: splash-indet 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes splash-indet {
+            0%   { left: -45%; }
+            100% { left: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .splash-bar::before { animation-duration: 3s; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <img class="splash-logo" src="favicon.png" alt="" aria-hidden="true" />
+        <div class="splash-bar" role="progressbar" aria-label="Loading"></div>
+    </div>
+
+    <div id="out"></div>
+    <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -12,6 +12,7 @@
   <a href="https://www.nuget.org/packages/Flags.Icons.WPF"><img src="https://img.shields.io/nuget/v/Flags.Icons.WPF.svg?label=WPF" alt="NuGet" /></a>
   <a href="https://github.com/Alpaq92/Flags.Icons/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/ci.yml?branch=main&label=CI" alt="CI" /></a>
   <a href="https://github.com/Alpaq92/Flags.Icons/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/Alpaq92/Flags.Icons/release.yml?branch=main&label=Release" alt="Release" /></a>
+  <a href="https://alpaq92.github.io/Flags.Icons/"><img src="https://img.shields.io/badge/demo-live-success" alt="Live demo" /></a>
   <a href="https://www.nuget.org/packages/Flags.Icons"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fazuresearch-usnc.nuget.org%2Fquery%3Fq%3Dpackageid%3AFlags.Icons%26prerelease%3Dtrue&query=%24.data%5B0%5D.totalDownloads&label=Downloads&color=blue&cacheSeconds=1800" alt="NuGet downloads (core, transitively included by every platform package)" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
 </p>
@@ -19,6 +20,8 @@
 <p align="center">
   <img src="flag-icons-demo.png" alt="Flags.Icons demo" />
 </p>
+
+> **Live demo →** **<https://alpaq92.github.io/Flags.Icons/>** *(the Avalonia demo's WebAssembly head, redeployed on every push to `main`)*
 
 Flag icons from **5 upstream sources** — Twemoji, Circle (HatScripts), Square (kapowaz), Lipis (lipis/flag-icons), FlagHub (Alpaq92 — maintained FlagKit fork) — packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every SVG ships as an embedded resource in the core `Flags.Icons` package, reachable through a per-source strongly-typed enum (`TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`, `FlagHubFlag`). No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
 
@@ -174,7 +177,7 @@ string? fileName3 = FlagHubFlagFiles.GetFileName(FlagHubFlag.US);  // "US.svg"
 Each UI stack ships a demo that renders every flag in a wrapping grid with country-code search, source picker (Twemoji / Circle / Square / Lipis / FlagHub / All), section headers, and click-to-copy markup snippets.
 
 ```bash
-dotnet run --project Flags.Icons.Avalonia.Demo
+dotnet run --project Flags.Icons.Avalonia.Demo.Desktop
 dotnet run --project Flags.Icons.Eto.Demo       # cross-platform
 dotnet run --project Flags.Icons.MAUI.Demo      # Windows or macCatalyst
 dotnet run --project Flags.Icons.MewUI.Demo     # cross-platform
@@ -182,6 +185,15 @@ dotnet run --project Flags.Icons.Uno.Demo       # desktop
 dotnet run --project Flags.Icons.WinForms.Demo  # Windows
 dotnet run --project Flags.Icons.WinUi.Demo     # Windows (x64/ARM64)
 dotnet run --project Flags.Icons.WPF.Demo       # Windows
+```
+
+### Avalonia demo: Desktop + Browser heads
+
+`Flags.Icons.Avalonia.Demo` is a shared library (the `App`, `MainView`, view models); `Flags.Icons.Avalonia.Demo.Desktop` and `Flags.Icons.Avalonia.Demo.Browser` are thin heads that host it — a classic desktop window and an Avalonia WebAssembly page, respectively. `.github/workflows/pages.yml` publishes the Browser head to GitHub Pages on every push to `main` (once **Settings → Pages → Source = "GitHub Actions"** is set). Run the Browser head locally with:
+
+```bash
+dotnet workload install wasm-tools
+dotnet run --project Flags.Icons.Avalonia.Demo.Browser
 ```
 
 ## Building from source
