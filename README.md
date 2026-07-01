@@ -21,7 +21,7 @@
   <img src="flag-icons-demo.png" alt="Flags.Icons demo" />
 </p>
 
-> **Live demo →** **<https://alpaq92.github.io/Flags.Icons/>** *(the Avalonia demo's WebAssembly head, redeployed on every push to `main`)*
+> **Live demo →** **<https://alpaq92.github.io/Flags.Icons/>** *(the Avalonia demo's WebAssembly head, redeployed to GitHub Pages on every push to `main`)*
 
 Flag icons from **5 upstream sources** — Twemoji, Circle (HatScripts), Square (kapowaz), Lipis (lipis/flag-icons), FlagHub (Alpaq92 — maintained FlagKit fork) — packaged as drop-in controls for [Avalonia](https://github.com/AvaloniaUI/Avalonia), [Eto.Forms](https://github.com/picoe/Eto), [.NET MAUI](https://github.com/dotnet/maui), [Aprillz.MewUI](https://github.com/aprillz/MewUI), [Uno Platform](https://github.com/unoplatform/uno), [Windows Forms](https://github.com/dotnet/winforms), [WinUI 3](https://github.com/microsoft/WindowsAppSDK) and [WPF](https://github.com/dotnet/wpf). Every SVG ships as an embedded resource in the core `Flags.Icons` package, reachable through a per-source strongly-typed enum (`TwemojiFlag`, `CircleFlag`, `SquareFlag`, `LipisFlag`, `FlagHubFlag`). No runtime download, no file-system access. Platform packages are thin wrappers that convert the embedded streams into the native image type for each UI stack.
 
