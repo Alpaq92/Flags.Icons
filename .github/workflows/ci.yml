@@ -57,6 +57,18 @@ jobs:
       - name: Build Flags.Icons.Avalonia.Demo
         run: dotnet build Flags.Icons.Avalonia.Demo/Flags.Icons.Avalonia.Demo.csproj --configuration Release --no-restore
 
+      - name: Build Flags.Icons.Avalonia.Demo.Desktop
+        run: dotnet build Flags.Icons.Avalonia.Demo.Desktop/Flags.Icons.Avalonia.Demo.Desktop.csproj --configuration Release
+
+      # The browser head targets net10.0-browser and needs the WASM workload. Built only here
+      # (not on the macOS job) — same TFM either way, so one OS is enough for CI coverage; the
+      # deploy workflow (pages.yml) publishes it for real on every push to main.
+      - name: Install WASM tools
+        run: dotnet workload install wasm-tools
+
+      - name: Build Flags.Icons.Avalonia.Demo.Browser
+        run: dotnet build Flags.Icons.Avalonia.Demo.Browser/Flags.Icons.Avalonia.Demo.Browser.csproj --configuration Release
+
       # Building Flags.Icons.Uno.Demo transitively builds the net10.0-desktop TFM of
       # Flags.Icons.Uno that the demo consumes — the other library TFMs (net10.0,
       # net10.0-browserwasm) are exercised at pack time in release.yml, so building the
@@ -173,6 +185,9 @@ jobs:
 
       - name: Build Flags.Icons.Avalonia.Demo
         run: dotnet build Flags.Icons.Avalonia.Demo/Flags.Icons.Avalonia.Demo.csproj --configuration Release
+
+      - name: Build Flags.Icons.Avalonia.Demo.Desktop
+        run: dotnet build Flags.Icons.Avalonia.Demo.Desktop/Flags.Icons.Avalonia.Demo.Desktop.csproj --configuration Release
 
       - name: Build Flags.Icons.Uno.Demo
         run: dotnet build Flags.Icons.Uno.Demo/Flags.Icons.Uno.Demo.csproj --configuration Release

@@ -11,10 +11,17 @@ namespace Flags.Icons.Avalonia.Demo {
         }
 
         public override void OnFrameworkInitializationCompleted() {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
-                desktop.MainWindow = new MainWindow {
-                    DataContext = new MainWindowViewModel(),
-                };
+            var viewModel = new MainWindowViewModel();
+
+            switch (ApplicationLifetime) {
+                // Desktop head: a window hosting the shared MainView.
+                case IClassicDesktopStyleApplicationLifetime desktop:
+                    desktop.MainWindow = new MainWindow { DataContext = viewModel };
+                    break;
+                // Browser (WASM) head: MainView is the top level itself, no window.
+                case ISingleViewApplicationLifetime singleView:
+                    singleView.MainView = new MainView { DataContext = viewModel };
+                    break;
             }
 
             base.OnFrameworkInitializationCompleted();

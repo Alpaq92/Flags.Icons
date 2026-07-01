@@ -38,6 +38,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.WinForms.Demo",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Demo.Shared", "Flags.Demo.Shared\Flags.Demo.Shared.csproj", "{1A0B0001-0000-0000-0000-000000000014}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Avalonia.Demo.Desktop", "Flags.Icons.Avalonia.Demo.Desktop\Flags.Icons.Avalonia.Demo.Desktop.csproj", "{1A0B0001-0000-0000-0000-000000000015}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flags.Icons.Avalonia.Demo.Browser", "Flags.Icons.Avalonia.Demo.Browser\Flags.Icons.Avalonia.Demo.Browser.csproj", "{1A0B0001-0000-0000-0000-000000000016}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +120,14 @@ Global
 		{1A0B0001-0000-0000-0000-000000000014}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A0B0001-0000-0000-0000-000000000014}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A0B0001-0000-0000-0000-000000000014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000015}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0B0001-0000-0000-0000-000000000016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0B0001-0000-0000-0000-000000000016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

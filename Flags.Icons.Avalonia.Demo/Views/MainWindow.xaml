@@ -1,95 +1,10 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Flags.Icons.Avalonia.Demo.ViewModels;assembly=Flags.Icons.Avalonia.Demo"
-        xmlns:shared="clr-namespace:Flags.Demo.Shared;assembly=Flags.Demo.Shared"
-        xmlns:flag="clr-namespace:Flags.Icons.Avalonia;assembly=Flags.Icons.Avalonia"
-        xmlns:controls="clr-namespace:Flags.Icons.Avalonia.Demo.Controls"
-        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        xmlns:views="clr-namespace:Flags.Icons.Avalonia.Demo.Views"
         Width="900" Height="600"
         x:Class="Flags.Icons.Avalonia.Demo.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/icon.ico">
-
-    <Window.Styles>
-        <Style Selector="controls|SelectionWrapper:selectednow > Border">
-            <Setter Property="Background" Value="#1976D2" />
-        </Style>
-        <Style Selector="controls|SelectionWrapper:selectednow > Border TextBlock">
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-    </Window.Styles>
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
-
-    <Grid RowDefinitions="Auto, *, Auto">
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="8">
-            <TextBox Grid.Column="0"
-                     Text="{Binding SearchText}"
-                     PlaceholderText="Search by country code (e.g. US, DE, FR, GB-ENG)" />
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="Source:" VerticalAlignment="Center" Margin="0,0,6,0" />
-                <ComboBox ItemsSource="{Binding Sources}"
-                          SelectedItem="{Binding Source}"
-                          MinWidth="160" />
-            </StackPanel>
-        </Grid>
-
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Visible"
-                      HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding Sections}" HorizontalAlignment="Center">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="shared:FlagSection">
-                        <StackPanel Margin="0,0,0,12">
-                            <TextBlock Text="{Binding Title}" FontSize="14" FontWeight="SemiBold" Margin="8,4" />
-                            <ItemsControl ItemsSource="{Binding Entries}" HorizontalAlignment="Center">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="shared:FlagEntry">
-                                        <controls:SelectionWrapper DataSource="{Binding .}"
-                                                                   CurrentSelected="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).Selected, Mode=TwoWay}">
-                                            <Border Name="MainBorder" CornerRadius="4" Padding="4">
-                                                <DockPanel Margin="2"
-                                                           ToolTip.Tip="{Binding Code}"
-                                                           Width="88"
-                                                           Height="80"
-                                                           Background="Transparent">
-                                                    <TextBlock Text="{Binding Code}"
-                                                               DockPanel.Dock="Bottom"
-                                                               FontSize="11"
-                                                               HorizontalAlignment="Center" />
-                                                    <flag:FlagIcon VerticalAlignment="Center"
-                                                                   HorizontalAlignment="Center"
-                                                                   Width="56" Height="42"
-                                                                   Twemoji="{Binding Twemoji}"
-                                                                   Circle="{Binding Circle}"
-                                                                   Square="{Binding Square}"
-                                                                   Lipis="{Binding Lipis}"
-                                                                   FlagHub="{Binding FlagHub}" />
-                                                </DockPanel>
-                                            </Border>
-                                        </controls:SelectionWrapper>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-
-        <TextBox Grid.Row="2"
-                 Margin="8"
-                 Text="{Binding CopyText, Mode=OneWay}"
-                 IsReadOnly="True"
-                 PlaceholderText="Click a flag to copy the XAML snippet" />
-    </Grid>
+    <views:MainView />
 </Window>

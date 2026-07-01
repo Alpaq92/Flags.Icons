@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Desktop head: the Windows/macOS/Linux entry point. Hosts the shared
+         Flags.Icons.Avalonia.Demo library's App in a classic desktop lifetime. -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <!-- Embeds the icon into the .exe so File Explorer / Alt-Tab / pinned-to-Start show it.
+             The shared library's AvaloniaResource makes the same .ico available via
+             Icon="/Assets/icon.ico" for the in-app Window chrome. -->
+        <ApplicationIcon>..\build\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+        <!-- Pin transitive (CVE GHSA-xrw6-gwf8-vvr9 fixed in 0.21.3).
+             Floor bumped to 0.92.0 to satisfy Avalonia 12.0.3's transitive demand
+             (Avalonia.Desktop → X11 → FreeDesktop → Tmds.DBus.Protocol ≥ 0.92.0). -->
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Flags.Icons.Avalonia.Demo\Flags.Icons.Avalonia.Demo.csproj" />
+    </ItemGroup>
+</Project>
