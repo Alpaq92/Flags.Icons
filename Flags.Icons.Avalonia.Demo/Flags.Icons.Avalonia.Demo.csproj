@@ -19,8 +19,8 @@
              (latest is 11.3.16) and pulling it in causes a TypeLoadException at
              runtime via Avalonia.Base. AttachDevTools wiring removed from
              MainWindow.xaml.cs to match. Re-add once a 12.x version ships. -->
-        <PackageReference Include="Avalonia" Version="12.0.4" />
-        <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.4" />
+        <PackageReference Include="Avalonia" Version="12.0.5" />
+        <PackageReference Include="Avalonia.Themes.Simple" Version="12.0.5" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Flags.Icons.Avalonia\Flags.Icons.Avalonia.csproj" />
