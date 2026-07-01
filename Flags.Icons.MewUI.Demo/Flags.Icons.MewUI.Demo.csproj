@@ -24,22 +24,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aprillz.MewUI" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI" Version="0.17.1" />
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-        <PackageReference Include="Aprillz.MewUI.Platform.Win32" Version="0.15.2" />
-        <PackageReference Include="Aprillz.MewUI.Backend.Direct2D" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI.Platform.Win32" Version="0.17.1" />
+        <PackageReference Include="Aprillz.MewUI.Backend.Direct2D" Version="0.17.1" />
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <PackageReference Include="Aprillz.MewUI.Platform.X11" Version="0.15.2" />
-        <PackageReference Include="Aprillz.MewUI.Backend.MewVG.X11" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI.Platform.X11" Version="0.17.1" />
+        <PackageReference Include="Aprillz.MewUI.Backend.MewVG.X11" Version="0.17.1" />
     </ItemGroup>
 
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-        <PackageReference Include="Aprillz.MewUI.Platform.MacOS" Version="0.15.2" />
-        <PackageReference Include="Aprillz.MewUI.Backend.MewVG.MacOS" Version="0.15.2" />
+        <PackageReference Include="Aprillz.MewUI.Platform.MacOS" Version="0.17.1" />
+        <PackageReference Include="Aprillz.MewUI.Backend.MewVG.MacOS" Version="0.17.1" />
     </ItemGroup>
 
     <ItemGroup>
