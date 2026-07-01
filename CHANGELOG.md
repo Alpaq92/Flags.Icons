@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.2.0...v3.3.0) (2026-07-01)
+
+
+### Features
+
+* **avalonia:** add a WebAssembly browser demo + GitHub Pages deploy ([#52](https://github.com/Alpaq92/Flags.Icons/issues/52)) ([059b9ec](https://github.com/Alpaq92/Flags.Icons/commit/059b9ec5d970428309f62cc839ee0ab63e01f79e))
+
 ## [3.2.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.1.1...v3.2.0) (2026-07-01)
 
 
