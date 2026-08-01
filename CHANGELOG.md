@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.3.0...v3.4.0) (2026-08-01)
+
+
+### Features
+
+* **deps:** bump bundled flag SVG sources to 2026-08-01 upstream HEAD ([#58](https://github.com/Alpaq92/Flags.Icons/issues/58)) ([297aaf6](https://github.com/Alpaq92/Flags.Icons/commit/297aaf6d1d112142ecfc8fbe227a7838b321f407))
+
 ## [3.3.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.2.0...v3.3.0) (2026-07-01)
 
 
