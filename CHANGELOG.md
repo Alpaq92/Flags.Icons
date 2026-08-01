@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.1](https://github.com/Alpaq92/Flags.Icons/compare/v3.4.0...v3.4.1) (2026-08-01)
+
+
+### Bug Fixes
+
+* **deps:** Bump the nuget-minor-and-patch group with 12 updates ([#57](https://github.com/Alpaq92/Flags.Icons/issues/57)) ([17be2ed](https://github.com/Alpaq92/Flags.Icons/commit/17be2ed6e16d155178cb87b7122555f253cdab5c))
+
 ## [3.4.0](https://github.com/Alpaq92/Flags.Icons/compare/v3.3.0...v3.4.0) (2026-08-01)
 
 
