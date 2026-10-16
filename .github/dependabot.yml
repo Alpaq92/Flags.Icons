@@ -28,6 +28,12 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # 12.0.0.14+ pulls Svg.Skia 5.2.x / SkiaSharp 4.148 while Avalonia 12.x is
+      # still on SkiaSharp 3.119 — the Browser (wasm) demo fails to link.
+      # Drop this once Avalonia itself targets SkiaSharp 4.
+      - dependency-name: "Svg.Controls.Skia.Avalonia"
+        versions: [">= 12.0.0.14"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
