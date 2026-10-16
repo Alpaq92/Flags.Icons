@@ -33,9 +33,12 @@
         <ProjectReference Include="..\Flags.Demo.Shared\Flags.Demo.Shared.csproj" />
     </ItemGroup>
 
-    <!-- Pin transitive dep to a version that closes a known CVE (GHSA-xrw6-gwf8-vvr9) -->
+    <!-- Pin transitive dep to a version that closes a known CVE (GHSA-xrw6-gwf8-vvr9).
+         Floor raised to 0.94.1: Uno 6.7 (Uno.WinUI.Runtime.Skia.X11 → Tmds.DBus.Protocol ≥ 0.92.0)
+         otherwise trips NU1605 (downgrade) on the linux/macos legs; kept in lockstep with the
+         Avalonia desktop demo pin. -->
     <ItemGroup>
-        <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.1" />
     </ItemGroup>
 
 </Project>
