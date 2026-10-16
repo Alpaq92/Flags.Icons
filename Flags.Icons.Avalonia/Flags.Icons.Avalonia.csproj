@@ -18,7 +18,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="12.0.5" />
+        <PackageReference Include="Avalonia" Version="12.1.3" />
+        <!-- Held at 12.0.0.13: 12.0.0.14+ moves Svg.Skia to 5.2.x, which targets SkiaSharp 4.148,
+             while Avalonia 12.x still ships SkiaSharp 3.119 (incl. the WebAssembly native assets).
+             Mixing them breaks the Browser demo link step (wasm-ld: undefined sk_pathbuilder_* symbols).
+             Bump together with Avalonia once it moves to SkiaSharp 4. Mirrored in .github/dependabot.yml. -->
         <PackageReference Include="Svg.Controls.Skia.Avalonia" Version="12.0.0.13" />
     </ItemGroup>
 
