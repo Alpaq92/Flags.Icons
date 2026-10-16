@@ -12,9 +12,9 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Desktop" Version="12.1.3" />
         <!-- Pin transitive (CVE GHSA-xrw6-gwf8-vvr9 fixed in 0.21.3).
-             Floor bumped to 0.92.0 to satisfy Avalonia 12.0.3's transitive demand
-             (Avalonia.Desktop → X11 → FreeDesktop → Tmds.DBus.Protocol ≥ 0.92.0). -->
-        <PackageReference Include="Tmds.DBus.Protocol" Version="0.92.0" />
+             Floor bumped to 0.94.1 to satisfy Avalonia 12.1.3's transitive demand
+             (Avalonia.Desktop → X11 → FreeDesktop → Tmds.DBus.Protocol ≥ 0.94.1). -->
+        <PackageReference Include="Tmds.DBus.Protocol" Version="0.94.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Flags.Icons.Avalonia.Demo\Flags.Icons.Avalonia.Demo.csproj" />
