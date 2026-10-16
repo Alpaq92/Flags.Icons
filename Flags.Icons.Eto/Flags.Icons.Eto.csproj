@@ -5,7 +5,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.Eto</PackageId>
-        <Description>Eto.Forms control that displays flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). Eto-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
+        <Description>Eto.Forms control that displays flag icons from 5 bundled sources (Twemoji emoji, Circle, Square, Lipis, FlagHub). Eto-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
     </PropertyGroup>
 
     <ItemGroup>
