@@ -8,7 +8,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.WinForms</PackageId>
-        <Description>Windows Forms control that displays flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). WinForms-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
+        <Description>Windows Forms control that displays flag icons from 5 bundled sources (Twemoji emoji, Circle, Square, Lipis, FlagHub). WinForms-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
 
         <RootNamespace>Flags.Icons.WinForms</RootNamespace>
     </PropertyGroup>
