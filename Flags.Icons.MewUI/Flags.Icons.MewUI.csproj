@@ -7,7 +7,7 @@
         <IsPackable>true</IsPackable>
 
         <PackageId>Flags.Icons.MewUI</PackageId>
-        <Description>Aprillz.MewUI helpers that display flag icons from 4 bundled sources (Twemoji emoji, Circle, Square, Lipis). MewUI-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
+        <Description>Aprillz.MewUI helpers that display flag icons from 5 bundled sources (Twemoji emoji, Circle, Square, Lipis, FlagHub). MewUI-specific implementation of Flags.Icons. SVGs are rasterized to PNG at runtime via Svg.Skia.</Description>
 
         <RootNamespace>Flags.Icons.MewUi</RootNamespace>
     </PropertyGroup>
